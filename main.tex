@@ -11,8 +11,10 @@
 \usepackage{amsthm}
 \usepackage{amsmath}
 \DeclareMathOperator*{\argmax}{argmax}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{corollary}{Corollary}[theorem]
+
+\newtheorem{corollary}{Corollary}
+\newtheorem{axiom}{Axiom}
+\newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
 
 \title{A way around the exploration-exploitation dilemma.}
@@ -39,7 +41,9 @@
 % \keywords{Keyword 1 $|$ Keyword 2 $|$ Keyword 3 $|$ ...} 
 
 \begin{abstract}
-Should an animal exploit an good outcome, or explore its world looking for something better? This question is considered a fundamental problem in the learning and decision sciences, and is viewed solely in terms of maximizing rewards. This viewpoint though ignores the direct value of exploratory behavior: the acquisition of general information about the world. Here, we challenge the traditional approach to the dilemma and offer an alternative account based in information theory. We first derive an axiomatic measure of information value, the use this to decompose the exploration-exploitation dilemma into a two-part problem, creating separate mathematical objectives for exploration and exploitation. This separation allows us to derive a new learning policy which can solve optimally the original dilemma problem deterministically, in very general circumstances. In simulation we show how this policy behaves in both simple and complex simulated worlds. Finally we who how this same theory predicts exploratory actions of \textit{EVERY FUCKING LIVING THING?!}. % TODO....
+The exploration-exploitation dilemma is considered a fundamental problem in the learning and decision sciences. Exploitation means simply choosing most valuable option. Exploration in the dilemma means searching for unknown rewards. The intrinsic uncertainty (or partial observability) of this search makes the problem mathematically intractable. Focusing only on rewards though ignores the direct certain value of exploratory behavior: the acquisition of general information about the world. Here, we challenge the traditional approach to the dilemma and offer an alternative account based in information theory. We first derive an axiomatic measure of information value. We use this to decompose the exploration-exploitation dilemma into a tractable two-part problem, creating separate mathematical objectives for exploration and exploitation. From this we derive a new learning policy which we prove is certain to optimally explore, maximize total information value, and maximize total rewards. In simulation, we show how this policy generates naturalistic behavior in both simple and complex simulated worlds. 
+
+% Finally we who how this same theory predicts exploratory actions of \textit{EVERY FUCKING LIVING THING?!}. % TODO....
 \end{abstract}
 
 % \dates{This manuscript was compiled on \today}
@@ -51,67 +55,125 @@ Should an animal exploit an good outcome, or explore its world looking for somet
 
 \thispagestyle{firststyle}
 \ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
-% TODO fix opening sentences. 
-To stay competitive an animal must adapt its actions to maximize the success of future decisions. Some environments encourage choosing actions likely to produce desirable results (\textit{exploitation}). Other environments promote taking a risk on actions that are immediately less certain, on the chance they will eventually produce a better outcome (\textit{exploration}). This tradeoff is known as the exploration-exploitation dilemma.
+Why do animals explore? We know animals will explore when there are no rewards present, or expected \cite{TODO}. This suggests they simply wish to better understand their world. Animals also explore as play, trying to understand other agents \cite{TODO}, to learn strategies \cite{TODO}, and to refine their actions repertoires \cite{TODO}. In a more classical sense animals also explore to find more food, water or mates. In a general sense then it seems animals explore to gain information \textit{and} to acquire more rewards.
 
-In terms of exploitation, \cite{gittins1974dynamic} showed that the optimal policy is one that calculates the expected total future rewards from each possible action and selects the action with the highest expected reward. The optimal policy for exploration, on the other hand, is elusive. Exploration is often framed as a problem of ``information seeking'' that is implemented through the use of motivational bonuses on less frequently used actions \citep{Sutton1990, dayan1996exploration}, or information is modeled as the internal isomorphism of a tangible, external reward (a so-called \textit{intrinsic reward}). However by linking the value of information to rewards, the problem of optimal exploration remains mathematically intractable \citep{thrun1992active, dayan1996exploration, findling2018computational, gershman2018deconstructing}. 
+When an animal explores looking for greater rewards there is a often a trade-off to be made with choosing more conservative actions, likely to produce desirable results (what we call exploitation) \cite{TODO}. The optimal policy for exploitation is well known. One calculates total expected future rewards \cite{TODO}. The optimal policy for exploration, on the other theoretical hand, remains elusive \citep{thrun1992active, dayan1996exploration, findling2018computational, gershman2018deconstructing}. 
 
-Here we propose an alternative view: \textit{Information is valuable for its own sake}. We argue that any agent should seek to maximization information just as vigorously as reward, and that these two goals can and should be optimized separately. This view though quickly runs into a new problem: how much should any given piece of information be valued by the agent. 
+Exploration for reward is often reframed as a problem of ``information seeking'', that is implemented through the use of motivational bonuses on less frequently used actions \citep{Sutton1990, dayan1996exploration}, or information is modeled as the internal isomorphism of a tangible, external reward (a so-called \textit{intrinsic reward}). However by linking the value of information to rewards, the problem of optimal exploration remains mathematically intractable \citep{thrun1992active, dayan1996exploration, findling2018computational, gershman2018deconstructing}. 
 
-Our contributions here are threefold. First, we use axiomatic information theory to create a new general measure of information value. Second, we develop a develop a new theory for exploration that optimally maximizes information value. This theory is purely deterministic, meaning exploration no longer relies on random sampling and instead can become perfectly rational. Third, we show how the exploitation-exploitation dilemma can be rethought of as a problem with two objectives, maximizing information value \textit{and} maximizing reward value. From this view we derive a new learning theory which allows for simultaneously optimal and deterministic solutions to \textit{both} the problems of exploration and exploitation.
+Here we propose an alternative view: \textit{Information is valuable for its own sake}. We argue two points. One, an animal should seek to maximize information just as vigorously as reward. Two, the two goal of maximizing information is entirely separate from goal of maximizing rewards. 
+
+Our contributions are threefold. We first use axiomatic information theory to create a new general measure of information value. Next we develop a new theory for exploration that optimally maximizes information value. This theory is purely deterministic, meaning exploration no longer relies on random sampling and is instead perfectly rational. Finally, we show how the exploitation-exploitation dilemma can be formally redefined using two objectives, maximizing information value \textit{and} maximizing reward value. From this view we derive a new learning theory which allows for simultaneously optimal and deterministic solutions to \textit{both} the problems of exploration and exploitation.
 
 \section*{Results}
-An animal should explore its world to maximize the rewards it finds, but this exploration leads to an intractable dilemma. Perhaps, to make progress, we should consider the other reasons there are to explore.
+To make up for any ``missed'' rewards during exploration information treated as a fictive reward signal.  When this happens the information term is generally weighted, and added to any natural rewards leading (as seen in Eq.~\ref{eq:total_r_I}). 
 
-An animal should explore it's world to build a model. Having a model makes later learning is more efficient (there's something to expand on, rather then starting from scratch), allows for generalization, and it makes decisions robust. 
-% TODO I'd like to explain this with more concrete examples rather than a citation dump, which how this really works at current.
- 
-An animal should explore its world because it can share that knowledge, as a kind of currency, spent for its own benefit or for group survival.  
-% TODO I need a better term than group survival? It's not just about survival.
+To denote information we use a generic term $I$ to stand in for a pack of theoretical possibilities, including novelty bonuses, curiosity signals, entropy terms\cite{TODO}. The classic, or natural, reward is denoted by $r$, and $\beta$ is used for the weight. For convenience, we confine confined rewards to be a binary variable, and $I$ to the real numbers ($r \in 1{0, 11}, I \in \mathbb{R}, \beta > 0$). When no information is included, the problem of estimating optimal total value $V^{*}_{pi_R}$ reduces to Eq.~\ref{eq:total_r} for a set of states $S$ and finite time $T$.
 
-An animal should explore to satisfy it's own curiosity. Curiosty may have arisen to ensure exploration, but evolution may have left it so ingrained we can treat curiosity as its own selfish objective.
+\begin{equation}
+    V^{*}_{pi_R} = \sum_{t \in T, s \in S} r
+    \label{eq:total_r}
+\end{equation}
 
-In a very general sense, what you get from exploration is knowledge about the world. Quantifying knowledge can be done with information theory. We could treat information gain as just another kind of reward, knowing this right now is the common path. We don't think is the right way to go though. Classical rewards (food, money, sex) and information have some fundementally different properties:
+\begin{equation}
+    V^{*}_{pi_R} = \sum_{t \in T, s \in S} r + \beta I
+    \label{eq:total_r_I}
+\end{equation}
 
-\begin{itemize}
-    \item Rewards are a conserved resource. Information is not. 
-    \item The same kind of reward can be consumed many times without necessarily losing value\footnote{In practice, there are saity effects but these are not a necessary part of the reward's value}. Information once learned has no value in being be learned again.
-\end{itemize}
+During exploration rate of rewards $\frac{dr/dt}$ can decline, for a time. If there is no $\beta I$ term, then value declines (Eq~\ref{eq:total_r}). This decline is the heart of the trade-off. Adding an information term can numerically balance out losses, ensuring the animal chooses to explore. 
 
-These can be seen more intuitively by example. If a rat shares its potato chip with a cage-mate, it has less food for itself. Compare that chip to a new idea. Explaining a new idea to lab-mate does not require forgetting the idea yourself. In fact, it's often the opposite.
+Rebalancing reward with information seems at the surface simple and intuitive. But it also comes with a cost. If the goal is to maximize $r$, as it is by define in the dilemma problem, adding a fictive reward obscures this aim while offering no guarantee of a performance increase. After all, an increase in $V$ can come from a $r$ or from the fictive $\beta I$. Put another way, $\beta I$ can drive exploration but can't help with the fundamental dilemma problem which is really about Eq~\ref{eq:total_r}.
 
-Eating one potato chip often means wanting another. Where as if you know the capital of the United States, there is no value in being told the capital of the United States is Washington DC. 
+Here we suggest a new view: \textit{information is valuable for its own sake}. 
 
-We think this properties are different enough, and important enough that information and reward should be seperated. This is why we suggest thinking about information as valauble for its own sake. This means that if information is valuable for its own sake, there is nothing lost in persuing it. We can then sidestep the classic dilemma because exploration need not come at a cost. But if information is not lumped in with reward, how should we value it? Here we offer an axiomatic approach.
+Animal's learn and explore the world for a range of reasons \cite{TODO LIST FROM INTRO}. Theory should take this into account. Specifically, we study a case with independent policies. One policy to maximize reward ($\pi_R$, Eq.~\ref{eq:total_r_2}) and one for information value ($\pi_E$, Eq.\ref{eq:total_e}). As well see in coming sections, separating the variables allows for exploration without obscuring the ability to optimize rewards. It also let's us offer theoretical guarantees for exploration quality, rooted in dynamic programming.
 
-% ---------------------------------------------------------------------------
-\subsection*{The value of information}
-Shannon originally developed information theory without any sense of what information ``means''. He focused on simply transmitting symbols. The theory does need to know what those symbols refer to, and is therefore extremely general \citep{Shannon1948}. Many attempts have since been made to instill information theory with meaning \citep{Kolchinsky2018}, and with meaning value should naturally follow. Most of these attempts require a ``salience'', or ``relevance'', or ``training'' signal (where all three terms amount to near the same thing), while others have taken an evolutionary approach \citep{Kolchinsky2018}.  % TODO bump up refs
+\begin{equation}
+    V^{*}_{pi_R} = \sum_{t \in T, s \in S} r
+    \label{eq:total_r_2}
+\end{equation}
 
-Instead of trying to define meaning more broadly, we take an axiomatic approach to define value: \textit{listing key properties (axioms) that any measure of information value should have, and arrive a metric that satisfies these.} Put another way, we suggest that value can be strictly internal to an agent, but that meaning requires an explicit outside reference. This purely self-referential approach to information value is extremely general for the same reasons as Shannon's original theory. We only compare distributions, and do not consider what those distributions refer to.
+\begin{equation}
+    V^{*}_{pi_E} = \sum_{t \in T, s \in S} I
+    \label{eq:total_e}
+\end{equation}
 
-We begin formalizing the value of information with five axioms:
+\subsection*{Information is not a reward}
+Besides the empirical and computational case made above, a first principle analysis of information and reward shows they have opposing properties:
 
 \begin{enumerate}
-    \item The value of information depends \textit{only} on what is already known.
-    \item Information that is known completely has a value of zero.
-    \item Information value is non-negative. Learning something is at worst useless, but is never intrinsically harmful.
-    \item The greater the \textit{overall change} in uncertainty, the more value it should have.
-    \item More \textit{local} changes in uncertainty convey more informative value.
+    \item Rewards are a conserved resource. Information is not. 
+    \item The same kind of reward can be consumed many times without necessarily losing value\footnote{In practice, there are satiety effects but these are not a necessary part of the reward's value}. Information once learned has no value in being be learned again.
 \end{enumerate}
 
-\begin{figure}
-\includegraphics[width=0.4\textwidth]{figures/metrics_updown.eps}
-\caption{
-\textit{Change in probability and information value in an example discrete distribution. 
-\textbf{a.} Decrease in probability ($\Delta P$) beginning with high mass on ``1'' (shown in grey) ending in a nearly uniform distribution (yellow). 
-\textbf{b.} Increase in probability beginning with no mass on ``1'' (grey) ending with nearly all mass concentrated there (green). 
-\textbf{c.} The change in KL with $\Delta P$ for both distributions in \textit{a} and \textit{b}.}
-}
-\label{fig:metrics_updown}
-\end{figure}
+These can be seen more intuitively by example. In \texit{1.}, If a rat shares its potato chip with a cage-mate, it has less food for itself. Compare that chip to a new idea. Explaining a new idea to lab-mate does not require forgetting the idea yourself. In fact, it's often the opposite.
 
-To satisfy \textit{Axiom 1} we require that each agent contains a memory that is represented as a probability distribution. Information value then comes only from comparing changes in this distribution during learning. A memory is needed for \textit{Axiom 1} to work at all. A distributional form of memory lets us use the mathematics of information theory, a reasonable basis for a theory of information value\footnote{The axioms are however general enough to allow for non-Shannon formulations of information value.}. 
+In \texit{2.}, eating one potato chip often means wanting another. Where as if you know the capital of the United States, there is no value in being told the capital of the United States is Washington DC.
+
+These philosophical differences lead to mathematical ones. To evenly share a reward $r$ between $n$ others, $r_n = \frac{r}{n}$. Where as for information value can in principle be shared without loss, $I_n = I$. Likewise, if an animal is learning about some state of world $s$ the value of information about $s$ should decrease with time. Assuming learning can asymptote, then as $t \rightarrow \infty, I_s \rightarrow 0$. For rewards, value never changes. So as $t \rightarrow \infty, r_s \rightarrow r_s$. Though, including reward satiety effects may somewhat diminish $r_s$.
+
+For empirical, philosophical, and mathematical reasons we've suggested reward and information should be optimized separately. To make this suggestion formal in the next sections we \begin{enumerate*} \item derive a general measure information value using an axiomatic approach, \item derive a deterministic optimal policy to maximize this measure, and \item derive a new optimal learning rule which can simultaneously maximize information \textit{and} reward value \end{enumerate*}. We also show how efficient coding can lead to efficient re-exploration in environments that change with time. 
+
+    
+% ---------------------------------------------------------------------------
+\subsection*{If information is not a reward, how can we value it?}
+Shannon originally developed information theory without any sense of what information ``means''. He focused on simply transmitting symbols. To work the theory does need to know what those symbols refer to, and is therefore extremely general \citep{Shannon1948}. Many attempts have since been made to instill information theory with meaning \citep{Kolchinsky2018}, and with meaning value follows. Most of these attempts require a ``salience'', or ``relevance'', or ``training'' signal (where all three terms amount to near the same thing), while others have taken an evolutionary approach \citep{Kolchinsky2018}.  
+% TODO bump up refs
+
+Instead of trying to define meaning more broadly, we take an axiomatic approach to define value: \textit{listing key properties (axioms) that any naturalistic measure of information value should have, and arrive a metric that satisfies these}. Put another way, we suggest information value can be strictly internal to an agent, but that meaning requires an explicit outside reference. This purely self-referential approach to information value is extremely general for the same reasons as Shannon's original theory. We only compare distributions, and do not consider what those distributions refer to.
+
+We begin formalizing information value with five axioms:
+
+\begin{axiom}
+    The value of information about some event $x$ depends \textit{only} on what is already known about $x$ (and not $x$ itself).    
+    \label{ax:1}
+\end{axiom}
+\begin{axiom}
+    Information about some event $x$ that is known with no uncertain has a value of exactly 0.
+    \label{ax:2}
+\end{axiom}
+\begin{axiom}
+    The value of information about some event $x$ is non-negative. 
+    \label{ax:3}
+\end{axiom}
+\begin{axiom}
+    The value of information of information about some event $x$ should be be higher when its uncertainty increases $p(x)$ compared to when it decreases.
+    \label{ax:4}
+\end{axiom}
+\begin{axiom}
+    For a some set of events $X$, specific (or localized) changes to the local structure of the distribution $p(X)$ uncertainty are more valuable than global changes.
+    \label{ax:5}
+\end{axiom}
+
+Axiom~\ref{ax:1} closes value calculations over the agent making them. Informally, we capture the idea that ``subjective value depends only on the subject's own experience''.  In Axiom~\ref{ax:2} we capture the idea that, ``if you know something \texit{perfectly), there is no value in learning it again''. Axiom~\ref{ax:3} exists to impose that idea that, ``learning new information is always good, in principle''. In practice, of course, learning some new information can have undesirable consequences. But any these consequences are not part of the information itself, but live in its use. Axiom~\ref{ax:4} ensures information value tracks risk to animals surviving in the natural world, ``it's more valuable to know about an increase in uncertainty than an increase in certainty''. Axiom~\ref{ax:5} covers the precept that, ``specific information is more valuable than general information.'' 
+
+Here, we satisfy these Axioms using ideas from information theory. Our choice of the KL divergence (below) is not as far as we are aware a unique information theoretic solution; it's simply a satisfactory choice. 
+
+% ---------------------------------------------------------------------------
+\subsubsection*{Using the KL divergence.}
+Calculations in information theory are done over probability distributions $p(.)$, on some set of symbols $S$. Here, symbols are states of the world (a notion we fully formalize below). 
+
+\begin{definition}
+    We call a distribution over a set of states of the world $S$ a \textit{memory distribution} and denote it with $M$, where $M(s) = p(s), \ \text{where} s \in S$.    
+\end{definition}
+
+The Kullback--Leibler divergence satisfies all five value axioms (Eq.~\ref{eq:KL}). 
+
+\begin{equation}
+    KL(M', M) = \sum_{s \in S} M'(s) \text{log} \frac{M'(x)}{M(x)} 
+    \label{eq:KL}
+\end{equation}
+
+\begin{definition}
+    Let $E$ represent value of information, such that $E = KL(M', M)$ (Eq.~\ref{eq:KL}), where $M$ is some initial memory and $M'$ is an update memory after observing some state $s'$.
+\end{definition}
+
+Axiom~\ref{ax:1} is satisfied by limiting $E$ calculations to successive memories. Axiom~\ref{ax:2}-\ref{ax:2} are naturally satisfied by using KL. That is, $E = 0$ if and only if $M' = M$ and $E \geq 0$ for all pairs $(M, M')$. Likewise, KL is naturally monotonic to overall changes in probability by its log-likelihood ratio term, $log \frac{M'(x)}{M(x)}$. This satisfies Axiom~\ref{ax:4}. 
+
+
+To make Axioms 4-5 more intuitive, in Figures~\ref{fig:metrics_updown}-\ref{fig:metrics_specifity} we show how KL changes between an initial distribution (always shown in grey) and a variety of ``learned'' distribution (colored). For simplicity's sake we use a simple discrete distribution, representing the likelihood of the first four non-negative integers $(0,1,2,3)$. Though the illustrated patterns should hold true for any pair of distributions.
+
+Axiom~\ref{ax:4} can be seen at work in Figures~\ref{fig:metrics_likelihood}. and \ref{fig:metrics_specifity}. In Figure~\ref{fig:metrics_specifity} we see KL increases substantially more, for a the same local increase in probability, when that increase comes with a localized decrease, rather than with an even re-normalization. Thus in this example, the KL divergence exhibits the required sensitivity to local structural changes in probability distribution.
 
 \begin{figure}
 \includegraphics[width=0.4\textwidth]{figures/metrics_likelihood.eps}
@@ -123,8 +185,6 @@ To satisfy \textit{Axiom 1} we require that each agent contains a memory that is
 \label{fig:metrics_likelihood}
 \end{figure}
 
-In general we denote the memory distribution before learning as $M$, and after as $M'$. We use $E$ as general term for information value. To satisfy \textit{Axiom} 2 then, $E = 0$ if and only if $M' = M$. To satisfy \textit{Axiom 3}, $E \geq 0$ for all pairs $(M, M')$. In a probabilistic setting, \textit{Axiom 4} requires that $E$ is monotonically changes in probability mass or density, $\Delta M$.  To make this intuitive in Figures~\ref{fig:metrics_updown}-\ref{fig:metrics_specifity} we show how KL changes between an initial distribution (always shown in grey) and a variety of ``learned'' distribution (colored). For simplicity's sake we use a simple discrete distribution, representing the likelihood of the first four non-negative integers $(0,1,2,3)$. Though the illustrated patterns should hold true for any pair of distributions.
-
 \begin{figure}
 \includegraphics[width=0.4\textwidth]{figures/metrics_specifity.eps}
 \caption{
@@ -135,26 +195,12 @@ In \textbf{b.} the loss is focused locally on ``2''.
 \label{fig:metrics_specifity}
 \end{figure}
 
-In \textit{Axiom 5} we are trying to capture two related ideas, that can be intuitively stated as: 
-\begin{enumerate}
-    \item \textit{local losses are more important than local gains} and
-    \item \textit{it is good to know when the probability of some event increases, but it is even better to know when that increase comes with a specific local loss}
-\end{enumerate}. For more on this, see the next section and Figures~\ref{fig:metrics_likelihood} and \ref{fig:metrics_specifity} for concrete examples.
+To a skeptical reader, Axioms~\ref{ax:4} and~\ref{ax:5} may seem unnecessary. A simpler natural set of Axioms is to keep 1-3 but replace 4-5 with a new axiom that only requires information value track the total changes in probability flux with each new state observations, meaning $\text{E \sim \frac{dM}{ds}$. We considered this, but rejected it for two reasons. Axiom~\ref{ax:4} arose from the substantial experimental literature showing how animals are more sensitive to decreases in uncertainty \cite{TODO}. Our motivation for Axiom 5, was different and mostly intuitive. We found it inescapable as theorists and scientists to not favor more specific, therefore more actionable, information. 
+
+Still, the skeptical reader may be unconvinced and would hope for a simpler set. For them, we can report that the derivative $E = |frac{dM}{ds}|$ can be used in place of our Axioms~\ref{ax:4}-~\ref{ax:5}, and Theorems~\ref{TODO} re-proven with trivial changes.
 
 % ---------------------------------------------------------------------------
-\subsubsection*{Value and the KL divergence}
- The Kullback--Leibler divergence satisfies all five value axioms (Eq.~\ref{eq:KL}). 
-
-\begin{equation}
-    E = KL(M', M) = \sum_{s \in S} M'(s) \text{log} \frac{M'(x)}{M(x)} 
-    \label{eq:KL}
-\end{equation}
-
-When $M = M'$ then $KL(M', M) = 0$ and $KL(M', M) \geq 0$ for all well-formed probability distributions $(M', M)$. Likewise, KL is naturally monotonic to overall changes in probability by its log-likelihood ratio term, $log \frac{M'(x)}{M(x)}$. For example in Figure~\ref{fig:metrics_updown} we show how KL changes with changes in probability $\Delta P$ in a simple, if abstract, discrete distribution. \textit{Axiom 5} can be seen at work in Figures~\ref{fig:metrics_likelihood} and \ref{fig:metrics_specifity}. In Figure~\ref{fig:metrics_likelihood} we compare a local increase in probability mass, to a local decrease and show how KL rates the former are more valuable, consistent with \textit{Axiom 5}. In Figure~\ref{fig:metrics_specifity} we see KL increases substantially more, for a the same local increase in probability, when that increase comes with a localized decrease, rather than with an even re-normalization. Thus, the KL divergence exhibits the required sensitivity to local structural changes in probability distribution.
-
-
-% ---------------------------------------------------------------------------
-\subsection*{Maximizing information value}
+\subsection*{Finding the optimal policy}
 % Intro - the state space, E, and R. Max E. 
 % Show the formalism, gentle like.
 % Optimal substruture. E max as dynamic programming problem
@@ -203,23 +249,12 @@ Having established the optimal substructure of $P$, for an independent memory $M
     V(s_t) = F(s_t, a_t) + \gamma max_{a \in A} F(\Lambda(s_t, \pi(s_t)), \pi(s_t))
 \end{align}
 
-\subsubsection*{Non-convexity and divergence}
-\begin{theorem}
-    The assumption $\frac{dL_{\pi_{a}}}{ds} \leq 0$, can be replaced with $\mathbb{E} [\frac{dL_{\pi_{a}}}{ds} \leq 0]$ over an infinite time horizon, with an increase in generality.
-\end{theorem}
-\begin{proof}
-....
-\end{proof}
-
-We justify our constraints on $L$ in two ways. First, assuming convexity is common tactic used to make learning proofs tractable. Second, we argue that the value of information is only \textit{certainly useful} when an agent can learn about it's world. If learning begins to diverge, $\frac{dL_{\pi_{a}}}{ds} > 0$) $E(s, a)$ must also grow (see Eq~TODO). If noise or stimulus complexity drove a momentary loss of learning progress, this drive will lead the agent to ``resample'' these stimuli which max return $L$ to a negative trajectory. In this case, maximizing $E$ remains a sound objective. On the other hand, if $L$ diverged due a problem with the learning algorithm itself, say a bad seed in a deep reinforcement learning model, then maximising $E$ may exacerbate the problem leading to a potentially catastrophic feedback loop. In this case maximizing $E$ seems unsound, though it is not clear if any action policy would be better unless that is the agent has access to it's own learning rule allowing it to self-diagnosis the problem.
-
-\subsubsection*{Dependent states}.
 
 % ---------------------------------------------------------------------------
-\subsection*{Defining optimal exploration}
-There is no generally agreed upon definition of optimal exploration because, as we discuss above exploration, exploration has largely been viewed as an intractable problem when framed in terms of reward. 
+\subsubsection*{Optimal exploration}
+A policy that maximizes information value should also do a good job exploring. It would be ideal if the exploration pattern was also optimal, for some useful definition of optimal. But there is no agreed upon definition of optimal exploration because, as we discussed in the introduction, exploration is an intractable problem when framed in terms of reward seeking. 
 
-There are many intuitive options when trying to construct a general definition for optimal exploration. For example, different definitions might require all states are explored in the fixed number of steps, or with the least effort, or that while maximizing also maximizing rewards. Rather than try and argue for one or another view, we suggest a \textit{minimal definition for optimal exploration} that satisfies two criteria for finite environments. 
+There are many intuitive options when trying to construct a general definition for exploration. For example, different definitions might require all states are explored in the fixed number of steps, or with the least effort, or that while exploration is ordered to also maximize rewards. Rather than try and argue for one or another view, we suggest a \textit{minimal definition for optimal exploration} which that satisfies two criteria for finite environments. 
 
 \begin{enumerate}[noitemsep,wide=0pt,leftmargin=\dimexpr\labelwidth+2\labelsep\relax]
     \item Optimal exploration should visit all states of the environment at least once. 
@@ -236,7 +271,7 @@ While on the surface simple, our minimal criterion for exploration is not \texit
 
 
 % ---------------------------------------------------------------------------
-\subsection*{Learning to explore optimally} \label{sec:Obj1a}
+\subsubsection*{Greedy exploration} 
 Here we prove that policy which strictly maximizes information value can also guarantee optimal exploration. 
 
 Informally stated, to achieve optimal exploration an agent should \textit{try and learn everything possible} and, \textit{when there is nothing to learn, do nothing}. Using our definition of information value (Eq. \ref{eq:KL}) we formalize these as:
@@ -334,7 +369,35 @@ We continue to restrict $\pi_E$ to be deterministic. We also now restrict $\pi_R
 For every state $s$ the algorithm chooses an action $a \sim \pi_{\pi}(s)$, leading to a new state $s'$ by $\Lambda(s, a)$ and a (possible) reward $r \in \{0,1\}$. In this arrangement both $\pi_E$ and $\pi_R$ are updated by their respective learning rules with each transition set $(s, a, s', r)$. That is, learning can be done in parallel, making it cooperative, but action control is adversarial governed by the inequality in Eq~\ref{eq:meta_greedy}.
 
 \section{Discussion}
+
+\subsection*{The assumptions on learning and memory}.
+\subsubsection{Non-convex learning}
+We justify our constraints on $L$ in two ways. First, assuming convexity is common tactic used to make learning proofs tractable. Second, we argue that the value of information is only \textit{certainly useful} when an agent can learn about it's world. If learning begins to diverge, $\frac{dL_{\pi_{a}}}{ds} > 0$) $E(s, a)$ must also grow (see Eq~TODO). If noise or stimulus complexity drove a momentary loss of learning progress, this drive will lead the agent to ``resample'' these stimuli which max return $L$ to a negative trajectory. In this case, maximizing $E$ remains a sound objective. On the other hand, if $L$ diverged due a problem with the learning algorithm itself, say a bad seed in a deep reinforcement learning model, then maximizing $E$ may exacerbate the problem leading to a potentially catastrophic feedback loop. In this case maximizing $E$ seems unsound, though it is not clear if any action policy would be better unless that is the agent has access to it's own learning rule allowing it to self-diagnosis the problem.
+
+% TODO: keep this? drop this?
+\begin{theorem}
+    The assumption $\frac{dL_{\pi_{a}}}{ds} \leq 0$, can be replaced with $\mathbb{E} [\frac{dL_{\pi_{a}}}{ds} \leq 0]$ over an infinite time horizon, with an increase in generality.
+\end{theorem}
+\begin{proof}
 ....
+\end{proof}
+
+
+\subsubsection*{Dependent states}.
+....
+
+
+\subsection*{Curiosity and value}.
+% TODO section on curiosity:
+
+A skeptical reader would suggest we're swapping an accepted term \textit{curiosity}, with another \textit{information value}. We acknowledge this, and have wondered it ourselves! It's that intuitively, curiosity often seems to dim more quickly than certain knowledge reaches its full brightness. That is, learning needs more than curiosity. Learned information has to have its own independent value. This is, in the end, why we formalize the value of information using simple axions. 
+
+\subsection*{Learning structure and value}.
+We've explored only a simple memory model. 
+
+.... Bayes, trajectories, and other model building.
+
+By redefining the problem of exploration and in defining the value axioms, which we known have multiple possible solutions, we offer a way to these methods for model-building and fold them seamlessly and optimally into a value optimization framework. 
 
 \bibliography{library}
 \end{document}
