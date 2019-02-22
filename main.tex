@@ -10,6 +10,7 @@
 
 \usepackage{amsthm}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \DeclareMathOperator*{\argmax}{argmax}
 
 \newtheorem{corollary}{Corollary}
@@ -123,7 +124,7 @@ Shannon originally developed information theory without any sense of what inform
 
 Instead of trying to define meaning more broadly, we take an axiomatic approach to define value: \textit{listing key properties (axioms) that any naturalistic measure of information value should have, and arrive a metric that satisfies these}. Put another way, we suggest information value can be strictly internal to an agent, but that meaning requires an explicit outside reference. This purely self-referential approach to information value is extremely general for the same reasons as Shannon's original theory. We only compare distributions, and do not consider what those distributions refer to.
 
-We begin formalizing information value with five axioms:
+We begin formalizing information value with four axioms:
 
 \begin{axiom}
     The value of information about some event $x$ depends \textit{only} on what is already known about $x$ (and not $x$ itself).    
@@ -138,17 +139,15 @@ We begin formalizing information value with five axioms:
     \label{ax:3}
 \end{axiom}
 \begin{axiom}
-    The value of information of information about some event $x$ should be be higher when its uncertainty increases $p(x)$ compared to when it decreases.
+    For a some set of events $X$, specific (or localized) changes to the local structure of the distribution $p(X)$ uncertainty are more valuable than global changes.
     \label{ax:4}
 \end{axiom}
-\begin{axiom}
-    For a some set of events $X$, specific (or localized) changes to the local structure of the distribution $p(X)$ uncertainty are more valuable than global changes.
-    \label{ax:5}
-\end{axiom}
 
-Axiom~\ref{ax:1} closes value calculations over the agent making them. Informally, we capture the idea that ``subjective value depends only on the subject's own experience''.  In Axiom~\ref{ax:2} we capture the idea that, ``if you know something \texit{perfectly}, there is no value in learning it again''. Axiom~\ref{ax:3} exists to impose that idea that, ``learning new information is always good, in principle''. In practice, of course, learning some new information can have undesirable consequences. But any these consequences are not part of the information itself, but live in its use. Axiom~\ref{ax:4} ensures information value tracks risk to animals surviving in the natural world, ``it's more valuable to know about an increase in uncertainty than an increase in certainty''. Axiom~\ref{ax:5} covers the precept that, ``specific information is more valuable than general information.'' 
+Axiom~\ref{ax:1} closes value calculations over the agent making them. Informally, we capture the idea that ``subjective value depends only on the subject's own experience''.  In Axiom~\ref{ax:2} we capture the idea that, ``if you know something \texit{perfectly}, there is no value in learning it again''. Axiom~\ref{ax:3} exists to impose that idea that, ``learning new information is always good, in principle''. In practice, of course, learning some new information can have undesirable consequences. But any these consequences are not part of the information itself, but live in its use. Axiom~\ref{ax:4} covers the precept that, ``specific information is more valuable than general information.'' 
 
-Here, we satisfy these Axioms using ideas from information theory. Our choice of the KL divergence (below) is not as far as we are aware a unique information theoretic solution; it's simply a satisfactory choice. 
+Here, we satisfy these Axioms using information theory. Our choice of the KL divergence (below) is not as far as we are aware a unique information theoretic solution; it's simply a satisfactory choice. 
+% TODO: https://twitter.com/simondedeo/status/993881889143447552?lang=en
+% use the above tweet to show how KL is useful as info gain, in predicting attention, etc.
 
 % ---------------------------------------------------------------------------
 \subsubsection*{Using the KL divergence.}
@@ -158,7 +157,7 @@ Calculations in information theory are done over probability distributions $p(.)
     We call a distribution over a set of states $S$ a ``memory distribution'' and denote it with $M$, where $M(s) = p(s), \ \text{where} \ s \in S, \ p(.) \rightarrow (0, 1)$.
 \end{definition}
 
-The Kullback--Leibler divergence satisfies all five value axioms (Eq.~\ref{eq:KL}). 
+The Kullback--Leibler divergence satisfies all four value axioms (Eq.~\ref{eq:KL}). 
 
 \begin{equation}
     KL(M', M) = \sum_{s \in S} M'(s) \text{log} \frac{M'(x)}{M(x)} 
@@ -169,21 +168,11 @@ The Kullback--Leibler divergence satisfies all five value axioms (Eq.~\ref{eq:KL
     Let $E$ represent value of information, such that $E = KL(M', M)$ (Eq.~\ref{eq:KL}), where $M$ is some initial memory and $M'$ is an update memory after observing some state $s'$.
 \end{definition}
 
-Axiom~\ref{ax:1} is satisfied by limiting $E$ calculations to successive memories. Axiom~\ref{ax:2}-\ref{ax:2} are naturally satisfied by using KL. That is, $E = 0$ if and only if $M' = M$ and $E \geq 0$ for all pairs $(M, M')$. Likewise, KL is naturally monotonic to overall changes in probability by its log-likelihood ratio term, $log \frac{M'(x)}{M(x)}$. This satisfies Axiom~\ref{ax:4}. 
+Axiom~\ref{ax:1} is satisfied by limiting $E$ calculations to successive memories. Axiom~\ref{ax:2}-\ref{ax:2} are naturally satisfied by using KL. That is, $E = 0$ if and only if $M' = M$ and $E \geq 0$ for all pairs $(M, M')$. KL is naturally monotonic to overall changes in probability by its log-likelihood ratio term, $log \frac{M'(x)}{M(x)}$. 
 
 To make Axioms 4-5 more intuitive, in Figures~\ref{fig:metrics_updown}-\ref{fig:metrics_specifity} we show how KL changes between an initial distribution (always shown in grey) and a variety of ``learned'' distribution (colored). For simplicity's sake we use a simple discrete distribution, representing the likelihood of the first four non-negative integers $(0,1,2,3)$. Though the illustrated patterns should hold true for any pair of distributions.
 
-Axiom~\ref{ax:4} can be seen at work in Figures~\ref{fig:metrics_likelihood}. and \ref{fig:metrics_specifity}. In Figure~\ref{fig:metrics_specifity} we see KL increases substantially more, for a the same local increase in probability, when that increase comes with a localized decrease, rather than with an even re-normalization. Thus in this example, the KL divergence exhibits the required sensitivity to local structural changes in probability distribution.
-
-\begin{figure}
-\includegraphics[width=0.4\textwidth]{figures/metrics_likelihood.eps}
-\caption{
-\textit{Uncertainty and information value.
-\textbf{a.} Increasing probability (red) compared to uniform (or maximum entropy) distribution (grey).
-\textbf{b.} Decreasing probability (purple).
-\textbf{c.} The change in KL as the probability density changes from the reference (grey), either increasing or decreasing the likelihood of a ``1'' appearing.}}
-\label{fig:metrics_likelihood}
-\end{figure}
+In Figure~\ref{fig:metrics_specifity} we see KL increases substantially more, for a the same local increase in probability, when that increase comes with a localized decrease, rather than with an even re-normalization. Thus in this example, the KL divergence exhibits the required sensitivity to local structural changes in probability distribution in Axiom~\ref{ax:4}.
 
 \begin{figure}
 \includegraphics[width=0.4\textwidth]{figures/metrics_specifity.eps}
@@ -196,40 +185,55 @@ In \textbf{b.} the loss is focused locally on ``2''.
 \end{figure}
 
 % TODO: move this to the discussion?
-To the skeptical reader Axioms~\ref{ax:4} and~\ref{ax:5} may seem too opinionated. A simpler natural set of Axioms is to keep 1-3 but replace 4-5 with a new Axiom 4 that only requires information value track the total change in probability flux, that is $\text{E \sim dP = \frac{dM}{ds}}$. We considered this, but rejected it after much contemplation. We feel this simpler view is incomplete. 
-
-Inclusion of Axiom~\ref{ax:4} arose from the substantial experimental literature showing how animals are more sensitive to decreases in uncertainty \cite{TODO} and increases. Our motivation for Axiom~\ref{ax:5} was different and mostly intuitive. As theorists and scientists how can we not favor more specific, therefore more actionable, information. 
-
-Still the skeptical reader may be unconvinced. They would hope for a simpler set. For them, we report that this alternate Axiom 4, satisfied with the absolute value of derivative ($E_{\text{alt}} = |\frac{dM}{ds}|$), can be used in place of the KL divergence, and Theorems~\ref{TODO} re-proven with only trivial changes. That is, using $E_{\text{alt}}$ will not change the asymptotic properties of the optimal policies we develop (not shown). It only changes the optimal order in which states are explored, and the therefore that rate at which an the optimal will converge (if it can converge). 
+To the skeptical reader Axioms~\ref{ax:4} may seem too opinionated. A simpler natural set of Axioms is to keep 1-3 but replace~\ref{ax:4} with a new Axiom  that only requires information value track the total change in probability flux, that is $\text{E \sim dP$. For this metric, the curves in Figure~\ref{fig:metrics_specifity} overlap. We considered this, but rejected it after much contemplation. We feel this simpler view is incomplete. As theorists and scientists we favor more specific, therefore more actionable, information. 
 
 
 % ---------------------------------------------------------------------------
 \subsection*{Finding the optimal policy}
-% Intro - the state space, E, and R. Max E. 
-% Show the formalism, gentle like.
-% Optimal substruture. E max as dynamic programming problem
-% Bellman form
-To derive an optimal policy for maximizing information value we borrow some formalisms from reinforcement learning, and it's parent dynamic programming. We say an agent occupies a state $s$, which in practice can be a simple as their position in the world, the current visual input, or any other combination of sense information. To keep the theory tractable, we assume that the total number of states an animal might visit $S$ is finite. Formally, $s\ in \textbf{S}; \textbf{S} \in \mathbb{R}^N$, where we use real numbers to represent states and $N$ is the total number of states. We also limit the number of actions $a$ animal might take to finite real set, $a \in \textbf{A}; \textbf{A} \in \mathbb{R}^K$, where there are $K$ actions. 
+In studying systems for reinforcement learning it is standard to embed the learning problem into a Markov decision space. In this space, each state transition $s_t \rightarrow s_{t+1}$ is independent of the history of transition, and where each transition generates a reward $r$ again independent of the history of states. Our definition of information value $E$ violates  the formalism for $r$, in the $E$ does dependent on past states. However $E$ is calculated iteratively, given an $M$ and a pair pf states $(s, s'$, and it yields a non-negative value with each iteration (i.e $E_{(s,s')} \ge 0$.  This leaves open the possibility of finding an optimal iterative learning rule for maximizing using dynamic programming. 
 
-When deciding what action to take, we say an that animal consults its policy function, $\pi$. Formally, we let $\pi$ be a policy function that maps a state $s$ to an action $a$, $\pi : s \rightarrow a$, such that $s \in S, a \in A$.
+We say at point in time $t$ an agent occupies a state $s$. In practice $s$ may be a as simple as their position, the current visual input, or any other combination of sense information. To keep the theory tractable, we assume that the total number of states an animal might visit $S$ is finite. Formally then, $s\ in \textbf{S}; \textbf{S} \in \mathbb{R}^N$, where we use real numbers to represent states and $N$ is the total number of states. Again to keep analysis the analysis tractable we limit the number of actions $a$ animal might take to finite real set, $a \in \textbf{A}; \textbf{A} \in \mathbb{R}^K$, where there are $K$ actions. 
 
-How an animal acts on the world, and how the environment responds, is in reality complex and depends on a lot of local context. % TODO make this an exmample or more concrete....
- We abstract over this detail and assert there exists a transition function $\Lambda$ which combines the current state $s$ and an action $a$ to generate some new state $s'$. Formally, let $\Lambda$ be a transition function which maps a $(s,a)$ 2-tuple to a new state $s'$, $\Lambda : (s, a) \rightarrow s'$. 
+To take an action, we say an that animal consults its policy function, $\pi$. 
 
-A policy function and transition function combine to generate a path $P$, finite ordered collections of states $s$, such that $s \in S$ and the length of $T = |P|$ where we use $t$ to index into $P$. A path $P$ can also be defined recursivly as, $P(t+1) \leftarrow \Lambda(P(t), \pi(P(t)))$.
+\begin{definition}
+    Let $\pi$ be a policy function that maps a state $s$ to an action $a$, $\pi : s \rightarrow a$, such that $s \in S, a \in A$.
+\end{definition}
 
-Learned information is said to be stored in a finite perfect (i.e., noiseless) memory, denoted by $\textbf{M}$. As $M$ is probability distribution, we let $M$ be a table of independent states $S$ and actions $A$, such that $M \in (0, 1)^{N\text{x}K}$. % TODO: Do I need to formalize independent somehow?
+State transitions are modeled with a transition function $\Lambda$ which combines the current state $s$ and an action $a$ to generate some new state $s'$.
 
-The memory $M$ is update with a loss function $L$, subject to $min_a L(M, {s})$. Formally, let $L$ be a memory function that maps a memory $M$ into itself, given some observed state $s$, $L : s, M \rightarrow M$. 
+\begin{definition}
+    Let $\Lambda$ be a transition function which maps a $(s,a)$ 2-tuple to a new state $s'$, $\Lambda : (s, a) \rightarrow s'$.     
+\end{definition}
 
+A policy function and transition function combine to generate a path $P$.
 
-\textit{With a loss of generality}, we assume that $L(.)$ is convex, and that every observation $s$ leads to learning progress unless $L(s) = 0$. That is, the gradient of $L$ is, $\frac{dL_{\pi_{a}}}{ds} \leq 0$ for all $s \in P$. These are strong statements on the animal's ability to learn from it's world. They allow us to develop several critical theorems, but might seem overly restrictive.
+\begin{definition}
+    Let $P$ be a finite ordered collections of states $s$, such that $s \in S$ and the length of $|P| \leq \infty$. A path $P$ can also be defined recursively as, $P(t+1) \leftarrow \Lambda(P(t), \pi(P(t)))$.
+\end{definition}
 
-We discuss our measure of information value $E$ in detail above. But for completeness, let $E$ be the information value between two successive memories, $M$ and $M'$ corresponding to states $s$ and $s'$, defined by the KL divergence so $E(s) := KL(L(s, M), M) = KL(M', M) = \sum_{s \in S} M'(s) \text{log} `\frac{M'(s)}{M(s)} $. 
+We use $t$ to index into $P$. 
 
-Our formalism for information value yields a non-zero positive number with every new observation $s'$, unless learning has already converged. This allows us to consider the problem of maximizing $E$ from a purely iterative point of view, i.e. dynamic programming. There is no need for trying to solve the protracted credit assignment often needed in reinforcement learning.
+Learned information is said to be stored in a finite perfect (i.e., noiseless) memory, denoted by $\textbf{M}$. 
 
-\texit{Note}: when discussing value optimization in general, and the exploration-exploitation dilemma in particular, it is standard to embed the learning problem in a Markov decision space. In this space, each transition is independent of the history of transitions, and that each each yields a value $V$ or reward $R$, where $R$ or $V$ are not dependent on the state of the agent itself. Our definition of information value $E$ violates both these formalisms. However the information value is calculated piece-wise, iteratively, between observations, which leaves open the possibility of finding an optimal iterative learning rule. 
+\begin{definition}
+    Let $M$ is probability distribution, we let $M$ be a table of independent states $S$ and actions $A$, such that $M \in (0, 1)^{N\text{x}K}$. % TODO: Do I need to formalize independent somehow?
+\end{definition}
+
+\begin{definition}
+    Let $\ell$ be a memory function that maps a memory $M$ into itself, given some observed state $s$, $L : s, M \rightarrow M$. 
+\end{definition}
+
+The memory $M$ is update with a loss function $\mathcal{L}$, subject to $min \mathcal{L} (M, {s})$. 
+
+\textit{With a loss of generality}, we assume that ${\mathcal{L}$ is convex, and that every observation $s$ leads to learning progress unless $L(s) = 0$. That is, the gradient of $L$ is, $\frac{dL_{\pi_{a}}}{ds} \leq 0$ for all $s \in P$. These are strong statements on the animal's ability to learn from it's world. They allow us to develop several critical theorems, but might seem overly restrictive.
+
+We discuss our measure of information value $E$ in detail above. But for completeness: 
+
+\begin{definition}
+    Let $E$ be the information value between two successive memories, $M$ and $M'$ corresponding to states $s$ and $s'$, defined by the KL divergence so $E(s) := KL(L(s, M), M) = KL(M', M) = \sum_{s \in S} M'(s) \text{log} `\frac{M'(s)}{M(s)} $.     
+\end{definition}
+
 
 \begin{theorem}
     Assuming a independent state memory $M$ and a value function $E$, a path $P$ has optimal substructure for a optimal policy $\pi_E$.
