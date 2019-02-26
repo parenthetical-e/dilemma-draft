@@ -215,7 +215,7 @@ State transitions are modeled with a transition function $\Lambda$ which combine
 A policy function and transition function combine to generate a path $P$. We use $t$ to index into $P$. 
 
 \begin{definition}
-    Let $P$ be a finite ordered collections of actions $a$, such that $a \in A$ and the length of $P$ is $T$. We define $P$ recursively, $P(t+1) \leftarrow \Lambda(P(t), \pi(P(t)))$.
+    Let $P$ be a finite ordered collections of states $s$, such that $s \in S$ and the length of $P$ is $T$. We define $P$ recursively, $P(t+1) \leftarrow \Lambda(P(t), \pi_E(P(t)))$.
 \end{definition}
 
 Learned information is stored in a finite perfect (i.e., noiseless) memory $M$. 
@@ -281,7 +281,7 @@ but is not guaranteed in the more general space we need to work with in estimati
 
 
 % --------------------------------------------------------------------------
-\subsubsection*{A Bellman derivation}
+\subsubsection*{An optimal recursive policy}
 In terms of the payout $F$ and policy $\pi_E$ and some initial memory $M_0$ the optimal value is given by Eq~\ref{eq:V_star}.
 
 \begin{equation} \label{eq:V_star}
@@ -308,25 +308,22 @@ From the final entry in Eq.~\ref{eq:bellman_seq}, we see how given some initial 
 
 % ---------------------------------------------------------------------------
 \subsubsection*{A definition of optimal exploration}
-When optimal exploration is intractable by definition there can be no optimal answer. It's clear though that if we are to suggest animals maximize information value, that policy should should also do a provably good job exploring. It would be ideal if the exploration pattern was also, in some sense optimal. But there is no agreed upon definition of optimal exploration because, of course, exploration is an intractable problem when framed in terms of reward seeking.
-
-There are many intuitive options when trying to construct a general definition for exploration. For example, different definitions might require all states are explored in the fixed number of steps, or with the least effort, or that while exploration is ordered to also maximize rewards. Rather than try and argue for one or another view, we suggest a \textit{minimal definition for optimal exploration} which that satisfies two criteria for finite environments. 
+There are many intuitive options when trying to construct a general definition for optimal exploration. For example, one might require all states are explored in the fixed number of steps, or with the least effort, in the shortest possible path, or that prefer that exploration also maximizes rewards. Rather than try and argue for one or another view, we suggest a \textit{minimal definition for optimal exploration} which that satisfies two criteria for finite environments. 
 
 \begin{enumerate}[noitemsep,wide=0pt,leftmargin=\dimexpr\labelwidth+2\labelsep\relax]
-    \item Optimal exploration should visit all states of the environment at least once. 
+    \item Optimal exploration should visit all states of an environment at least once. 
     \item Exploration should cease, but \textit{only} once learning about the environment has plateaued. 
 \end{enumerate}
 
-Criterion 1 is required because it's converse is absurd. An exploration which leaves some states unseen isn't complete, and how can an incomplete exploration be optimal.
+\textit{Criterion 1} is required because as its converse is absurd. An exploration which leaves some states unseen isn't complete, and how can an incomplete exploration be optimal.
 
-Criterion 2 might at first seem unnecessary; Exploration, by definition, seeks the unknown. It does not necessarily need to terminate. If the environment changes too fast, the agent has a limited memory or has no memory at all, the optimal choice would be endless exploration. If, however, the environment is learnable and stationary, then an optimal exploration policy should cease once the environment is learned well enough (formalized below). Put more simply, exploration is redundant if there is nothing new to learn.
+\textit{Criterion 2} might at first seem unnecessary; Exploration, by definition, seeks the unknown. It does not necessarily need to terminate. If the environment changes too fast, the agent has a limited memory or has no memory at all, the optimal choice would be endless exploration. If, however, the environment is learnable and stationary, then an optimal exploration policy should cease once the environment is learned well enough (formalized below). Put more simply, exploration is redundant if there is nothing new to learn.
 
-For brevity we will refer to our minimal definition as \textit{optimal exploration} and use $\pi^{\dagger}$ to denote any action policy which satisfies this definition.
+For brevity we will refer to our minimal definition as \textit{optimal exploration} and use $\pi^{\dagger}$ to denote any action policy which satisfies it.
 
-Criterion 1 should be satisfied by nearly any random policy, given a sufficiently long time to explore. %TODO explain why w/ intuition
+Criterion 1 should be satisfied by nearly any random policy, given a sufficiently long time to explore.
 
 Our criterion 2 for exploration is not \textit{guaranteed} to be satisfied by existing approaches.  For example, ... % TODO more on this. How do epsilon, softmax, H max, all fail..
-
 
 To test for satisfaction of criterion 2, we introduce a set $Z$. 
 
@@ -334,62 +331,63 @@ To test for satisfaction of criterion 2, we introduce a set $Z$.
     Let $Z$ be set of all visited states, where $Z_0$ is the empty set $\{\}$ and $Z$ is built iteratively over a path $P$, such that $Z = \{s | s \in P\ \text{and}\ s \not\in Z\}$.    
 \end{definition}
 
+
 % ---------------------------------------------------------------------------
 \subsubsection*{A greedy policy explores optimally}
-We've used dynamic programming to derive an optimal $E$ maximization policy. It would be ideal is this policy also lead to optimal exploration. Here we prove it does, with no added assumptions. In sum, we will show $\pi_E$ satisfies the following three objectives:
+We've used dynamic programming to derive an optimal $E$ maximization policy. It would be ideal is this policy also lead to optimal exploration. Here we prove it does, but must make some additional assumptions about the loss function $\mathcal{L}$. We will show $\pi_E$ satisfies the following two objectives:
 
 \begin{enumerate}[noitemsep,wide=0pt,leftmargin=\dimexpr\labelwidth+2\labelsep\relax]
-    \item The goal of any agent is to learn an action policy $\pi_E$ that maximizes total information value, $\argmax_{\pi_E} \ \sum_S \sum_T E$, over all states $s \in S$ and times $t \in T$.
     \item The policy $\pi_E$ must visit each state in $S$ at least once. That is, $Z = S$.
     \item Under some learning assumptions, the action policy $\pi_E$ should ensure $E$ is decreasing with time, $(E_t < E_{t-1}, ...)$. That is, as $t \rightarrow \infty,\ E_t \rightarrow \epsilon$. This ensures the system will move to its null action policy by, $\pi_E \rightarrow \pi_{\emptyset} \ \text{when} \ E_t \leq \epsilon$ where $E_0 > \epsilon \geq 0$.
 \end{enumerate}
 
-\begin{theorem}{Visitation (completeness and uniqueness)}
-A greedy policy $\pi$ is the only deterministic policy which ensures all states in $S$ are visited, such that $Z = S$.
-\end{theorem}
-
- % TODO is this structured right? Lemmas and all?
-\begin{proof}
-    \textbf{Definition}: 
+\begin{definition} \label{def:ineq}
     \begin{align}
         a \leq b \Leftrightarrow \exists c; b = a + c \\
         a > b \leftrightarrow (a \neq b) \wedge (b \leq a) 
     \end{align}
+\end{definition}
 
-    \begin{lemma}
-    Let $\textbf{E} = (E_1, E_2, ...)$ be ranked series of $E$ values for all states $S$, such that $(E_1 \geq E_2, \geq ...)$. To swap any pair of values ($E_i \geq E_j$) so ($E_i \leq E_j$) be definition $E_i - c = E_j$.  
+\begin{theorem}{Visitation (completeness and uniqueness)} \label{theorem:Z}
+A greedy policy $\pi$ is the only deterministic policy which ensures all states in $S$ are visited, such that $Z = S$.
+\end{theorem}
+\begin{proof}    
+    Let $\textbf{E} = (E_1, E_2, ...)$ be ranked series of $E$ values for all states $S$, such that $(E_1 \geq E_2, \geq ...)$. To swap any pair of values ($E_i \geq E_j$) so ($E_i \leq E_j$) by Def.~\ref{def:ineq} $E_i - c = E_j$.  
 
-    \textbf{Recall}: $\delta E(s) < 0$ 
+    Therefore, again by Def.~\ref{def:ineq}, $\exists \int \delta E(s) \rightarrow -c$. 
 
-    Therefore, $\exists \int \delta E(s) \rightarrow -c$. 
-    \end{lemma}
+    \textit{Recall}: $\delta < 0$ 
 
-    \begin{lemma}
-    Conversely, if we wish to swap ($E_i \leq E_j$) so ($E_i \geq E_j$) by definition $\not \exists c; E_i + c = E_j$, as $\not \exists \int \delta E(s) \rightarrow c$. 
-    \end{lemma}
+    However if we wished to instead swap ($E_i \leq E_j$) so ($E_i \geq E_j$) by definition $\not \exists c; E_i + c = E_j$, as $\not \exists \int \delta \rightarrow c$. 
 
-    % TODO This is too loose.
-    To complete the direct proof, assume that some policy $pi^* \neq pi$. The policy $\pi^*$ must choose between $k$th best options, eventually after $T$ the $k$ options will be 0, but by Lemma TODO the top $k-1$ are inaccessible. Therefore, $pi^* \rightarrow Z /neq S$.
+    To complete the proof, assume that some policy $\hat \pi_E \neq \pi^*_E$. By definition policy $\hat \pi_E$ can any action but the maximum leaving $k-1$ options. Eventually as $t \rightarrow T$ the only possible swap is between the max option and the $kth$ but as we have already proven this is impossible as long as $\delta < 0$. Therefore, the policy $\hat \pi_E$ will leave at least 1 option unexplored and $S \neq Z$.
 \end{proof}
 
 \begin{theorem}{Convergence}
-    A deterministic greedy policy $\pi_E$ will resample $S$ until convergence at $\sum_{s \in S} E < \epsilon$.
+    Assuming a deterministic transition function $\Lambda$, a greedy policy $\pi_E$ will resample $S$ until convergence at $\sum_{s \in S} E < \epsilon$.
 \end{theorem}
 \begin{proof}
-    In theorem TODO, it was proven that deterministic greedy policy will visit each state in $S$ over $T$ trials, unless $\sum_{s \in S} E < \epsilon$. 
+    \textit{Recall}: $\delta < 0$. 
+
+    Each time $\pi^*_E$ visits a state $s$, so $M \rightarrow M'$, $F(M', a_{t+1}) < F(M, a_t)$
+
+    In Theorem~\ref{theorem:Z} we proved only deterministic greedy policy will visit each state in $S$ over $T$ trials.
     
-    If we assume that over $T + \delta T$ that $\sum_{s \in S} E > \epsilon$ a deterministic greedy will then revisit each state over other interval $T + \delta T$. By induction then, for any later interval $\delta T$ a deterministic greedy policy will revisit all states until (by definition) $\sum_{s \in S} E < \epsilon$.
+    By induction, if $\pi^*+E$ will visit all $s \in S$ in $T$ trials, it will revisit them in $2T$, therefore as $T \rightarrow \infty$, $E \rightarrow 0$. 
 \end{proof}
 
+% TODO talk about epsilon, and stochastic \Lambda.
 
-Exploration is often considered to be a stochastic process. An animal makes a weighted random choice to try and maximize rewards in the long term. We've shown here that from the point of view of information value, a noisy policy would be suboptimal; a deterministic greedy policy is optimal.
+% TODO this needs to be cleaned and tightened up!
+Exploration is often treated as a stochastic process, where an animal makes a weighted random choice to try and maximize rewards in the long term. We've shown here that from the point of view of information value, a noisy policy would be suboptimal; a deterministic greedy policy is optimal.
 
-We conjecture that a greedy $E$ policy also leads to the minimal possible number of samplings strategy for any convex loss function $L$. We prove this in the limited case of a ``perfect'' one-shot learning system.
-
+We conjecture that a greedy $E$ policy also leads to the minimal possible number of samplings strategy for any convex loss function $L$. We prove this in the limited case of a ``perfect'' one-shot learning system....
 % TODO: one shot proof
+
 
 % ---------------------------------------------------------------------------
 \subsection*{A way around the dilemma}
+% HERE
 Here we derive new meta-policy $\pi_{\pi}$ which optimally maximizes information value, shows optimal exploration, and maximize rewards (Eq.~\ref{eq:meta_greedy}).
 
 \begin{equation}
