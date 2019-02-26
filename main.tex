@@ -290,18 +290,19 @@ In terms of the payout $F$ and policy $\pi_E$ and some initial memory $M_0$ the 
 
 Knowing the memory $M$ has optimal substructure (Theorem~\ref{theorem:opt_sub}) the valuation of $V_{\pi_E^*}(s_0)$ can be decomposed into a series of local greedy decisions.
 
-\begin{equation} \label{eq:bellman}
+\begin{equation} \label{eq:bellman_seq}
     \begin{split}
         V^*_{\pi_E}(M_0) &= \max_{\{a\}_{t \in T}} \Big [\sum_{t \in T} F(M_t, a_t)\Big ]\\
                          &= \max_{\{a\}_{t \in T}} \Big [F(M_0, a_0) + \sum_{t \in T}F(M_{t+1}, a_{t+1})\Big ]\\
-                         &= F(M_0, a_0) + \max_{\{a\}_{t \in T}} \Big [\sum_{t \in T} F(M_{t+1}, a_{t+1}) \Big ]
+                         &= F(M_0, a_0) + \max_{\{a\}_{t \in T}} \Big [\sum_{t \in T} F(M_{t+1}, a_{t+1}) \Big ]\\
+                         &= F(M_0, a_0) + V^*_{\pi_E}(M_{t+1}) + V^*_{\pi_E}(M_{t+2}),\ \ldots
     \end{split}
 \end{equation}
 
-The final (Bellman) form in Eq.~\ref{eq:bellman} can be more compactly restated in terms of only $s_t$.
+From the final entry in Eq.~\ref{eq:bellman_seq}, we see how given some initial memory $M_0$, action $a_0$, we can write down an optimal recursive definition for $V^*_{\pi_E}(M_0)$ (Eq.~\ref{eq:bellman_iter}).
 
-\begin{equation} \label{eq:e_policy}
-    V(s_t) = \max_a\ [ E(s) + V^*_E(\Lambda(s_t, \pi^*_E(s_t)))]
+\begin{equation} \label{eq:bellman_iter}
+    V^*_{\pi_E}(M_0) = F(M_0, a_0) + \max_{a_1} \Big [F(M_1, a_1) \Big ]
 \end{equation}
     
 
