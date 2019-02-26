@@ -248,52 +248,57 @@ We discuss our measure of information value $E$ in detail in the previous sectio
 
 For consistency with dynamic programming and the Bellman equation, we make a change of notation for $E$ by introducing a payoff function $F$.
 
-\begin{definition}
-    Let $F$ be a payoff function for $E$ such that $F(M_t, a_t) = E(M', M)$, subject to the constraints $a_t \in \pi(s_t)$, $s_{t+1} = \Lambda(s_t, a_t)$, $M_{t+1} = J(M_t, s_{t+1})$, $\forall t = 0,1,2,\ldots$.
-\end{definition}
+\begin{equation}
+    \begin{split} \label{eq:V}
+    F(M_t, a_t) = E(M_{t+1}, M_{t})\\
+    \text{subject to the constraints} \\
+    a_t = \pi_E(s_t), \\
+    s_{t+1} = \Lambda(s_t, a_t),\\ 
+    M_{t+1} = J(M_t, s_{t+1}),\\ 
+    \forall t = (0,1,2,\ldots)
+    \end{split} 
+\end{equation}
+
+The total information value is then simply the sum of all payout functions for some policy $\pi_E$ observation period $T$. 
+
+\begin{equation} \label{eq:V}
+    V_{\pi_E} = \sum_{t \in T} F(M_t, a_t)
+\end{equation}
 
 % --------------------------------------------------------------------------
 \subsubsection*{A proof of optimal substructure}
-A first step in solving a dynamic programming problem is isolating the relevant subproblem, and proving it has an optimal substructure. This means that problem can be decomposed into a iteratively optimal series. This property in inherent in the Markov Space % TODO cite, 
+A first step in solving a dynamic programming problem is isolating the relevant subproblem, and proving it has an optimal substructure. Which means the problem can be decomposed into an iteratively optimal series. This property in inherent in the Markov Space % TODO cite, 
 but is not guaranteed in the more general space we need to work with in estimating the best was to maximize total information value. Information value and its payoff function $F$ depend on the memory $M$ and so need to prove learning progression on $M$ has an optimal substructure.
 
-\begin{theorem}
-    % TODO HERE
-    Given an optimal greedy policy $\pi_E$, and an path of actions $P$, $P$ has optimal substructure at the rightmost or $n$ entry of $P$. The total optimal value for $P$ is $V$.
+\begin{theorem} \label{theorem:opt_sub}
+    Assuming transition function $\Lambda$ is deterministic, if $V^*_{\pi_E}$ is the optimal information value given by $\pi_E$, a memory $M_t$ has optimal substructure if the the last observation $s_t$ can be removed from $M_t$, by $J^{-1}(M_t, s_t) \rightarrow M_{t-1}$, such that $V^*_{t-1} = V^*_t - F(M_t, a_t)$ is also optimal. 
 \end{theorem}
 \begin{proof}
-    Let $\hat P = P - a_t$ be the subproblem whose optimality it is we wish to test, where $\hat V' = V - E_t$ is the total value of this subproblem. 
-    
-    For the sake of contradiction, assume there exists an alternative policy $\pi_E^*$ that gives a path $\hat P^* \neq \hat P$ and for which $\hat V^* > \hat V$. 
+    For the sake of contradiction, assume there exists an alternative policy $\hat \pi_E$ that gives a memory $\hat M_{t-1} \neq M_{t-1}$ and for which $\hat V^*_{t-1} > V^*_{t-1}$. 
 
-    To recover the known optimal path $P$ we learn about the final observation $s_t$, giving $P^* \neq P$ and $V* > V$, which contradicts the purported optimality of $V$ and therefore $P$.
+    To recover the known optimal memory $M_t$ we lift $\hat M_{t-1}$ by $U(\hat M_{t-1}, s_t) \rightarrow M_t$, but this lifting implies $\hat V^* > V^*$, which contradicts the purported optimality of $V^*$ and therefore $\pi_E$.
 \end{proof}
 
 
 % --------------------------------------------------------------------------
-\subsubsection*{A Bellman definition}
-Knowing an action path has optimal substructure implies the the total optimal information value $V_{\pi_E^*}$ is given by the sum of local greedy decisions, where $\pi^*_E(s_t) = \max_{a} E(s)$.
+\subsubsection*{A Bellman derivation}
+In terms of the payout $F$ and policy $\pi_E$ and some initial memory $M_0$ the optimal value is given by Eq~\ref{eq:V_star}.
 
-\begin{equation} \label{eq:maxE}
-    \begin{split}
-        V^*_{\pi_E^*} &= \sum_T E_t^{\pi^*_E} (s_t) \\
-                      &= \sum_T \text{KL} (M_{t+1}, M_t) \\ 
-                      & \text{where}\ M_{t+1} = J(M, s_{t+1}), s_{t+1} = \Lambda(s_t, \pi^*_E(s_t))
-    \end{split}
+\begin{equation} \label{eq:V_star}
+    V^*_{\pi_E}(M_0) = \max_{\{a\}_{t \in T}} \sum_{t \in T} F(M_t, a_t)
 \end{equation}
 
-In most situations the optimal path in not known a priori, so an iterative form is needed. We can use Bellman's equation in the standard way to derive an optimal greedy iterative policy for $E$ on an infinite time horizon:
+Knowing the memory $M$ has optimal substructure (Theorem~\ref{theorem:opt_sub}) the valuation of $V_{\pi_E^*}(s_0)$ can be decomposed into a series of local greedy decisions.
 
 \begin{equation} \label{eq:bellman}
     \begin{split}
-        V^*_{\pi_E^*} &= \sum_T E_t^{\pi^*_E} (s_t) \\
-                      &{}= \max_a\ \mathbb{E}_{\pi^*_E} [\sum^{\infty}_{k=0} E_{t+k+1} | s_t = a, a_t = a] \\
-                      &{}= \max_a\ \mathbb{E}_{\pi^*_E} [E_{t+1} + \sum^{\infty}_{k=0} E_{t+k+2} | s_t = a, a_t = a] \\
-                      &= \max_a\ \mathbb{E}_{\pi^*_E} [E_{t+1} + V^*_E (s') | s_t = a, a_t = a]
+        V^*_{\pi_E}(M_0) &= \max_{\{a\}_{t \in T}} \Big [\sum_{t \in T} F(M_t, a_t)\Big ]\\
+                         &= \max_{\{a\}_{t \in T}} \Big [F(M_0, a_0) + \sum_{t \in T}F(M_{t+1}, a_{t+1})\Big ]\\
+                         &= F(M_0, a_0) + \max_{\{a\}_{t \in T}} \Big [\sum_{t \in T} F(M_{t+1}, a_{t+1}) \Big ]
     \end{split}
 \end{equation}
 
-The final (Bellman) form in Eq.~\ref{eq:bellman} can be more compactly restated in terms of $s_t$, $\Lambda$, and $\pi^*_E$.
+The final (Bellman) form in Eq.~\ref{eq:bellman} can be more compactly restated in terms of only $s_t$.
 
 \begin{equation} \label{eq:e_policy}
     V(s_t) = \max_a\ [ E(s) + V^*_E(\Lambda(s_t, \pi^*_E(s_t)))]
