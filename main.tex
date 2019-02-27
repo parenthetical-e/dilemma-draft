@@ -43,7 +43,7 @@
 % \keywords{Keyword 1 $|$ Keyword 2 $|$ Keyword 3 $|$ ...} 
 
 \begin{abstract}
-The exploration-exploitation dilemma is considered a fundamental problem in the learning and decision sciences. Exploitation means choosing the best known option. Exploration means searching among unknown options to find one more valuable than the present best. Some searches may be brief and successful. Other long and unsuccessful. It's impossible to know which until the search is complete. This uncertainty, often referred to as partial observability, makes the problem of exploration mathematically intractable. Focusing only on rewards though ignores the direct and certain value of exploratory behavior: the acquisition of information about the world. Here, we challenge the traditional approach to the dilemma and offer an alternative account based in information theory. We first derive an axiomatic measure of information value. We use this to decompose the exploration-exploitation dilemma into a tractable two-part problem, creating separate mathematical objectives for exploration and exploitation. From this we derive a new meta-policy approach which optimally explores, maximizes total information value, and maximizes total rewards. In simulation, we show how this policy generates useful and naturalistic behavior in both simple and complex simulated worlds. 
+The exploration-exploitation dilemma is considered a fundamental problem in the learning and decision sciences. Exploitation means choosing the best known option. Exploration means searching among unknown options to find one more valuable than the present best. Some searches may be brief and successful. Other long and unsuccessful. It's impossible to know which until the search is complete. This uncertainty, often referred to as partial observability, makes the problem of exploration mathematically intractable. Focusing only on rewards though ignores the direct and certain value of exploratory behavior: the acquisition of information about the world. Here, we challenge the traditional approach to the dilemma and offer an alternative account based in information theory. We first derive an axiomatic measure of information value. We use this to decompose the exploration-exploitation dilemma into a tractable two-part problem, creating separate mathematical objectives for exploration and exploitation. From this we derive a new meta-policy approach which optimally maximizes total information value and maximizes total rewards. In simulation, we show how this policy generates useful and naturalistic behavior in both simple and complex simulated worlds. 
 
 % Finally we who how this same theory predicts exploratory actions of \textit{EVERY FUCKING LIVING THING?!}. % TODO....
 \end{abstract}
@@ -252,17 +252,19 @@ For consistency with dynamic programming and the Bellman equation, we make a cha
     \begin{split} \label{eq:V}
     F(M_t, a_t) = E(M_{t+1}, M_{t})\\
     \text{subject to the constraints} \\
-    a_t = \pi_E(s_t), \\
     s_{t+1} = \Lambda(s_t, a_t),\\ 
-    M_{t+1} = J(M_t, s_{t+1}),\\ 
-    \forall t = (0,1,2,\ldots)
+    M_{t+1} = J(M_t, s_{t+1})
     \end{split} 
 \end{equation}
 
 The total information value is then simply the sum of all payout functions for some policy $\pi_E$ observation period $T$. 
 
 \begin{equation} \label{eq:V}
-    V_{\pi_E} = \sum_{t \in T} F(M_t, a_t)
+    \begin{split}
+        V_{\pi_E} = \sum_{t \in T} F(M_t, a_t)\\
+        \text{subject to the constraint}\\
+        \forall t = (0,1,2,\ldots, T),\ T \leq \infty
+    \end{split}
 \end{equation}
 
 % --------------------------------------------------------------------------
@@ -270,6 +272,7 @@ The total information value is then simply the sum of all payout functions for s
 A first step in solving a dynamic programming problem is isolating the relevant subproblem, and proving it has an optimal substructure. Which means the problem can be decomposed into an iteratively optimal series. This property in inherent in the Markov Space % TODO cite, 
 but is not guaranteed in the more general space we need to work with in estimating the best was to maximize total information value. Information value and its payoff function $F$ depend on the memory $M$ and so need to prove learning progression on $M$ has an optimal substructure.
 
+% TODO need to adapt for ties.... see coursera
 \begin{theorem} \label{theorem:opt_sub}
     Assuming transition function $\Lambda$ is deterministic, if $V^*_{\pi_E}$ is the optimal information value given by $\pi_E$, a memory $M_t$ has optimal substructure if the the last observation $s_t$ can be removed from $M_t$, by $J^{-1}(M_t, s_t) \rightarrow M_{t-1}$, such that $V^*_{t-1} = V^*_t - F(M_t, a_t)$ is also optimal. 
 \end{theorem}
@@ -285,7 +288,11 @@ but is not guaranteed in the more general space we need to work with in estimati
 In terms of the payout $F$ and policy $\pi_E$ and some initial memory $M_0$ the optimal value is given by Eq~\ref{eq:V_star}.
 
 \begin{equation} \label{eq:V_star}
-    V^*_{\pi_E}(M_0) = \max_{\{a\}_{t \in T}} \sum_{t \in T} F(M_t, a_t)
+    \begin{split}
+        V^*_{\pi_E}(M_0) = \max_{\{a\}_{t \in T}} \sum_{t \in T} F(M_t, a_t)\\
+        \text{subject to the constraint}\\
+        \forall t = (0,1,2,\ldots, T),\ T \leq \infty
+    \end{split}
 \end{equation}
 
 Knowing the memory $M$ has optimal substructure (Theorem~\ref{theorem:opt_sub}) the valuation of $V_{\pi_E^*}(s_0)$ can be decomposed into a series of local greedy decisions.
@@ -299,7 +306,7 @@ Knowing the memory $M$ has optimal substructure (Theorem~\ref{theorem:opt_sub}) 
     \end{split}
 \end{equation}
 
-From the final entry in Eq.~\ref{eq:bellman_seq}, we see how given some initial memory $M_0$, action $a_0$, we can write down an optimal recursive definition for $V^*_{\pi_E}(M_0)$ (Eq.~\ref{eq:bellman_iter}).
+From the final entry in Eq.~\ref{eq:bellman_seq}, we can write down an optimal recursive definition for $V^*_{\pi_E}(M_0)$, Eq.~\ref{eq:bellman_iter}.
 
 \begin{equation} \label{eq:bellman_iter}
     V^*_{\pi_E}(M_0) = F(M_0, a_0) + \max_{a_1} \Big [F(M_1, a_1) \Big ]
@@ -348,6 +355,8 @@ We've used dynamic programming to derive an optimal $E$ maximization policy. It 
     \end{align}
 \end{definition}
 
+% TODO: assume \delta < 0 for all T. Convexity too.
+
 \begin{theorem}{Visitation (completeness and uniqueness)} \label{theorem:Z}
 A greedy policy $\pi$ is the only deterministic policy which ensures all states in $S$ are visited, such that $Z = S$.
 \end{theorem}
@@ -364,7 +373,7 @@ A greedy policy $\pi$ is the only deterministic policy which ensures all states 
 \end{proof}
 
 \begin{theorem}{Convergence}
-    Assuming a deterministic transition function $\Lambda$, a greedy policy $\pi_E$ will resample $S$ until convergence at $\sum_{s \in S} E < \epsilon$.
+    Assuming a deterministic transition function $\Lambda$, a greedy policy $\pi_E$ will resample $S$ to convergence as $t \rightarrow T$, $E_t \rightarrow 0$.
 \end{theorem}
 \begin{proof}
     \textit{Recall}: $\delta < 0$. 
@@ -377,6 +386,7 @@ A greedy policy $\pi$ is the only deterministic policy which ensures all states 
 \end{proof}
 
 % TODO talk about epsilon, and stochastic \Lambda.
+If the transition function $\Lambda$ is stochastic, the noisy state changes will prevent $E$ from fully converging to 0. This might be ideal, in that it will force continual exploration of the world. However if we redefine the converge of $E$ not to 0 but to some value $\epsilon$, we can once again ensure convergence in noisy worlds. That is, in the limit of $t \rightarrow T$, $E_t \rightarrow \epsilon$, where $0 leq \epsilon \ll E_0$ with $E_0$ denoting the initial value of $E$. The larger $\epsilon$ the easier it is have the system settle into $\pi_{\emptyset}$ (Eq.~\ref{eq:pi_null}). Too large though, and $\epsilon$ will interfere with potential optimality of $\pi^*_E$ (by Theorem.~\ref{theorem:Z}). 
 
 % TODO this needs to be cleaned and tightened up!
 Exploration is often treated as a stochastic process, where an animal makes a weighted random choice to try and maximize rewards in the long term. We've shown here that from the point of view of information value, a noisy policy would be suboptimal; a deterministic greedy policy is optimal.
@@ -386,42 +396,83 @@ We conjecture that a greedy $E$ policy also leads to the minimal possible number
 
 
 % ---------------------------------------------------------------------------
+% TODO: The validity of the title is made here. Bring it all together!
 \subsection*{A way around the dilemma}
-% HERE
-Here we derive new meta-policy $\pi_{\pi}$ which optimally maximizes information value, shows optimal exploration, and maximize rewards (Eq.~\ref{eq:meta_greedy}).
+Having two objectives $\pi_E$ and $\pi_R$ sidesteps the exploration-exploitation dilemma in the following ways. Exploration now generates tangible value, and so is not costly. Because of this exploration can be carried out completely. This in turn ensures the reward policy $\pi^*_R$ discovers its global optimum, if it exists. In circumstances where the environment can be learned $E$ will decay to $\epsilon \geq 0$ leaving $\pi^*_R$ in control. Only when the environment changes can exploration policy $\pi^*_E$ resume control. Finally, while only one policy can control behavior each policy can learn from the actions of the other. This makes learning to maximize exploration and exploitation cooperative, even though action control is adversarial. 
 
-\begin{equation}
-    \pi_{\pi} = 
-    \begin{cases}
-        \pi_E & : E_t - \epsilon > R_t \\
-        \pi_R & : R_t \geq E_t - \epsilon \\
-    \end{cases}
-    \label{eq:meta_greedy}
+We introduce a new style of reinforcement learning we call \textit{Dual Value Learning}. From point of the view of an animal learning to explore its world \textit{and} gather the most rewards, we mathematically embody the idea that it can, and probably should, use two different policies for each aim. Hence the name, dual value learning. Of course only one policy can drive behavior at a time. To adjudicate we derive a simple value-based way % TODO CITE luce choice
+ to select which policy dominates at a given time. We call this policy on policies a \textit{meta-policy}.
+
+Formally then, we say that dual value learning must define a meta-policy $\pi_{pi}$ which can inherit the optimality of $pi^*_E$, while also assuming the optimal properties of any reward learning policy $pi^*_R$. Here we base our formulation on the distinct asymptotic properties of information and rewards (for more on this, see \textit{Information is not a reward}).
+
+The asymptotic properties of $E \rightarrow \epsilon$ as $t \rightarrow T$ (Theorem~\ref{theorem:Z}) allow for a $\pi_{pi}$ definition based on a simple set of inequalities, with the addition of some mild constraints on both information $E_t$ and reward value $R_t$ (Eq.~\ref{eq:meta_greedy}). 
+
+\begin{equation} \label{eq:meta_greedy}
+    \begin{split}
+        \pi_{\pi} = 
+        \begin{cases}
+            \pi_E & : E_t - \epsilon > R_t \\
+            \pi_R & : R_t \geq E_t - \epsilon \\
+        \end{cases}\\
+        \text{subject to the constraints}\\
+        R_t \in \{0, 1\}\\ 
+        p(R_t = 1) < 1\\
+        0 \leq E_t < 1
+    \end{split}
 \end{equation}
 
-Several types of reinforcement learning are known to be optimal, by one definition or another. Examples include, temporal difference learning, Q learning, and REINFORCE \cite{Sutton2018}. To keep things as general as possible, we refer don't refer to any single reward learning rule here. Instead, we use the term $\pi_R$ to refer to any suitable rule.
-
-\begin{theorem}
-    Assuming an infinite horizon, a memory $M$ (Def. TODO), a value function $1 > E \ge 0$ (Eq.~\ref{eq:KL}) and $R\ in \{0, 1\}. p(R = 1) < 1, \forall s \in S$, the \textit{meta-greedy} policy $\pi_{\pi}$ (Eq.\ref{eq:meta_greedy}), optimally maximizes total information value if $\pi_E$ is itself optimal, has optimal exploration if $\pi_E$ is greedy, and optimally maximizes total reward if $pi_R$ is itself optimal.
+\begin{theorem} \label{theorem:meta}
+    Assuming an infinite time horizon, if $\pi_E$ is optimal and $\pi_R$ is optimal, then $\pi_{\pi}$ is also optimal in the same sense as $\pi_E$ and $\pi_R$.
 \end{theorem}
 \begin{proof}
-    \textbf{Recall}: in Theorem TODO we prove the optimality of $\pi_E$.
-    \textbf{Recall}: we assume $\pi_R$ has some proven optimality.
-
     The optimality of $|\pi_{\pi}$ can be seen by direct inspection. If, $p(R = 1) < 1$ and we have an infinite horizon, the $pi_E$ will have a unbounded number of trials meaning the optimally of $P^*$ holds. Likewise, $\sum E < \epsilon$ as $T \rightarrow \infty$, ensuring $pi_R$ will dominate $\pi_{\pi}$ therefore $pi_R$ will asymptotically converge to optimal behavior.
 \end{proof}
 
-In proving the total optimality of $\pi_{\pi}$ we limit the probability of a positive reward to less than one, denoted by $p(R = 1) < 1$. Without this constraint the reward policy $\pi_R$ would always dominate $\pi_{\pi}$, limiting information maximization and exploration to suboptimal levels. An alternate way to handle the edge case $p(R = 1) = 1$ would be to introduce the a model of reward satiety, where reward value decays asymptotically with repeated exposure. % TODO example of satiety with math.
+% TODO: clip 0 <= E < 1? Is arbitrary, but in practice KL will give values << 1. Can switch to JS. Or simply rescale, r to some set {0, N}.
 
-% TODO: talk about the dynamics more intuitively. The less likely R the more exploration, until convergence.
+In proving the total optimality of $\pi_{\pi}$ we limit the probability of a positive reward to less than one, denoted by $p(R_t = 1) < 1$. Without this constraint the reward policy $\pi_R$ would always dominate $\pi_{\pi}$ when rewards are certain. While this might be useful in some circumstances, from the point of view $\pi_E$ it extremely suboptimal; the model will never explore. Limiting $p(R_t = 1) < 1$ is an admittedly ad hoc way to handle this edge case in the mathematics. We think its reasonable constraint though, as rewards in the real world are rarely certain. A more naturalistic, but perhaps less parsimonious, way to handle this edge case would be to introduce the a model of reward satiety, where reward value decays asymptotically with repeated exposure. 
+% TODO example of satiety with math. Also, TODO CITE
 
-While successfully maximizing $E$ leads to $\bar E \rightarrow 0$. The differing asymptotes suggest that each policy $\pi_E$ and $\pi_R$ should be learned separately, and they could usefully compete for control of the agent at any given moment in time $t$. We call this \textit{meta-greedy learning}.
+\subsubsection*{Exploration-exploitation as an initial value problem}
+In our analysis $\pi_E$ has been assumed to be deterministic. If we also restrict $\pi_R$ to be deterministic--which is sensible when optimal exploration is certain--we can the define exploration-exploitation dilemma strictly as an initial value problem, which has at least one major benefit.
 
-We continue to restrict $\pi_E$ to be deterministic. We also now restrict $\pi_R$ to be deterministic, leading to a unique conception of the exploration-exploitation problem: an initial value problem. 
+Exact, turn by turn, fits are of real behavior are possible. The experimenter need only hypothesize about initial conditions. This means specifying the initial value of $E_0$ (i.e., its prior) and establishing a tie breaking rule, as well as setting the hyper-parameters. At minimum hyper-parameter tuning will require setting the learning rates for both policies in $\pi_{\pi}$ (Eq~\ref{eq:meta_greedy}), and the convergence threshold for exploration, $\epsilon$. Critically, though there is no longer a need to hand tune the sampling noise to be ``just right''. % TODO cite dump. 
 
-For every state $s$ the algorithm chooses an action $a \sim \pi_{\pi}(s)$, leading to a new state $s'$ by $\Lambda(s, a)$ and a (possible) reward $r \in \{0,1\}$. In this arrangement both $\pi_E$ and $\pi_R$ are updated by their respective learning rules with each transition set $(s, a, s', r)$. That is, learning can be done in parallel, making it cooperative, but action control is adversarial governed by the inequality in Eq~\ref{eq:meta_greedy}.
 
-\section{Discussion}
+\subsubsection*{The rates of exploration and exploitation}
+In Theorem~\ref{theorem:meta} we proved that $\pi_{\pi}$ inherits the optimality of policies for both exploration $\pi_E$ and exploitation $\pi_R$ over infinite time. However this does proof does not say whether $\pi_{\pi}$ will not alter the rate of convergence of each policy. By design, it does alter the rate of each, favoring $\pi_R$. As you can see in Eq.~\ref{eq:meta_greedy}, whenever $r_t = 1$ then $\pi_R$ dominates that turn. Therefore the more likely $p(r=1)$, the more likely $\pi_R$ will have control. This doesn't of course change the eventual convergence of $\pi_E$, just delays it in direct proportion to the average rate of reward.
+
+\subsubsection*{Sample efficiency and dual value learning}
+....
+% TODO: needs to be redone considering p(r=1). Do a real run time analysis not speculative bullshit like the below...
+
+% In the meta-policy $\pi_{\pi}$ the dual policies $\pi^*_E$ and $\pi^*_R$ separately and uniquely control action selection. So if in isolation it takes $T_E$ steps to earn $E_{T} = \sum_{T_E} E$, and $T_r$ steps to earn $r_{T} = \sum_{T_r} r$, then the worst case training time for $\pi_{\pi}$ is $T_E + T_r$. There is however no reason each policy can't observe the transitions $(s_t, a_t, r, s_{t+1})$ caused by the other. If this allowed, the worst case training time improves substantially to $\max (T_E, T_r)$. That is, learning can be done in parallel--making it cooperative--but action control is adversarial, governed by the $\pi_{\pi}$ inequality (Eq.~\ref{eq:meta_greedy}).
+
+\subsubsection*{Re-exploration}
+The world often changes. Or in formal parlance, the world is non-stationary process. When the world does change, re-exploration becomes necessary. Tuning the size of $\epsilon$ in $\pi_{\pi}$ (Eq~\ref{eq:meta_greedy}) tunes the threshold for re-exploration. That is, once the $\pi^*_E$ has converged and so $\pi^*_R$ fully dominates $\pi_{\pi}$, if $\epsilon$ is small then small changes in the world will allow $pi_E$ to exert control. If instead $\epsilon$ is large, then large changes in the world are needed. That is, $\epsilon$ acts a hyper-parameter controlling how quickly rewarding behavior will dominate, and easy it is to let exploratory behavior resurface.
+
+\subsubsection*{Model-free and model-based reinforcement learning}
+Reinforcement learning is divided into two general kinds, model-free and model-based \cite{Sutton2018}. % TODO explain more?
+Dual value learning offers a natural general approach to unite them. Estimating information value is a means to efficiently build a model of the world. This model can in turn be used during reinforcement learning. To that end we define two hypothetical reward policies, $\pi_F$ for the model-free rule and $\pi_M$ for the model-based.  We can then extend our original meta-policy in Eq~\ref{eq:meta_greedy} to switch between exploration, a model-free policy or the model-based policy. For example, in Eq.~\ref{eq:meta_greedy_3} we illustrate a conservative approach that switches to $\pi_M$ only once the average value of $E_t$, $\bar E$, falls below $\epsilon$.
+
+\begin{equation} \label{eq:meta_greedy_3}
+    \begin{split}
+        \pi_{\pi} = 
+        \begin{cases}
+            \pi_E & : E_t - \epsilon > R_t \\
+            \pi_M & : R_t \geq \bar E_t - \epsilon \\
+            \pi_F & : R_t \geq E_t - \epsilon \\
+        \end{cases}\\
+        \text{subject to the constraints}\\
+        R_t \in \{0, 1\}\\ 
+        p(R_t = 1) < 1\\
+        0 \leq E_t < 1
+    \end{split}
+\end{equation}
+
+
+% --------------------------------------------------------------------------
+\section*{Discussion}
 Reinforcement learning using only rewards is a fundamentally incomplete idea. We argue this has been partially acknowledged by adapting information terms (as fictive rewards) into reinforcement learning problems. On empirical, computational, mathematical, and philosophical grounds we suggest the use of fictive rewards is not far enough. Instead, information should be valued entirely for its own sake. Then reward and information should be maximized separately. We offer a simple optimal meta-policy for doing this. We show that you use this meta-policy, the classic exploration-exploitation dilemma is no longer a dilemma and that exploration can be both optimal and deterministic.
 
 When training animals to learn a new task one of the most difficult parts in the training is constraining behavior. Left to their own devices and motivations, animals engage in a range of task-irrelevant activities. This kind of exploration is a nuisance to the experimenter, but we suggest is a important object of study for the theorist. Our \textit{dual value} approach accommodates analysis and prediction for any mode of free ranging behavior, given a working definition for the state space $S$, a memory $M$, and the memory learning rule $J$.
@@ -603,7 +654,6 @@ By redefining the problem of exploration and in defining the value axioms, which
 % \begin{equation}
 %     F : S \rightarrow \emptyset
 % \end{equation}
-
 
 % \section*{Evolutionary games with information}
 
