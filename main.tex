@@ -11,6 +11,8 @@
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{multicol}
+
 
 \DeclareMathOperator*{\argmax}{argmax}
 \newtheorem{corollary}{Corollary}
@@ -44,8 +46,6 @@
 
 \begin{abstract}
 The exploration-exploitation dilemma is considered a fundamental problem in the learning and decision sciences. Exploitation means choosing the best known option. Exploration means searching among unknown options to find one more valuable than the present best. Some searches may be brief and successful. Other long and unsuccessful. It's impossible to know which until the search is complete. This uncertainty, often referred to as partial observability, makes the problem of exploration mathematically intractable. Focusing only on rewards though ignores the direct and certain value of exploratory behavior: the acquisition of information about the world. Here, we challenge the traditional approach to the dilemma and offer an alternative account based in information theory. We first derive an axiomatic measure of information value. We use this to decompose the exploration-exploitation dilemma into a tractable two-part problem, creating separate mathematical objectives for exploration and exploitation. From this we derive a new meta-policy approach which optimally maximizes total information value and maximizes total rewards. In simulation, we show how this policy generates useful and naturalistic behavior in both simple and complex simulated worlds. 
-
-% Finally we who how this same theory predicts exploratory actions of \textit{EVERY FUCKING LIVING THING?!}. % TODO....
 \end{abstract}
 
 % \dates{This manuscript was compiled on \today}
@@ -59,45 +59,46 @@ The exploration-exploitation dilemma is considered a fundamental problem in the 
 \ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
 Animals across the animal kingdom will a new environment even when no rewards, like food and water, are present or expected. Many of these same animals also explore as play, trying to understand other agents behavior, to the learn the best playful strategies, and to refine their action repertoires. Of course animals like bees, mice, monkey, and humans also explore to find more rewards. In a general sense then it seems animals explore to gain information \textit{and} to acquire more rewards. These two goals are often conflated during reinforcement learning.
 
-When an animal explores looking for rewards there is a trade-off to be made between with choosing more conservative actions, likely to produce desirable results (what we call exploitation), and exploring to try are beat the current best option. The optimal policy for exploitation is well known. One calculates total expected future rewards. The optimal policy for exploration, on the other theoretical hand, remains elusive \citep{thrun1992active, dayan1996exploration, findling2018computational, gershman2018deconstructing}. 
+Schmidhuber began laying the groundwork for explaining exploration by suggesting information about the world is valuable for its own sake \cite{Schmidhuber1991}. He argued that in addition to searching for rewards animals seek to build a model of the world, motivated by information and a curiosity signal. In developing this theory, Schmidhuber made the seemingly parsimonious choice that the information and reward terms be combined into a single objective function (similar to our Eq.\ref{eq:total_r_I}). This joint form set the stage for two decades of productive work on fictive rewards, and curiosity learning \cite{Pathak2017,Sutton1990,dayan1996exploration,TODO}. That said, the exploration-exploitation remains an intractable mathematical problem \cite{thrun1992active,dayan1996exploration,findling2018computational,gershman2018deconstructing} 
 
-Exploration is often costly, which makes it hard to theoretically explain using rewards. To mitigate this ``cost'', exploration is often reframed as a problem of ``information seeking'' and fictive rewards are introduced. Fictive rewards can implemented as novelty or other motivational bonuses \citep{Sutton1990, dayan1996exploration}, or modeled as the internally generated isomorphism of tangible external rewards (so-called intrinsic rewards).  
+ Here we re-explore the idea that \textit{information is valuable for its own sake} \cite{Schmidhuber1991}. Unlike prior work, we separate the two goals of maximizing reward and information into two independent objectives. Estimating dual values is admittedly less simple than having a single objective, but this increase in complexity comes with substantial theoretical benefits.
 
-Rebalancing reward with information seems simple and intuitive, but it comes with a fundamental limitation. If the goal is to maximize $r$, as defined by the dilemma problem, adding a fictive reward obscures this actual aim. After all, an increase in $V$ can come from a $r$ or from the fictive $\beta I$. Fictive rewards may encourage exploration but still offer no guarantee of a performance increase in the long term, once the fictive signal fades.
+Our contributions are threefold. We first set out a series of axioms to serve as principled basis for information value, and use these to implement a working scheme rooted in information theory. Next we develop an optimal policy for exploration that maximizes information value. This theory is purely deterministic, meaning exploration no longer relies on random sampling and is instead perfectly rational. Finally, we derive a new \textit{meta-policy} which allows for simultaneously optimal and deterministic solutions to \textit{both} the problems of exploration and exploitation. This \textit{meta-policy} effectively side-steps the exploration-exploitation dilemma.
 
-Here we propose \textit{information is valuable for its own sake}. We separate the two goals into two objectives. In our view agents should seek to maximize information value just as vigorously as reward. Their policies for reward learning should be separated from their policies for exploration. 
+% As we'll see in coming sections using separate objective let's us offer theoretical guarantees for exploration quality, rooted in dynamic programming. It also means we can motivate exploration without obscuring the ability to optimize rewards. Assuming the learning about the environment is possible, the net result is we can guarantee an optimal rewarding policy is found.
 
-Our contributions are threefold. We first set out a series of axioms to serve as principled basis for information value, and use these to implement a working scheme rooted in information theory. Next we develop an optimal policy for exploration that maximizes information value. This theory is purely deterministic, meaning exploration no longer relies on random sampling and is instead perfectly rational. Finally, we derive a new \textit{meta-policy} which allows for simultaneously optimal and deterministic solutions to \textit{both} the problems of exploration and exploitation.
 
+% ----------------------------------------------------------------------------
 \section*{Results}
-The overall objective in reinforcement learning is to maximize $V^{*}_{pi_R}$, expectation of total future rewards (Eq~\ref{eq:total_r}; \cite{Sutton2018}). When a fictive reward signal is present, this becomes Eq~\ref{eq:total_r_I}.
+One of the most common forms to incorporate fictive rewards is seen in Eq~\ref{eq:total_r_I}. The overall objective in reinforcement learning is to maximize $V^{*}_{pi_R}$, expectation of total future rewards (Eq~\ref{eq:total_r_I}; \cite{Sutton2018}). Where $I$ is a generic stand in for the pack of fictive possibilities--including novelty bonuses \cite{Kakade2002}, curiosity signals \cite{Pathak2017}, Bayesian updates \cite{Radulescu2019}, or entropy terms \cite{Haarnoja2015,Haarnoja2017}--and rewards are denoted by $r$, with $\beta$ is used for the fictive weight. For convenience, we confine rewards to be a binary variables, and $I$ to the real numbers ($r \in \{0, 1\}, I \in \mathbb{R}, \beta > 0$). In this example the total time $T$ is finite.
 
 \begin{equation}
-    V^{*}_{\pi_R} = \sum_{t \in T, s \in S} r
-    \label{eq:total_r}
-\end{equation}
-
-\begin{equation}
-    V^{*}_{\pi_R} = \sum_{t \in T, s \in S} r + \beta I
+    V^{*}_{\pi_R} = \sum_{t \in T, s \in S} R_t + \beta I_t
     \label{eq:total_r_I}
 \end{equation}
 
-Where $I$ is a generic stand in for the pack of fictive possibilities--including novelty bonuses, curiosity signals, or entropy terms--and rewards are denoted by $r$, with $\beta$ is used for the fictive weight. For convenience, we confine rewards to be a binary variables, and $I$ to the real numbers ($r \in \{0, 1\}, I \in \mathbb{R}, \beta > 0$).
+Here propose instead that reinforcement learning should try and solve the a objective problem, maximizing both Eq.~\ref{eq:total_r_2} and Eq.~\ref{eq:total_e}. 
 
-We propose that reinforcement learning should often become a two objective problem, maximizing both Eq.~\ref{eq:total_r_2} and Eq.~\ref{eq:total_e}. 
-
-\begin{equation}
-    V^{*}_{\pi_R} = \sum_{t \in T, s \in S} r
+\begin{multicols}{2}
+  \begin{equation}
+    V^{*}_{\pi_R} = \sum_{t \in T, s \in S} R_t
     \label{eq:total_r_2}
-\end{equation}
-
-\begin{equation}
-    V^{*}_{\pi_E} = \sum_{t \in T, s \in S} I
+  \end{equation}\break
+  \begin{equation}
+    V^{*}_{\pi_I} = \sum_{t \in T, s \in S} I_t
     \label{eq:total_e}
-\end{equation}
+  \end{equation}
+\end{multicols}
 
-As we'll see in coming sections using separate objective let's us offer theoretical guarantees for exploration quality, rooted in dynamic programming. It also means we can motivate exploration without obscuring the ability to optimize rewards. Assuming the learning about the environment is possible, the net result is we can guarantee an optimal rewarding policy is found.
+In the next two sections we argue information and reward should be separated because \textit{1.} conflating them introduces an undesirable bias both in building an accurate model of the world and in maximizing rewards and \textit{2.} a first principle analysis reveals reward and information value have fundamentally different philosophical properties. These philosophical difference imply, we think, crucial differences in their mathematical and asymptotic properties.
 
+\subsection*{Biased by reward}
+Rebalancing reward with information seems simple and intuitive, but it comes with a fundamental limitation. If the goal is to maximize $r$, as defined by the dilemma problem, adding a fictive reward obscures this actual aim. After all, an increase in $V$ can come from a $r$ or from the fictive $\beta I$. Fictive rewards may encourage exploration but still offer no guarantee of a performance increase in the long term, once the fictive signal fades. Said more simply, if an animal wishes to just maximize reward, exploring for the sake of world building, or satisfying curiosity, is an suboptimal bias. It is this bias that is at the heart of the exploration-exploitation dilemma.
+
+Conversely, if an animal wants to build a generally useful model of world then biasing maximizing reward is suboptimal in terms of maximizing both the accuracy of the world model, and the efficiency with which the model is built. Successfully optimizing for reward \textit{requires} an animal to over-sample rewarding states, in comparison to all others. That is, rewards are a harmful bias when trying to learn a general model.
+
+
+% ----------------------------------------------------------------------------
 \subsection*{Information is not a reward}
 A first principle analysis of information and reward shows they have opposing properties:
 
@@ -116,7 +117,7 @@ For empirical, philosophical, and mathematical reasons we've suggested reward an
 
     
 % ---------------------------------------------------------------------------
-\subsubsection*{If information is not a reward, how can we value it}
+\subsection*{If information is not a reward, how can we value it}
 Shannon originally developed information theory without any sense of what information ``means''. He focused on simply transmitting symbols. To work the theory does need to know what those symbols refer to, and is therefore extremely general \citep{Shannon1948}. Many attempts have since been made to instill information theory with meaning \citep{Kolchinsky2018}, and with meaning value follows. Most of these attempts require a ``salience'', or ``relevance'', or ``training'' signal (where all three terms amount to near the same thing), while others have taken an evolutionary approach \citep{Kolchinsky2018}.  
 % TODO bump up refs
 
@@ -389,13 +390,13 @@ A greedy policy $\pi$ is the only deterministic policy which ensures all states 
 If the transition function $\Lambda$ is stochastic, the noisy state changes will prevent $E$ from fully converging to 0. This might be ideal, in that it will force continual exploration of the world. However if we redefine the converge of $E$ not to 0 but to some value $\epsilon$, we can once again ensure convergence in noisy worlds. That is, in the limit of $t \rightarrow T$, $E_t \rightarrow \epsilon$, where $0 leq \epsilon \ll E_0$ with $E_0$ denoting the initial value of $E$. The larger $\epsilon$ the easier it is have the system settle into $\pi_{\emptyset}$ (Eq.~\ref{eq:pi_null}). Too large though, and $\epsilon$ will interfere with potential optimality of $\pi^*_E$ (by Theorem.~\ref{theorem:Z}). 
 
 
-\subsubsection*{Sampling efficiency and information value}
-We conjecture that a greedy $E$ policy also leads to the minimal possible number of samplings strategy for any convex loss function $L$. We prove this in the limited case of a ``perfect'' one-shot learning system ....
+% TODO: drop or develop this?
+% \subsubsection*{Sampling efficiency and information value}
+% We conjecture that a greedy $E$ policy also leads to the minimal possible number of samplings strategy for any convex loss function $L$. We prove this in the limited case of a ``perfect'' one-shot learning system ....
 % TODO: one shot proof
 
 
 % ---------------------------------------------------------------------------
-% TODO: The validity of the title is made here. Bring it all together!
 \subsection*{A way around the dilemma}
 Having two objectives $\pi_E$ and $\pi_R$ sidesteps the exploration-exploitation dilemma in the following ways. Exploration now generates tangible value, and so is not costly. Because of this exploration can be carried out completely. This in turn ensures the reward policy $\pi^*_R$ discovers its global optimum, if it exists. In circumstances where the environment can be learned $E$ will decay to $\epsilon \geq 0$ leaving $\pi^*_R$ in control. Only when the environment changes can exploration policy $\pi^*_E$ resume control. Finally, while only one policy can control behavior each policy can learn from the actions of the other. This makes learning to maximize exploration and exploitation cooperative, even though action control is adversarial. 
 
@@ -414,9 +415,13 @@ We introduce a new style of reinforcement learning we call \textit{Dual Value Le
         \text{subject to the constraints}\\
         R_t \in \{0, 1\}\\ 
         p(R_t = 1) < 1\\
-        0 \leq E_t < 1
+        E_t - \epsilon > 0
     \end{split}
 \end{equation}
+
+Note that to satisfy $E_t - \epsilon > 0$ in Eq~\ref{eq:meta_greedy}, $\epsilon = 0$ when $\Lambda(.)$ is deterministic. Only when the environment is stochastic can $\epsilon$ safely exceed 0.
+
+The meta-policy in Eq.~\ref{eq:meta_greedy} is a myopic in the sense that at every time $t$, $\pi_E$ or $\pi_R$ has the opportunity to take control but this control lasts only a single time step. There are many possible meta-policies which could inherit the optimality of the dual value policies. We chose this form for its simplicity, but justify it as similar myopic control schemes have proven effective for other complex, high variance, problems \cite{Hocker2019}.
 
 \begin{theorem} \label{theorem:meta}
     Assuming an infinite time horizon, if $\pi_E$ is optimal and $\pi_R$ is optimal, then $\pi_{\pi}$ is also optimal in the same sense as $\pi_E$ and $\pi_R$.
@@ -463,7 +468,7 @@ Dual value learning offers a natural general approach to unite them. Estimating 
         \text{subject to the constraints}\\
         R_t \in \{0, 1\}\\ 
         p(R_t = 1) < 1\\
-        0 \leq E_t < 1
+        E_t - \epsilon > 0
     \end{split}
 \end{equation}
 
@@ -488,10 +493,6 @@ We justify our constraints on $\mathcal{L}$ in two ways. First, assuming convexi
 \end{proof}
 
 
-\subsubsection*{Dependent states}.
-....
-
-
 \subsection{Modulation by introspection}
 Policies sampling each other, to tune hyper params. To set modulation.
 
@@ -505,17 +506,12 @@ Policies sampling each other, to tune hyper params. To set modulation.
 % Consider both ep and learning rate tuning across policies are a kind of modulation. ...If it is modulation what is its homeostasis? These must be a matched set?
 
 \subsection*{Curiosity and value}.
-% TODO section on curiosity:
+A skeptical reader might suggest we've arbitrarily swapping an accepted term \textit{curiosity}, for another \textit{information value}. We introduce this new term for two reasons. \textit{1.} When separating information value from reward we felt it was important to place  information value on principled grounds. This is why we developed the value axioms. Applying these axioms to an existing, and loosely defined term, like curiosity would seem to add confusion to the literature rather than simplify. \textit{2.}, curiosity as a subjective experience seems to dim more quickly than learning a detailed model requires. That is, learning needs more than just curiosity. We try and capture this admittedly complex motivation using information gain and the KL divergence.
 
-A skeptical reader would suggest we're swapping an accepted term \textit{curiosity}, with another \textit{information value}. We acknowledge this, and have wondered it ourselves! It's that intuitively, curiosity often seems to dim more quickly than certain knowledge reaches its full brightness. That is, learning needs more than curiosity. Learned information has to have its own independent value. This is, in the end, why we formalize the value of information using simple axions. 
 
-% TODO: treat this as the future work section.
 \subsection*{Learning structure and value}.
-We've explored only a simple memory model. 
-
-.... Bayes, trajectories, and other model building.
-
-By redefining the problem of exploration and in defining the value axioms, which we known have multiple possible solutions, we offer a way to these methods for model-building and fold them seamlessly and optimally into a value optimization framework. 
+Here we've explored only a simple probabilistic memory model that lends itself to information theoretic calculations. There are of course a large number of known approaches one an animal might use to build a model of the world. These include, Bayesian structure learning, dynamical systems modeling, casual reasoning, % TODO CITE, and more.
+By defining information value axiomatically, we offer a principled and consistent way to fold potentially any model-build method seamlessly and optimally into a value optimization framework. Doing this might require developing a new metric other than the KL divergence. We conjecture though that in many cases adding a simple probabilistic memory module to estimate state-action likelihoods--like the one we study here--may prove sufficient.
 
 \bibliography{library}
 \end{document}
