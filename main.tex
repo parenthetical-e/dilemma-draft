@@ -238,7 +238,7 @@ The independent representation of $S$ and $A$ probabilities is critical to all t
     Let $J$ be a learning rule that maps a memory $M$, a new state $s'$ into memory $M'$. That is, $J : M, s' \rightarrow M'$ subject to the constraints  $M' = U(s' \delta)$, $\delta = \mathcal{L}(M, s')$.
 \end{definition}
 
-\textit{With a loss of generality}, we assume that $\mathcal{L}$ is convex, and that every observation $s$ leads to learning progress unless $L(s) = 0$. That is, the gradient of $\triangledown \mathcal{L} \leq 0$ for all $s \in P$ and $t \in T$. The strong assumptions of convexity, and continual learning progress greatly simplifies the critical theorems for exploitation we prove, but is also overly restrictive. Having completed the initial proofs, we explore under what conditions these constraints can be safely relaxed.
+\textit{With a loss of generality}, we assume that $\mathcal{L}$ is convex, and that every observation $s$ leads to learning progress, unless $L(s) = 0$. That is, the gradient of $\triangledown \mathcal{L} < 0$ for all $s \in P$ when $L(s) \neq 0$ and. The strong assumptions of convexity, and continual learning progress greatly simplifies the critical theorems for exploitation we prove, but is also overly restrictive. Having completed the initial proofs, we explore under what conditions these constraints can be safely relaxed.
 
 We discuss our measure of information value $E$ in detail in the previous section, but for completeness we reintroduce it with complete formal notation.
 
@@ -355,7 +355,7 @@ We've used dynamic programming to derive an optimal $E$ maximization policy. It 
     \end{align}
 \end{definition}
 
-% TODO: assume \delta < 0 for all T. Convexity too.
+
 
 \begin{theorem}{Visitation (completeness and uniqueness)} \label{theorem:Z}
 A greedy policy $\pi$ is the only deterministic policy which ensures all states in $S$ are visited, such that $Z = S$.
@@ -365,18 +365,18 @@ A greedy policy $\pi$ is the only deterministic policy which ensures all states 
 
     Therefore, again by Def.~\ref{def:ineq}, $\exists \int \delta E(s) \rightarrow -c$. 
 
-    \textit{Recall}: $\delta < 0$ 
+    \textit{Recall}: $\triangledown \mathcal{L} < 0$
 
     However if we wished to instead swap ($E_i \leq E_j$) so ($E_i \geq E_j$) by definition $\not \exists c; E_i + c = E_j$, as $\not \exists \int \delta \rightarrow c$. 
 
-    To complete the proof, assume that some policy $\hat \pi_E \neq \pi^*_E$. By definition policy $\hat \pi_E$ can any action but the maximum leaving $k-1$ options. Eventually as $t \rightarrow T$ the only possible swap is between the max option and the $kth$ but as we have already proven this is impossible as long as $\delta < 0$. Therefore, the policy $\hat \pi_E$ will leave at least 1 option unexplored and $S \neq Z$.
+    To complete the proof, assume that some policy $\hat \pi_E \neq \pi^*_E$. By definition policy $\hat \pi_E$ can any action but the maximum leaving $k-1$ options. Eventually as $t \rightarrow T$ the only possible swap is between the max option and the $kth$ but as we have already proven this is impossible as long as $\triangledown \mathcal{L} < 0$. Therefore, the policy $\hat \pi_E$ will leave at least 1 option unexplored and $S \neq Z$.
 \end{proof}
 
 \begin{theorem}{Convergence}
     Assuming a deterministic transition function $\Lambda$, a greedy policy $\pi_E$ will resample $S$ to convergence as $t \rightarrow T$, $E_t \rightarrow 0$.
 \end{theorem}
 \begin{proof}
-    \textit{Recall}: $\delta < 0$. 
+    \textit{Recall}: $\triangledown \mathcal{L} < 0$. 
 
     Each time $\pi^*_E$ visits a state $s$, so $M \rightarrow M'$, $F(M', a_{t+1}) < F(M, a_t)$
 
@@ -388,10 +388,9 @@ A greedy policy $\pi$ is the only deterministic policy which ensures all states 
 % TODO talk about epsilon, and stochastic \Lambda.
 If the transition function $\Lambda$ is stochastic, the noisy state changes will prevent $E$ from fully converging to 0. This might be ideal, in that it will force continual exploration of the world. However if we redefine the converge of $E$ not to 0 but to some value $\epsilon$, we can once again ensure convergence in noisy worlds. That is, in the limit of $t \rightarrow T$, $E_t \rightarrow \epsilon$, where $0 leq \epsilon \ll E_0$ with $E_0$ denoting the initial value of $E$. The larger $\epsilon$ the easier it is have the system settle into $\pi_{\emptyset}$ (Eq.~\ref{eq:pi_null}). Too large though, and $\epsilon$ will interfere with potential optimality of $\pi^*_E$ (by Theorem.~\ref{theorem:Z}). 
 
-% TODO this needs to be cleaned and tightened up!
-Exploration is often treated as a stochastic process, where an animal makes a weighted random choice to try and maximize rewards in the long term. We've shown here that from the point of view of information value, a noisy policy would be suboptimal; a deterministic greedy policy is optimal.
 
-We conjecture that a greedy $E$ policy also leads to the minimal possible number of samplings strategy for any convex loss function $L$. We prove this in the limited case of a ``perfect'' one-shot learning system....
+\subsubsection*{Sampling efficiency and information value}
+We conjecture that a greedy $E$ policy also leads to the minimal possible number of samplings strategy for any convex loss function $L$. We prove this in the limited case of a ``perfect'' one-shot learning system ....
 % TODO: one shot proof
 
 
@@ -401,11 +400,9 @@ We conjecture that a greedy $E$ policy also leads to the minimal possible number
 Having two objectives $\pi_E$ and $\pi_R$ sidesteps the exploration-exploitation dilemma in the following ways. Exploration now generates tangible value, and so is not costly. Because of this exploration can be carried out completely. This in turn ensures the reward policy $\pi^*_R$ discovers its global optimum, if it exists. In circumstances where the environment can be learned $E$ will decay to $\epsilon \geq 0$ leaving $\pi^*_R$ in control. Only when the environment changes can exploration policy $\pi^*_E$ resume control. Finally, while only one policy can control behavior each policy can learn from the actions of the other. This makes learning to maximize exploration and exploitation cooperative, even though action control is adversarial. 
 
 We introduce a new style of reinforcement learning we call \textit{Dual Value Learning}. From point of the view of an animal learning to explore its world \textit{and} gather the most rewards, we mathematically embody the idea that it can, and probably should, use two different policies for each aim. Hence the name, dual value learning. Of course only one policy can drive behavior at a time. To adjudicate we derive a simple value-based way % TODO CITE luce choice
- to select which policy dominates at a given time. We call this policy on policies a \textit{meta-policy}.
-
-Formally then, we say that dual value learning must define a meta-policy $\pi_{pi}$ which can inherit the optimality of $pi^*_E$, while also assuming the optimal properties of any reward learning policy $pi^*_R$. Here we base our formulation on the distinct asymptotic properties of information and rewards (for more on this, see \textit{Information is not a reward}).
-
-The asymptotic properties of $E \rightarrow \epsilon$ as $t \rightarrow T$ (Theorem~\ref{theorem:Z}) allow for a $\pi_{pi}$ definition based on a simple set of inequalities, with the addition of some mild constraints on both information $E_t$ and reward value $R_t$ (Eq.~\ref{eq:meta_greedy}). 
+ to select which policy dominates at a given time. We call this policy on policies a \textit{meta-policy}. We insist that for any meta-policy $\pi_{pi}$ to be considered valid, it must inherit the optimality of both $pi^*_E$ \textit{and} $pi^*_R$. 
+ 
+ We base our formulation for $\pi_{\pi}$ on the distinct asymptotic properties of information and rewards (which we discuss in \textit{Information is not a reward}). To review, $E \rightarrow \epsilon$ as $t \rightarrow T$ (Theorem~\ref{theorem:Z}). With this we can write down a $\pi_{\pi}$ definition based on a simple set of inequalities (Eq.~\ref{eq:meta_greedy}). 
 
 \begin{equation} \label{eq:meta_greedy}
     \begin{split}
@@ -495,15 +492,12 @@ We justify our constraints on $\mathcal{L}$ in two ways. First, assuming convexi
 ....
 
 
-\subsection*{Rewards and satiety}.
-% TODO: show it does not matter.
+\subsection{Modulation by introspection}
+Policies sampling each other, to tune hyper params. To set modulation.
 
-\subsection{Pain and value}
 % TODO: for the same reason we argue reward and E are separate, we must argue E and pain are separate. A separation of cognition and affect. 
 % def a pain meta policy w/ the other parts
 
-\subsection{Modulation by introspection}
-Policies sampling each other, to tune hyper params. To set modulation.
 % Pain has a stronger learning rate, so E declines quickly? Still, we think our model may be incomplete here. Suggest a adapted meta for pain and pleasure.
 
 % Let the policies leak to tune learning rates? How much bias does this introduce. A necessary bias in a harmful world? Likewise, if you are starving tune up E for R, change epsilon. 
@@ -515,6 +509,7 @@ Policies sampling each other, to tune hyper params. To set modulation.
 
 A skeptical reader would suggest we're swapping an accepted term \textit{curiosity}, with another \textit{information value}. We acknowledge this, and have wondered it ourselves! It's that intuitively, curiosity often seems to dim more quickly than certain knowledge reaches its full brightness. That is, learning needs more than curiosity. Learned information has to have its own independent value. This is, in the end, why we formalize the value of information using simple axions. 
 
+% TODO: treat this as the future work section.
 \subsection*{Learning structure and value}.
 We've explored only a simple memory model. 
 
