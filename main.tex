@@ -227,7 +227,7 @@ The independent representation of $S$ and $A$ probabilities is critical to all t
 \end{definition}
 
 \subsubsection*{Learning assumptions}
-\textit{With a loss of generality}, we assume that $\mathcal{L}$ is convex, and that every observation $s$ leads to learning progress, unless $L(s) = 0$. That is, the gradient of $\triangledown \mathcal{L} < 0$ for all $s \in P$ when $L(s) \neq 0$ and. The strong assumptions of convexity, and continual learning progress greatly simplifies the critical theorems for exploitation we prove, but is also overly restrictive. Having completed the initial proofs, we explore under what conditions these constraints can be safely relaxed.
+\textit{With a loss of generality}, we assume that $\mathcal{L}$ is convex, and that every observation $s$ leads to learning progress, unless $L(s) = 0$. That is, the gradient of $\triangledown \mathcal{L} < 0$ for all $s \in P$ when $L(s) \neq 0$ and. If $\triangledown \mathcal{L} = 0$, then for a convex learner we are at the global minimum, and so exploration and learning should stop (an idea we formalize below). The strong assumptions of convexity, and continual learning progress greatly simplifies the critical theorems for exploitation we prove, but is also overly restrictive. Having completed the initial proofs, we also explore under what conditions these constraints can be safely relaxed.
 
 \subsubsection*{From value to payoff}
 We discuss our measure of information value $E$ in detail in the previous section, but for completeness we reintroduce it with complete formal notation.
@@ -392,13 +392,27 @@ If the transition function $\Lambda$ is stochastic, the noisy state changes will
 \subsection*{Limitations}
 A deterministic $\pi_E$ requires that the initial set of information values, $E_0$, be provided \textit{a priori}. The simplest choice $E_0 = (0.0 ,... )$ isn't a good choice. When $\sum E = 0$ then $\pi_E \rightarrow \pi_{\emptyset}$ and thus exploitation can never begin. A uniform prior for $E_0$ is probably a good default. It means no single choice is preferred, which seems a reasonable assumption for the initial state of an agent in a new environment. Theorem~\ref{theorem:opt_sub} ensures that any $E_0$, $\pi_E$ will optimal in terms of maximization of total $E$. Likewise, Theorem~\ref{theorem:Z} ensures that any initial choice will not effect the optimality of the search. So while $E_0$ does not change $\pi_E$'s long term behavior, it will of course change it's transitory dynamics which might be extremely important when applying this work to real life settings.
 
-A greedy policy can't handle when values are exactly tied, as there is now way to rank equal values. Theorems~\ref{theorem:Z}and~\ref{theorem:Z} ensure that any tie breaking strategy is valid, and so can be arbitrary. However like the choice of $E_0$, tie breaking can strongly effect the transient dynamics of $\pi_E$ and so can be quite important in practice. Viable tie breaking strategies taken from experimental work include, ``take the closest option'', ``repeat the last option'', or ``take the option with the highest marginal likelihood''. % TODO: CITES for these three.... 
+A greedy policy can't handle when values are exactly tied, as there is now way to rank equal values. Theorems~\ref{theorem:opt_sub} and~\ref{theorem:Z} ensure that any tie breaking strategy is valid, and so can be arbitrary. However like the choice of $E_0$, tie breaking can strongly effect the transient dynamics of $\pi_E$ and so can be quite important in practice. Viable tie breaking strategies taken from experimental work include, ``take the closest option'', ``repeat the last option'', or ``take the option with the highest marginal likelihood''. % TODO: CITES for these three.... 
 We do suggest the tie breaking scheme is deterministic, which maintains the determinism of the whole theory.
-
-For many complex and realistic environments, convergence of any given learning algorithm, even a convex one, is not guaranteed in the general case \cite{TODO}. If learning does not at least begin to converge, then $E$ will not converge and $\pi_E$ must be non-optimal. This is, however, a fundamental limitation of learning theory. Still, our analysis must confine itself to agents that do learn.
 
 Optimal exploration, both in terms of search and max $E$ does not promise that the agent has learned an accurate or unbiased memory. The loss function $\mathcal{L}$ is responsible for that. By comparing a memory before and after learning, information value only measures self-consistency. That is, the agent could learn a bad model of the world, but as long as it learns it consistently exploration will be consider convergent and total $E$ optimal.
 
+\subsection*{Non-convex learning}
+To simplify the problem we have assumed that the memory learning loss function $\mathcal{L}$ is both convex, and its gradient is always negative. Intuitively, these assumptions mean \textit{1.} there is a global solution to learning $M$ and that \textit{2.} with every observation some small amount of learning progress is made. In practice, neither assumption is realistic. Many of our most powerful learning systems are non-convex, and not all observation can and do lead to learning progress. 
+
+There are many reasons learning can diverge. For example, a ``bad'' initialization or ``bad'' hyper-parameters, too much noise in the input data, and so on. For many complex and realistic environments, convergence of any given learning algorithm, even a convex one, is not guaranteed in the general case \cite{TODO}. If learning does not at least begin to converge, then $E$ will not converge and $\pi_E$ must be non-optimal. This is, however, a fundamental limitation of learning theory. Still, our analysis must confine itself to agents that do learn.
+
+If learning begins to diverge so $\triangledown \mathcal{L} > 0$, then $E$ must also grow (see Eq.~\ref{eq:KL}). If noise or stimulus complexity drive this momentary loss of learning progress, increases to $E$ will force the animal to ``resample'' these stimuli. The resampling order is based on the expected information gain with each. In many circumstances \textit{we conjecture maximizing $E$ will lead to $\mathcal{L}$ both to resume a negative trajectory and do so as efficiently or quickly as possible}. In this case, maximizing $E$ remains a sound objective. On the other hand, if $\mathcal{L}$ diverged due a problem with the learning algorithm itself, say a bad seed in a deep reinforcement learning model, then maximizing $E$ may exacerbate the problem leading to a potentially catastrophic feedback loop. In this case maximizing $E$ seems unsound, though it is not clear if any action policy would be better. 
+
+
+\subsubsection*{Overcoming local minimum}.
+Local minimum are a common concrete case of that any purportedly general theory of exploration must accommodate. We've assumed $\triangledown \mathcal{L} < 0$. We can invert this assumption to extend our Theorems~\ref{theorem:opt_sub} and~\ref{theorem:Z} to local minimum. 
+
+Assume instead $\triangledown \mathcal{L} > 0$  but this is constrained to a finite duration $W$, over an a sampling time $T$. It's logically required than that at all other times $T - W$, $\triangledown \mathcal{L} \leq 0$. However if .... % HERE
+
+A finite divergence like the above is half of a working definition for local minimum in $\mathcal{L}$. (The other half being the minimum itself, defined by the gradient finding zero as $\triangledown \mathcal{L} = 0$.)
+
+As we note above, there is no way in the general case to prove that any minimum is local, or that $\mathcal{L}$ will overcome any local minimum. We show here that if a minimum can be overcome, greedily maximizing $E$ will not interfere. We also conjecture in many cases maximizing $E$ may be the most efficient resampling strategy. % TODO: I'd like to do this proof, but am not quite sure how to form the problem statement. I don't grok KL deeply enough? Need to know more about L?
 
 % ---------------------------------------------------------------------------
 \subsection*{A way around the dilemma}
@@ -431,10 +445,10 @@ The meta-policy in Eq.~\ref{eq:meta_greedy} is a myopic in the sense that at eve
     Assuming an infinite time horizon, if $\pi_E$ is optimal and $\pi_R$ is optimal, then $\pi_{\pi}$ is also optimal in the same sense as $\pi_E$ and $\pi_R$.
 \end{theorem}
 \begin{proof}
-    The optimality of $|\pi_{\pi}$ can be seen by direct inspection. If, $p(R = 1) < 1$ and we have an infinite horizon, the $pi_E$ will have a unbounded number of trials meaning the optimally of $P^*$ holds. Likewise, $\sum E < \epsilon$ as $T \rightarrow \infty$, ensuring $pi_R$ will dominate $\pi_{\pi}$ therefore $pi_R$ will asymptotically converge to optimal behavior.
+    The optimality of $|\pi_{\pi}$ can be seen by direct inspection. If, $p(R = 1) < 1$ and we have an infinite horizon, the $\pi_E$ will have a unbounded number of trials meaning the optimally of $P^*$ holds. Likewise, $\sum E < \epsilon$ as $T \rightarrow \infty$, ensuring $pi_R$ will dominate $\pi_{\pi}$ therefore $\pi_R$ will asymptotically converge to optimal behavior.
 \end{proof}
 
-% TODO: clip 0 <= E < 1? Is arbitrary, but in practice KL will give values << 1. Can switch to JS. Or simply rescale, r to some set {0, N}.
+If learning during $\pi_{\pi}$ is allowed to continue until $\pi_E$ converges so $E_t - \epsilon = 0$ then, by definition the animal will have completely explored its world. This implies that in turn $\pi_R$ has seen every state, and so can then choose the overall optimal value. Thus is there is a globally optimally reward policy, $\pi_{\pi}$ guarantees it will be found. Classic reinforcement learning views this search as costing potential reward. Dual value learning instead asserts a net gain. Either from information value, from rewards, or both. We suggest that rather than being fundamental, the exploration-exploitation dilemma follows from asking too little from an animal's learning objectives.
 
 In proving the total optimality of $\pi_{\pi}$ we limit the probability of a positive reward to less than one, denoted by $p(R_t = 1) < 1$. Without this constraint the reward policy $\pi_R$ would always dominate $\pi_{\pi}$ when rewards are certain. While this might be useful in some circumstances, from the point of view $\pi_E$ it extremely suboptimal; the model will never explore. Limiting $p(R_t = 1) < 1$ is an admittedly ad hoc way to handle this edge case in the mathematics. We think its reasonable constraint though, as rewards in the real world are rarely certain. A more naturalistic, but perhaps less parsimonious, way to handle this edge case would be to introduce the a model of reward satiety, where reward value decays asymptotically with repeated exposure. 
 % TODO example of satiety with math. Also, TODO CITE
@@ -490,25 +504,16 @@ Policies sampling each other, to tune hyper params. To set modulation.
 % Consider both ep and learning rate tuning across policies are a kind of modulation. ...If it is modulation what is its homeostasis? These must be a matched set?
 
 
+\subsection*{What do to by default}
+% TODO move pi_null here. Make it a meta-problem?
+% TODO remove pi_null from the rest solving the local min problem, which is more important!
+
 
 % --------------------------------------------------------------------------
 \section*{Discussion}
 Our analysis raises the possibility that reinforcement learning on just rewards is an incomplete theory. This has been partially acknowledged by adapting information terms (as fictive rewards) into reinforcement learning problems. However we suggest that on empirical, computational, mathematical, and philosophical grounds the use fictive rewards is not far enough. Instead,  we believe information should be valued entirely for its own sake, and reward and information should be maximized separately. While this approach might seem more complex, we offer a simple optimal meta-policy for doing dial optimization. If an animal were to use this meta-policy, the classic exploration-exploitation dilemma is no longer a dilemma, and that exploration can be both optimal and deterministic.
 
 When training animals to learn a new task one of the most difficult parts in the training is constraining behavior. Left to their own devices and motivations, animals engage in a range of task-irrelevant activities. This kind of exploration is a nuisance to the experimenter, but we suggest is a important object of study for the theorist. Dual value learning accommodates the analysis and prediction for any mode of free ranging behavior, given a working definition for the state space $S$, a memory $M$, and the memory learning rule $J$.  %TODO J is right here?
-
-\subsection*{Non-convex learning}
-% TODO re-write
-We justify our constraints on $\mathcal{L}$ in two ways. First, assuming convexity is common tactic used to make learning proofs tractable. Second, we argue that the value of information is only certainly useful when an agent can learn about it's world. If learning begins to diverge, $\frac{\mathcal{L}{ds}} > 0$, $E(s, a)$ must also grow (see Eq.~\ref{TODO}). If noise or stimulus complexity drove a momentary loss of learning progress, this drive will lead the agent to ``resample'' these stimuli which max return $L$ to a negative trajectory. In this case, maximizing $E$ remains a sound objective. On the other hand, if $L$ diverged due a problem with the learning algorithm itself, say a bad seed in a deep reinforcement learning model, then maximizing $E$ may exacerbate the problem leading to a potentially catastrophic feedback loop. In this case maximizing $E$ seems unsound, though it is not clear if any action policy would be better unless that is the agent has access to it's own learning rule allowing it to self-diagnosis the problem.
-
-% TODO: keep this? drop this?
-\begin{theorem}
-    The assumption $\frac{dL_{\pi_{a}}}{ds} \leq 0$, can be replaced with $\mathbb{E} [\frac{dL_{\pi_{a}}}{ds} \leq 0]$ over an infinite time horizon, with an increase in generality.
-\end{theorem}
-\begin{proof}
-....
-\end{proof}
-
 
 \subsection*{Curiosity and value}.
 A skeptical reader might suggest we've arbitrarily swapped an accepted term \textit{curiosity}, for another \textit{information value}. We introduce a new term for two reasons. \textit{1.} When separating information value from reward we felt it was important to place information value on principled grounds. This is why we developed the value axioms. Applying these axioms to an existing, and loosely defined term, like curiosity would seem to add confusion to the literature rather than simplify. \textit{2.}, curiosity as a subjective experience seems to dim more quickly than learning a detailed model requires. That is, learning needs more than just curiosity. We try and capture this admittedly complex motivation using information gain and the KL divergence.
@@ -527,7 +532,7 @@ Likewise, in machine learning memory modules often don't rely on distributions, 
 The axioms can be easily satisfied in these alternative kinds of cases. A set of axioms also is a concrete point to debate how to value information; We hope ours isn't the last word.
 
 
-\subsection*{Learning structure and value}.
+\subsection*{Learning structure and value}
 Here we've explored only a simple probabilistic memory model that lends itself to information theoretic calculations. There are of course a large number of known approaches one an animal might use to build a model of the world. These include, Bayesian structure learning, dynamical systems modeling, casual reasoning, % TODO CITE, and more.
 By defining information value axiomatically, we offer a principled and consistent way to fold potentially any model-build method seamlessly and optimally into a value optimization framework. Doing this might require developing a new metric other than the KL divergence. We conjecture though that in many cases adding a simple probabilistic memory module to estimate state-action likelihoods--like the one we study here--may prove sufficient.
 
