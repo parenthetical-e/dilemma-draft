@@ -100,20 +100,18 @@ Conversely, if an animal wants to build a generally useful model of world then b
 
 % ----------------------------------------------------------------------------
 \subsection*{Information is not a reward}
-A first principle analysis of information and reward shows they have opposing properties:
+Information and reward have opposing properties:
 
 \begin{enumerate}[noitemsep,wide=0pt,leftmargin=\dimexpr\labelwidth]
     \item Rewards are a conserved resource. Information is not. 
     \item The same kind of reward can be consumed many times without necessarily losing value\footnote{In practice, there are satiety effects but these are not a necessary part of the reward's value}. Information once learned has no value in being be learned again.
 \end{enumerate}
 
-These can be seen more intuitively by example. In \textit{1.}, If a rat shares its potato chip with a cage-mate, it has less food for itself. Compare that chip to a new idea. Explaining a new idea to lab-mate does not require forgetting the idea yourself. In fact, it's often the opposite.
+These can be seen more intuitively by example. \textit{1.}, If a rat shares its potato chip with a cage-mate, it has less food for itself. Compare that chip to a new idea. Explaining a new idea to lab-mate does not require forgetting the idea yourself. In fact, it's often the opposite.
 
-In \textit{2.}, eating one potato chip often means wanting another. Where as if you know the capital of the United States, there is no value in being told the capital of the United States is Washington DC.
+\textit{2.} Eating one potato chip often means wanting another. Where as if you know the capital of the United States, there is no value in being told the capital of the United States is Washington DC.
 
-These philosophical differences lead to notable mathematical differences. To evenly share a reward $r$ between $n$ others, $r_n = \frac{r}{n}$. Where as for information value can in principle be shared without loss, so $I_n = I$. Likewise, if an animal is learning about some state of world $s$ the value of information about $s$ should decrease with time. Assuming learning can asymptote, then as $t \rightarrow \infty, I_s \rightarrow 0$. For rewards, value never changes. So as $t \rightarrow \infty, r_s \rightarrow r_s$.\footnote{Though including reward satiety effects may somewhat diminish $r_s$ in practice.}
-
-For empirical, philosophical, and mathematical reasons we've suggested reward and information should be optimized separately. To make this suggestion formal in the next sections we \textit{1.} derive a general measure information value using an axiomatic approach, \textit{2.} derive a deterministic optimal policy to maximize this measure, and \textit{3.} derive a new optimal learning rule which can simultaneously maximize information \textit{and} reward value. We also show how efficient coding can lead to efficient re-exploration in environments that change with time. 
+These philosophical differences lead to notable mathematical differences. To evenly share a reward $r$ between $n$ others, $r_n = \frac{r}{n}$. Where as for information value can in principle be shared without loss, so $I_n = I$. Likewise, if an animal is learning about some state of world $s$ the value of information about $s$ should decrease with time. Assuming learning can asymptote, then as $t \rightarrow \infty, I_s \rightarrow 0$. For rewards, value never changes. So as $t \rightarrow \infty, r_s \rightarrow r_s$.\footnote{Though including reward satiety effects may somewhat diminish $r_s$ in practice.} In summary, information is fundamentally not a reward. Information about the world and the rewards from the world are very different kinds of things.
 
     
 % ---------------------------------------------------------------------------
@@ -458,6 +456,8 @@ With these asymptotic properties in mind, we can write down a $\pi_{\pi}$, based
 Note that to satisfy $E_t - \epsilon > 0$ in Eq~\ref{eq:meta_greedy}, $\epsilon = 0$ when $\Lambda(.)$ is deterministic. Only when the environment is stochastic can $\epsilon$ safely exceed 0.
 
 The meta-policy in Eq.~\ref{eq:meta_greedy} is a myopic in the sense that at every time $t$, $\pi_E$ or $\pi_R$ has the opportunity to take control but this control lasts only a single time step. There are many possible meta-policies which could inherit the optimality of the dual value policies. We chose this form for its simplicity, but justify it as similar myopic control schemes have proven effective for other complex, high variance, problems \cite{Hocker2019}.
+
+Even though the individual policies in the meta-policy are independent, learning can be done in parallel. Regardless of which policy is in control, they can in principle observe choices made by the other and learn from them. Parallel learning, with sequential control, may greatly increase the sampling efficiency of both policies without biasing them.   
 
 \begin{theorem}[Optimality of $\pi_{\pi}$] \label{theorem:meta}
     Assuming an infinite time horizon, if $\pi_E$ is optimal and $\pi_R$ is optimal, then $\pi_{\pi}$ is also optimal in the same sense as $\pi_E$ and $\pi_R$.
