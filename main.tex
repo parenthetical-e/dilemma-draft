@@ -17,11 +17,11 @@
 \DeclareMathOperator*{\argmax}{argmax}
 \newtheorem{corollary}{Corollary}
 \newtheorem{axiom}{Axiom}
+\newtheorem{statement}{Statement}
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}[theorem]{Lemma}
 
-% \title{A deterministic answer to the exploration-exploitation dilemma.}
 \title{A way around the exploration-exploitation dilemma.}
 
 % Use letters for affiliations, numbers to show equal authorship (if applicable) and to indicate the corresponding author
@@ -34,7 +34,7 @@
 \leadauthor{Peterson} 
 
 % Please add here a significance statement to explain the relevance of your work
-\significancestatement{We have derived a deterministic way for an agent to learn how to optimally maximize reward, and to independently explore their world in an optimal manner. In our approach exploration is done only to maximize information value--a quantity we define axiomatically. Maximizing information value forces the animal to form a general, reward-independent memory of the world $M$. An important side effect of learning $M$, is that reward learning also improves. We call our view of the reinforcement learning problem, dual value learning. Dual value learning is a simple way to avoid the exploration-exploitation dilemma. The major cost of our approach is a increase in worst-case sample efficiency.}
+\significancestatement{We have derived a deterministic way for an agent to learn how to maximize reward, and to explore their world in an optimal manner. In our approach exploration is done only to maximize information value--a quantity we define axiomatically. Maximizing information value forces the animal to learn a general, reward-independent, memory of the world. An important side of this learning is that reward learning also improves, to optimality. We call this view of the reinforcement learning problem, dual value learning. Dual value learning is a simple way to avoid the exploration-exploitation dilemma. The major cost of our approach is an increase in worst-case sample efficiency.}
 
 % Please include corresponding author, author contribution and author declaration information
 % \authorcontributions{EJP?.}
@@ -52,7 +52,7 @@
 
 % Short abstract
 \begin{abstract}
-The exploration-exploitation dilemma is considered a fundamental but intractable problem in the learning and decision sciences. Here we show a way around this dilemma. We first derive an axiomatic measure of information value. We use this to break the dilemma down into a tractable two-part problem, creating separate mathematical objectives for exploration and exploitation. We call this dual value learning. Dual value learning can exploit reward and explore information value optimally, with no trade-off. The cost to this solution is an increase in worst-case sample efficiency when compared to the equivalent reinforcement learning problem. The severity of the cost depends on the size of the environment, and the rate of rewards.
+The exploration-exploitation dilemma is considered a fundamental but intractable problem in the learning and decision sciences. Here we show a way around it. We first derive an axiomatic measure of information value. We use this to break the dilemma down into a tractable two-part problem, creating separate mathematical objectives for exploration and exploitation. We call this dual value learning. Dual value learning can exploit reward and explore information value optimally, with no trade-off. The cost to this solution is an increase in worst-case sample efficiency when compared to the equivalent reinforcement learning problem. The severity of the cost depends on the size of the environment, and the rate of rewards.
 \end{abstract}
 
 % \dates{This manuscript was compiled on \today}
@@ -71,75 +71,54 @@ The exploration-exploitation dilemma is considered a fundamental but intractable
 % TODO: make sure symbols have a colloquial def.
 \thispagestyle{firststyle}
 \ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
-When placed in a new environment animals will explore it, even if no tangible rewards, like food and water, are expected \cite{Liu2019,Jaegle,Todd2015}. Sometimes they'ss explore when the it is certain that will lead to less reward \cite{ZheWang2019}. If a reward is expected though, an animal will generally explore and discover it \cite{Todd2015}. This gets interpreted as the animal exploring \textit{for} reward--to maximize reward \cite{Sutton2018}. Here we analyze an alternative: animals don't explore to maximize reward at all, they explore to maximize information--sometimes--about reward. 
+When placed in a new environment animals will explore it even if no tangible rewards, like food and water, are expected \cite{Liu2019,Jaegle,Todd2015}. Sometimes they'll explore even when it is certain that exploration will lead to a loss \cite{ZheWang2019}. If a reward is expected though, an animal will generally explore and discover it \cite{Todd2015}. This exploration gets interpreted as the animal exploring \textit{for} reward--to maximize reward \cite{Sutton2018}. Here we offer an alternative view: animals don't explore to maximize reward at all, they explore to maximize information--sometimes--about reward. 
 
-Schmidhuber layed out the theoretical groundwork for our view of exploration. He conjectured that \textit{information about the world is valuable for its own sake} \cite{Schmidhuber1991} and argued that, \textit{in addition} to searching for rewards, animals seek to explore to build a model of the world. In doing this he said they are motivated by information itself, as a curiosity signal. In developing this theory, Schmidhuber made the seemingly parsimonious choice that when it comes time optimize, information and reward terms be combined into a single objective function (similar to our Eq.\ref{eq:total_r_I}). This mathematical form set the stage for decades of productive work on rewards, fictive rewards, and curiosity learning \cite{Pathak2017,Sutton1990,dayan1996exploration}. Despite the success including information and reward as a single additive objective suffers from at least one drawback: exploration becomes an intractable mathematical problem, fundamentally limited by the partial observability of rewards \cite{thrun1992active,dayan1996exploration,findling2018computational,gershman2018deconstructing} 
+Schmidhuber layed out the theoretical groundwork for our view of exploration. He conjectured that \textit{information about the world is valuable for its own sake} \cite{Schmidhuber1991} and argued that, \textit{in addition} to searching for rewards, animals seek to explore to build a model of the world. In doing this he said they are motivated by information itself, as a curiosity signal. In developing this theory, Schmidhuber made the seemingly parsimonious choice that when it comes time optimize, information and reward terms be combined into a single objective function (similar to our Eq.\ref{eq:total_r_I}). This mathematical form set the stage for decades of productive work on rewards, fictive rewards, and curiosity learning \cite{Pathak2017,Sutton1990,dayan1996exploration}. Despite the success including information and reward as a single additive objective suffers from at least one drawback: exploration itself becomes an intractable mathematical problem, fundamentally limited by the partial observability of rewards \cite{thrun1992active,dayan1996exploration,findling2018computational,gershman2018deconstructing} 
 
-Here we make a stronger conjecture than Schmidhuber's \cite{Schmidhuber1991}. We assert that information is valuable \textit{entirely} for its own sake. This lets us completely separate reward and information into two objectives, whose value we try to independently maximize. Estimating dual values this way is  less simple than having a single objective, but the increase in complexity comes with a substantial theoretical benefit. Exploration becomes a tractable mathematical problem, one we can solve deterministically.
+Here we make a stronger conjecture than Schmidhuber's \cite{Schmidhuber1991}. We assert that information is valuable \textit{entirely} for its own sake. This lets us completely separate reward and information into two objectives, whose values we independently maximize. Estimating dual values is less simple than having a single objective, but the increase in complexity comes with a theoretical benefit. Exploration becomes a tractable mathematical problem, one we can solve deterministically.
 
 Our contribution is threefold. We first set out a series of axioms to serve as principled basis for information value, and use these to implement a working scheme rooted in information theory. Next we develop an optimal policy for exploration that maximizes information value. This theory is purely deterministic, so exploration no longer relies on random sampling \cite{Haarnojaa,Kakade2002,Pathak2017,Sutton1990,thrun1992active,dayan1996exploration}. Finally we derive a new myopic controller \cite{Hocker2017}, a \textit{meta-policy}, that allows for simultaneously optimal and deterministic solutions to both problems of exploration and exploitation. 
 
 
 % ----------------------------------------------------------------------------
 \section*{Results}
-The overall objective in reinforcement learning is to maximize $V_{\pi_R}$, the expected value of total future rewards (Eq~\ref{eq:total_r_I}) \cite{Sutton2018}. Here we use the term $I_t$ as a generic stand in for a range of fictive rewards, including novelty bonuses \cite{Kakade2002}, curiosity signals \cite{Pathak2017}, Bayesian updates \cite{Radulescu2019}, or entropy terms \cite{Haarnoja2015,Haarnoja2017}.  Often the fictive term in these equations is arbitrarily re-weighted. We use $\beta$ for this fictive weight. Likewise, rewards are denoted by $R_t$. In this example the total time $T$ is said to be finite, simplifying the notation.
+We've conjectured the exploration-exploitation dilemma actually contains two completely seperate problems. Learning to maximising reward, and learning to maximize information value. The value of rewards are well known. So our conjecture begs the question of how to value information, if we don't consider it a reward.
 
-\begin{equation}
-    V_{\pi_R} = \sum_{t \in T, s \in S} R_t + \beta I_t
-    \label{eq:total_r_I}
-\end{equation}
-
-Explicitly, we propose that reinforcement learning problems should try and optimize two values: reward (Eq.~\ref{eq:total_r_2}) and information (Eq.~\ref{eq:total_e}). 
-
-\begin{multicols}{2}
-  \begin{equation}
-    V_{\pi_R} = \sum_{t \in T, s \in S} R_t
-    \label{eq:total_r_2}
-  \end{equation} \break
-  \begin{equation}
-    V_{\pi_I} = \sum_{t \in T, s \in S} I_t
-    \label{eq:total_e}
-  \end{equation}
-\end{multicols}
-
-We separate the objectives because classical rewards and information value have fundamentally different philosophical and mathematical properties. Conflating them introduces an undesirable bias, both in trying to maximize information value and in maximizing rewards.
-
-\subsection*{Biased by reward}
-Exploration often means a loss of rewards. To motivate exploration, lost rewards are often re-balanced with information gains, novelty signals, or other fictive reward signals. This is simple and intuitive, but comes with an under-appreciated limitation. If the true goal is to maximize total reward $R$, adding a fictive reward obscures this aim. After all, now an increase in $V_{\pi_R}$ may come from $R$ or from the fictive term $\beta I$. So while fictive rewards do encourage exploration they offer no guarantee of a performance increase in $R$, or in the long-term value $V_{\pi_R}$. 
-
-Conversely, if an animal wants to build a generally useful model of world, as Schmidhuber suggests, then biasing choices by maximizing reward is suboptimal. Both in terms of maximizing both the accuracy of the world model (which will wind up over-sampled near rewarding sites), and the efficiency with which the model is built (much time is wasted gathering rewards). 
-
-% ----------------------------------------------------------------------------
-\subsection*{Information is not a reward}
-Information and reward so seem to have opposing properties. If a rat shares a potato chip with a cage-mate, it must break the chip up to share, leaving has less food for itself. While if a student shares an idea with a lab-mate, the is idea is not divided up or lost. Thus rewards are a conserved resource, information is not. 
-
-The same kind of reward can be consumed many times without necessarily losing value\footnote{In practice, there are satiety effects but these are not a necessary part of the reward's value}. Information once learned though has no value in being be learned again. Eating one potato chip often means wanting another, whereas if you know the capital of the United States, there is no value in being told the capital of the United States is Washington DC.
-
-These two philosophical differences suggest that reward and information may also have notable mathematical differences. To evenly share a reward $r$ between $n$ others, $r_n = \frac{r}{n}$. In contrast, information value can, in principle, be shared without loss, i.e., $I_n = I$. Likewise, if an animal is learning about some state of world $s$ the value of information about $s$ should decrease with time. Assuming learning can asymptote, then as $t \rightarrow \infty, I_s \rightarrow 0$. For rewards, value never changes. So as $t \rightarrow \infty, r_s \rightarrow r_s$.\footnote{Though including reward satiety effects may somewhat diminish $r_s$ in practice.} In summary, information is fundamentally not a reward. Information about the world and the rewards from the world are very different kinds of things.
-
-% ---------------------------------------------------------------------------
 \subsection*{If information is not a reward, how can we value it}
-Shannon developed information theory without any sense of what information ``means''. He focused on transmitting symbols. For his theory ro work, it does need to know what the symbols refer to and is therefore extremely general \citep{Shannon1948}. Many attempts have since been made to instill information theory with meaning \citep{Kolchinsky2018}. With meaning, value follows. Most of these attempts require a ``salience'', or ``relevance'', or ``training'' signal (where all three terms amount to near the same thing; \cite{Deacon2015,Tishby}), while others have taken an evolutionary approach \citep{Kolchinsky2018,Deacon2015}.  
+Shannon developed information theory without any sense of what information ``means''. He focused on transmitting symbols. For the theory to work, it doesn't need to know what the symbols refer to and is therefore extremely general \citep{Shannon1948}. Many attempts have since been made to instill information theory with meaning \citep{Kolchinsky2018}. With meaning, value follows. Most of these attempts require a ``salience'', or ``relevance'', or ``training'' signal (where all three terms amount to near the same thing; \cite{Deacon2015,Tishby}), while others have taken an evolutionary approach \citep{Kolchinsky2018,Deacon2015}.  
 
-Instead of trying to define meaning more broadly, we take an axiomatic approach to define value: listing key properties (axioms) that any naturalistic measure of information value should have, and arrive a metric that satisfies these. In taking this approach we suggest information value can be separated from meaning, and can be strictly internal to an agent. While meaning requires an explicit outside reference. Our self-referential approach to information value is extremely general for the same reasons as Shannon's original theory: we only compare distributions, and do not consider what those distributions refer to.
+Instead of trying to define meaning broadly, we take an axiomatic approach to only define value. We list key properties (axioms) that any naturalistic measure of information value should have, and arrive a working metric that satisfies these. Our self-referential approach to information value is extremely general for the same reasons as Shannon's original theory: we examine how memory changes with learning, but do not consider what the memory refer to in the world; what it means. Here memories are just a collection of (transformed) symbols.
 
-% TODO: rephrase axioms to make no mention of p()? Most general possible. Free work from any hint of bayes.
-We formalize information value with five axioms.
+To state the axioms first we need to introduce notation. We want to be as general as possible. This means we have keep the definitions, and theorems, abstract. Though at every point we offer concrete examples for how these abstract ideas can be realized in practice. 
 
+We assume that the total number of states an animal might visit $S$ is finite. 
+
+where $M$ is a collection of memories defined, abstractly, as a functional transform of $s$ mapped into $M$, $M(s) = f(s)$. If $f$ is an identity function, then $M$ is the simple set of past states. If $f$ is a probability function, then $M$ is distribution. 
+
+We require that $M$ is reversible. % TODO...
+
+We limit the number of actions $a$ animal might take to a finite set $\textbf{A}$ of size $K$, $a \in \textbf{A}^k$. 
+
+To take an action, we imagine an animal consults its policy function, $\pi$. 
+% M, s, etc.
+
+% TODO: discuss that these DO NOT NEED Shannon entropy or information theory. We will use it, but it not necessary. 
+
+\subsection*{The value axioms}
 \begin{axiom}
-    The value of information about some event $s$ depends \textit{only} on what is already known about $s$ (and not $s$ itself).    
+    The value of information $E$ about some event $s$ depends \textit{only} on how $s$ changes $M$.
     \label{ax:1}
 \end{axiom}
 \begin{axiom}
-    Information about some event $s$ that is known with no uncertainty has a value of exactly 0.
+    For any $s$ the only way for $E$ to have value of exactly 0 is if observing $s$ does not change $M$.
     \label{ax:2}
 \end{axiom}
 \begin{axiom}
-    The value of information about some event $s$ is non-negative. 
+    The value of information $E$ about $s$ is non-negative for all possible $s$ and $M$. 
     \label{ax:3}
 \end{axiom}
 \begin{axiom}
-    Information value should increase monotonically with absolute changes in the uncertainty of $S$.
+    Information value $E$ should increase monotonically with changes in $M$; $E \sim \delta M$.
     \label{ax:4}
 \end{axiom}
 \begin{axiom}
@@ -147,27 +126,71 @@ We formalize information value with five axioms.
     \label{ax:5}
 \end{axiom}
 
-Axiom~\ref{ax:1} informally captures the idea that ``subjective value depends only on the subject's own experience''.  In Axiom~\ref{ax:2} we capture the idea that, ``if you know something \textit{perfectly}, there is no value in learning it again''. Axiom~\ref{ax:3} exists to impose the idea that, ``learning new information is always good, in principle''. In practice, of course, learning some new information can have undesirable consequences. These consequences are not part of the information itself, but instead live in its use. Axiom~\ref{ax:4} ensures that information value positively tracks changes in uncertainty, regardless of whether it is a increase a decrease of uncertainty. Axiom~\ref{ax:5} covers the precept that, ``specific information is more valuable than general information.'' 
+% \begin{axiom}
+%     The value of information about some event $s$ depends \textit{only} on what is already known about $s$ (and not $s$ itself).    
+%     \label{ax:1}
+% \end{axiom}
+% \begin{axiom}
+%     Information about some event $s$ that is known with no uncertainty has a value of exactly 0.
+%     \label{ax:2}
+% \end{axiom}
+% \begin{axiom}
+%     The value of information about some event $s$ is non-negative. 
+%     \label{ax:3}
+% \end{axiom}
+% \begin{axiom}
+%     Information value should increase monotonically with absolute changes in the uncertainty of $S$.
+%     \label{ax:4}
+% \end{axiom}
+% \begin{axiom}
+%     For a some set of events $S$, specific (or localized) changes to the structure of the distribution $p(S)$ uncertainty are more valuable than global changes.
+%     \label{ax:5}
+% \end{axiom}
 
-To separate all kinds of fictive rewards $I$ from those which satisfy our axioms, we introduce a new notation $E$ to represent axiomatic information value.
+As formality can sometimes obscure more general intent, we restate the axioms informally illuminating, we hope, the basic idea behind each one:
+
+% \setcounter{axiom}{0}
+\begin{statement}
+    Any subjective value depends \textit{only} on the subject's own experience. Information value is subjective, and so should depend only on how past experience is remembered.
+\end{statement}
+\begin{statement}
+    If you know something perfectly, there is no value in learning it again.
+\end{statement}
+\begin{statement}
+    Learning new information is always good, in principle. The consequences of the information may not always be good, but that's a separate issue altogether.
+\end{statement}
+\begin{statement}
+    If information value is based on changes to memory (per Ax. 1), it should track memory changes in a strict monotonic way. This is both sensible and simplifies mathematical analysis.
+\end{statement}
+\begin{statement}
+    More specific information is more always more valuable than less specific information.
+\end{statement}
+
+% Axiom~\ref{ax:1} captures the idea that ``subjective value depends only on the subject's own experience''.  In Axiom~\ref{ax:2} we capture the idea that, ``if you know something \textit{perfectly}, there is no value in learning it again''. Axiom~\ref{ax:3} exists to impose the idea that, ``learning new information is always good, in principle''. In practice, of course, learning some new information can have undesirable consequences. These consequences are not part of the information itself, but instead live in its use. Axiom~\ref{ax:4} ensures that information value positively tracks changes in uncertainty, regardless of whether it is a increase a decrease of uncertainty. Axiom~\ref{ax:5} covers the precept that, ``specific information is more valuable than general information.'' 
+
+% To separate all kinds of fictive rewards $I$ from those which satisfy our axioms, we introduce a new notation $E$ to represent axiomatic information value.
 
 % ---------------------------------------------------------------------------
 \subsection*{Exploration as a dynamic programming problem}
-Exploration is almost universally regarded as stochastic process \cite{Sutton2018,Jaegle}. Here we show to recast it as a deterministic, rational, search process. To do this \textit{we only need to make a few common, mild, assumptions about details of the animal's memory and its learning function(s).} 
+Exploration is almost universally regarded as stochastic process \cite{Sutton2018,Jaegle}. Our value axioms and related definitions allow for a different take. We'll now show how to recast exploration as a deterministic, rational, search process. Specifically, we'll borrow a tool from computer science and cast exploration as a dynamic programming problem \cite{TODO}. To do this we need to make an additional assumption about animal learning.
 
-In the following sections we develop a formalism to prove a general memory mechanism $M$ has optimal substructure. This proof let's use the Bellman equation \cite{Bellman} to derive an optimal greedy policy for maximizing information value. We further prove that this greedy policy will naturally explore an environment to completion. 
+\subsubsection*{Limits on learning}
+% TODO L() defs got here now!
+
 
 
 \subsubsection*{Memory space}
-Information value depends on an animals memory. That is, information value $E$ of the present state $s_t$ depends on the whole history of observations $S_{<t}$ via its memory $M$. This long-term dependency means exploratory learning \textit{cannot} be embedded in a Markov decision space, which is where most analysis of reinforcement learning problems takes place \cite{Sutton2018a}. However, $E$ \textit{is} calculated iteratively over $M$, using only the pair of states $(s_t, s_{t-1})$, and yields a non-negative real value with each iteration (i.e $E_{(s,s')} \ge 0, E \in \mathbb{R}^1$). Conditions like these \textit{are} suitable for a dynamic programming solution. 
+To use theorems from dynamic programming we must prove our memory $M$ has a special property called ``optimal substructure''. Optimal substructure means that one can take a problem and break into to a small number of sub-problems or series. If these sub-problems have \textit{optimal substructure} then they will keep any relevant optimality present in the original series. % TODO for example: explain a simple case from roughgardners class.
+
+This is useful because if we prove can decompose a problem keeping its optimally, we can also the grow it optimally; induction proofs are trivial when a problem has an optimal substructure. 
 
 \begin{definition}
     We call a distribution over a set of states $S$ a \textit{memory distribution} and denote it with $M$, where $M(s) = p(s), \ \text{where} \ s \in S : \mathbb{R}^N, \ p(.) \rightarrow (0, 1)$. We require for any $s \in S$, a single $s_i$ can be updated without effecting the other $N-1$ state probabilities. 
 \end{definition}
 
-The idea behind optimal substructure is that one can take a problem and break into to a small number of sub-problems or series. If these sub-problems have \textit{optimal substructure} then they will keep any relevant optimality present in the original series.  This is useful because if we prove can decompose a problem optimally, we can also grow it optimally; Induction proofs are trivial when the problem has an optimal substructure. 
 
-To make the analysis tractable we assume that the total number of states an animal might visit $S$ is finite. Formally then, $s \in \textbf{S}; \textbf{S} \in \mathbb{R}^N$, where $N$ is the total number of states. We limit the number of actions $a$ animal might take to finite real set, $a \in \textbf{A}; \textbf{A} \in \mathbb{R}^K$, with $K$ actions. To take an action, we imagine an animal consults its policy function, $\pi$. 
+
+
 
 \begin{definition}
     Let $\pi$ be a policy function that maps a state $s$ to an action $a$, $\pi : s \rightarrow a$, such that $s \in S, a \in A$.
@@ -245,7 +268,7 @@ A first step in solving a dynamic programming problem is isolating the relevant 
 
 % --------------------------------------------------------------------------
 \subsection*{A Bellman solution}
-In terms of the payout $F$ and policy $\pi_E$ and some initial memory $M_0$ the optimal value is given by Eq~\ref{eq:V_star}.
+If $M$ has optimal substructure (which it does, see above), we can then use the Bellman equation \cite{Bellman} to write down a known optimal (greedy) policy for maximizing information value $E$ with $M$. In terms of the payout $F$ and policy $\pi_E$ and some initial memory $M_0$ the optimal value is given by Eq~\ref{eq:V_star}.
 
 \begin{equation} \label{eq:V_star}
     \begin{split}
@@ -352,6 +375,43 @@ A greedy policy $\pi$ is the only deterministic policy which ensures all states 
 \end{proof}
 
 If the transition function $\Lambda$ is stochastic, the noisy state changes will prevent $E$ from fully converging to 0. This might be ideal, as it will force continual re-exploration of the world. However if we redefine the converge of $E$ not to 0 but to some criterion $\epsilon$, we can once again ensure convergence in noisy worlds. That is, in the limit of $t \rightarrow T$, $E_t \rightarrow \epsilon$, where $0 leq \epsilon \ll E_0$ with $E_0$ denoting the initial value of $E$. Too large though, and $\epsilon$ will interfere with potential optimality of $\pi^*_E$ (by Theorem.~\ref{theorem:Z}). 
+
+
+\subsection*{Exploration during reinforcement learning}
+The overall objective in reinforcement learning is to maximize $V_{\pi_R}$, the expected value of total future rewards (Eq~\ref{eq:total_r_I}) \cite{Sutton2018}. Here we use the term $I_t$ as a generic stand in for a range of fictive rewards, including novelty bonuses \cite{Kakade2002}, curiosity signals \cite{Pathak2017}, Bayesian updates \cite{Radulescu2019}, or entropy terms \cite{Haarnoja2015,Haarnoja2017}.  Often the fictive term in these equations is arbitrarily re-weighted. We use $\beta$ for this fictive weight. Likewise, rewards are denoted by $R_t$. In this example the total time $T$ is said to be finite, simplifying the notation.
+
+\begin{equation}
+    V_{\pi_R} = \sum_{t \in T, s \in S} R_t + \beta I_t
+    \label{eq:total_r_I}
+\end{equation}
+
+Explicitly, we propose that reinforcement learning problems should try and optimize two values: reward (Eq.~\ref{eq:total_r_2}) and information (Eq.~\ref{eq:total_e}). 
+
+\begin{multicols}{2}
+  \begin{equation}
+    V_{\pi_R} = \sum_{t \in T, s \in S} R_t
+    \label{eq:total_r_2}
+  \end{equation} \break
+  \begin{equation}
+    V_{\pi_I} = \sum_{t \in T, s \in S} I_t
+    \label{eq:total_e}
+  \end{equation}
+\end{multicols}
+
+We separate the objectives because classical rewards and information value have fundamentally different philosophical and mathematical properties. Conflating them introduces an undesirable bias, both in trying to maximize information value and in maximizing rewards.
+
+\subsection*{Biased by reward}
+Exploration often means a loss of rewards. To motivate exploration, lost rewards are often re-balanced with information gains, novelty signals, or other fictive reward signals. This is simple and intuitive, but comes with an under-appreciated limitation. If the true goal is to maximize total reward $R$, adding a fictive reward obscures this aim. After all, now an increase in $V_{\pi_R}$ may come from $R$ or from the fictive term $\beta I$. So while fictive rewards do encourage exploration they offer no guarantee of a performance increase in $R$, or in the long-term value $V_{\pi_R}$. 
+
+Conversely, if an animal wants to build a generally useful model of world, as Schmidhuber suggests, then biasing choices by maximizing reward is suboptimal. Both in terms of maximizing both the accuracy of the world model (which will wind up over-sampled near rewarding sites), and the efficiency with which the model is built (much time is wasted gathering rewards). 
+
+% ----------------------------------------------------------------------------
+\subsection*{Information is not a reward}
+Information and reward so seem to have opposing properties. If a rat shares a potato chip with a cage-mate, it must break the chip up to share, leaving has less food for itself. While if a student shares an idea with a lab-mate, the is idea is not divided up or lost. Thus rewards are a conserved resource, information is not. 
+
+The same kind of reward can be consumed many times without necessarily losing value\footnote{In practice, there are satiety effects but these are not a necessary part of the reward's value}. Information once learned though has no value in being be learned again. Eating one potato chip often means wanting another, whereas if you know the capital of the United States, there is no value in being told the capital of the United States is Washington DC.
+
+These two philosophical differences suggest that reward and information may also have notable mathematical differences. To evenly share a reward $r$ between $n$ others, $r_n = \frac{r}{n}$. In contrast, information value can, in principle, be shared without loss, i.e., $I_n = I$. Likewise, if an animal is learning about some state of world $s$ the value of information about $s$ should decrease with time. Assuming learning can asymptote, then as $t \rightarrow \infty, I_s \rightarrow 0$. For rewards, value never changes. So as $t \rightarrow \infty, r_s \rightarrow r_s$.\footnote{Though including reward satiety effects may somewhat diminish $r_s$ in practice.} In summary, information is fundamentally not a reward. Information about the world and the rewards from the world are very different kinds of things.
 
 % ---------------------------------------------------------------------------
 \subsection*{A way around the dilemma}
