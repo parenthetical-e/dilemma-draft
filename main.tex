@@ -45,14 +45,8 @@
 % Keywords are not mandatory, but authors are strongly encouraged to provide them. If provided, please include two to five keywords, separated by the pipe symbol, e.g:
 % \keywords{Keyword 1 $|$ Keyword 2 $|$ Keyword 3 $|$ ...} 
 
-% Long abstract
-% \begin{abstract}
-% The exploration-exploitation dilemma is considered a fundamental problem in the learning and decision sciences. Exploitation means choosing the most rewarding option. Exploration means searching among unknown options to find one more valuable than the present best. Some searches may be brief and successful, others long and unsuccessful. It is impossible to know which until the search is complete. This uncertainty about rewards, referred to as partial observability, makes optimal exploration mathematically intractable. Focusing only on rewards also ignores the direct and certain value of exploratory behavior: the acquisition of information about the world. Here we challenge the traditional approach to the dilemma and offer an alternative account based in information theory. We first derive an axiomatic measure of information value. We use this to decompose the exploration-exploitation dilemma into a tractable two-part problem, creating separate mathematical objectives for exploration and exploitation. From this we derive an optimal meta-policy which deterministically maximizes total information value and reward. In simulation, we show how this policy generates useful and naturalistic behavior in both simple and complex simulated worlds. 
-% \end{abstract}
-
-% Short abstract
 \begin{abstract}
-The exploration-exploitation dilemma is considered a fundamental but intractable problem in the learning and decision sciences. Here we show a way around it. We first derive an axiomatic measure of information value. We use this to break the dilemma down into a tractable two-part problem, creating separate mathematical objectives for exploration and exploitation. We call this dual value learning. Dual value learning can exploit reward and explore information value optimally, with no trade-off. The cost to this solution is an increase in worst-case sample efficiency when compared to the equivalent reinforcement learning problem. The severity of the cost depends on the size of the environment, and the rate of rewards.
+    The exploration-exploitation dilemma is a fundamental but intractable problem in the learning and decision sciences. Here we challenge the common view of the dilemma--which focuses only on reward--by breaking it down into a tractable two-part problem, creating separate mathematical objectives for exploration and exploitation. To make exploration independent of reward we develop a new set of value axioms, inspired by Shannon's original approach to developing information theory. We then turn to field of computer science--borrowing methods from both dynamic programming and job scheduling--to develop optimal (greedy) algorithms which maximize both information value and reward. The cost of this solution is an increase in worst-case sample efficiency when compared to a equivalent reinforcement learning problem. The severity of the cost depends on the size of the environment and the rate of rewards.
 \end{abstract}
 
 % \dates{This manuscript was compiled on \today}
@@ -71,117 +65,115 @@ The exploration-exploitation dilemma is considered a fundamental but intractable
 % TODO: make sure symbols have a colloquial def.
 \thispagestyle{firststyle}
 \ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
-When placed in a new environment animals will explore it even if no tangible rewards, like food and water, are expected \cite{Liu2019,Jaegle,Todd2015}. Sometimes they'll explore even when it is certain that exploration will lead to a loss \cite{ZheWang2019}. If a reward is expected though, an animal will generally explore and discover it \cite{Todd2015}. This exploration gets interpreted as the animal exploring \textit{for} reward--to maximize reward \cite{Sutton2018}. Here we offer an alternative view: animals don't explore to maximize reward at all, they explore to maximize information--sometimes--about reward. 
+Life is like a rat in a maze. When placed in an new maze a rat will generally explore it's new environment, visiting each arm. This exploration gets interpreted as curiosity, and is often formally modeled maximizing information gained.
 
-Schmidhuber layed out the theoretical groundwork for our view of exploration. He conjectured that \textit{information about the world is valuable for its own sake} \cite{Schmidhuber1991} and argued that, \textit{in addition} to searching for rewards, animals seek to explore to build a model of the world. In doing this he said they are motivated by information itself, as a curiosity signal. In developing this theory, Schmidhuber made the seemingly parsimonious choice that when it comes time optimize, information and reward terms be combined into a single objective function (similar to our Eq.\ref{eq:total_r_I}). This mathematical form set the stage for decades of productive work on rewards, fictive rewards, and curiosity learning \cite{Pathak2017,Sutton1990,dayan1996exploration}. Despite the success including information and reward as a single additive objective suffers from at least one drawback: exploration itself becomes an intractable mathematical problem, fundamentally limited by the partial observability of rewards \cite{thrun1992active,dayan1996exploration,findling2018computational,gershman2018deconstructing} 
+% TODO math
 
-Here we make a stronger conjecture than Schmidhuber's \cite{Schmidhuber1991}. We assert that information is valuable \textit{entirely} for its own sake. This lets us completely separate reward and information into two objectives, whose values we independently maximize. Estimating dual values is less simple than having a single objective, but the increase in complexity comes with a theoretical benefit. Exploration becomes a tractable mathematical problem, one we can solve deterministically.
+If the maze is familiar and a reward--might--be found in one the arms, the rat will generally explore and discover it \cite{Todd2015}. This exploration gets interpreted as the animal exploring \textit{for} reward--to maximize reward \cite{Sutton2018}. 
 
-Our contribution is threefold. We first set out a series of axioms to serve as principled basis for information value, and use these to implement a working scheme rooted in information theory. Next we develop an optimal policy for exploration that maximizes information value. This theory is purely deterministic, so exploration no longer relies on random sampling \cite{Haarnojaa,Kakade2002,Pathak2017,Sutton1990,thrun1992active,dayan1996exploration}. Finally we derive a new myopic controller \cite{Hocker2017}, a \textit{meta-policy}, that allows for simultaneously optimal and deterministic solutions to both problems of exploration and exploitation. 
+% TODO math
+
+The exploration-exploitation dilemma comes into play once the rat has found one rewarding arm. It could simply return to this arm every time it finds itself in this maze--exploiting it. Or the rat could explore the other arms, hoping to find a larger or more consistent result. Theoretical study of this simple problem has shown it is intractable. The unknowable nature--or partial observability--of what's behind the other arms make the problem ill-defined. Theoretical study has also shown though its possible to approximate an answer, by blending information and reward.
+
+% TODO math
+
+% TODO: beta is the problem. Dilemma is masked.
+% The dilemma is 2 problems: opp cost, the unknown.
+
+To try and make progress on the dilemma itself we made a challenging conjecture--phrased as question: ``What if the rat \textit{always} explores \textit{just} to maximize information?''. In some sense this is quite unintuitive. Why would an animal explore just out of curiosity if it wants a reward. However, if this conjecture were true the dilemma can be avoided. The problem in Eq TODO can be broken into two independent parts--maximizing reward (exploitation) and maximizing information (exploration). 
+
+ %TODO math dual
+
+Here we study this challenging conception, using it prove the exploration-exploitation dilemma does contain a tractable mathematical problem. One we can solve optimally, and to our surprise deterministically. To do this we borrow methods and ideas from Shannon's information theory, dynamic programming, and job scheduling.
+
+% This should be the News & Views?
+% Our contribution is threefold. Inspired by Shannon's orignal axiomatic formulation of information theory, we develop a set of 5 axioms to serve as principled basis for information value. Next we use methods from computer science--dynamic programming--to prove that optimal way to maximize information value is with the Bellman equation (TODO). Finally, we again borrow tools from computer science and show that balancing reward with information value is analogous to a classic job scheduling problem. Using this analogy we arrive at a simple greedy solution that optimally maximizes both reward and information value. 
+
+% Here we offer an alternative view: animals don't explore to maximize reward at all, they explore to maximize information--sometimes--about reward. 
+
+% Schmidhuber layed out the theoretical groundwork for our view of exploration. He conjectured that \textit{information about the world is valuable for its own sake} \cite{Schmidhuber1991} and argued that, \textit{in addition} to searching for rewards, animals seek to explore to build a model of the world. In doing this he said they are motivated by information itself, as a curiosity signal. In developing this theory, Schmidhuber made the seemingly parsimonious choice that when it comes time optimize, information and reward terms be combined into a single objective function (similar to our Eq.\ref{eq:total_r_I}). This mathematical form set the stage for decades of productive work on rewards, fictive rewards, and curiosity learning \cite{Pathak2017,Sutton1990,dayan1996exploration}. Still, to make progress on underlying problem of the dilemma we challenge the conception of the problem itself.
+
+% Here we make a stronger conjecture than Schmidhuber's \cite{Schmidhuber1991}. We assert that information is valuable \textit{entirely} for its own sake. This lets us completely separate reward and information into two objectives, whose values we independently maximize. Estimating dual values is less simple than having a single objective, but the increase in complexity comes with a theoretical benefit. Exploration becomes a tractable mathematical problem, one we can solve deterministically.
 
 
 % ----------------------------------------------------------------------------
-\section*{Results}
-We've conjectured the exploration-exploitation dilemma contains two separate problems. Learning to maximising reward value, and learning to maximize information value. The value of rewards are well known. So the conjecture begs the question of how to value information, if we don't consider it a reward.
+% \section*{Results}
+% We've conjectured the exploration-exploitation dilemma contains two separate problems. Learning to maximising reward value, and learning to maximize information value. The value of rewards are well known. So the conjecture begs the question of how to value information, if we don't consider it a reward.
 
-\subsection*{If information is not a reward, how can we value it}
-Shannon developed information theory without any sense of what information ``means''. He focused on transmitting symbols. For the theory to work, it doesn't need to know what the symbols refer to and is therefore extremely general \citep{Shannon1948}. Many attempts have since been made to instill information theory with meaning \citep{Kolchinsky2018}. With meaning, value follows. Most of these attempts require a ``salience'', or ``relevance'', or ``training'' signal (where all three terms amount to near the same thing; \cite{Deacon2015,Tishby}), while others have taken an evolutionary approach \citep{Kolchinsky2018,Deacon2015}.  
+% \subsection*{If information is not a reward, how can we value it}
 
-Instead of trying to define meaning broadly, we take an axiomatic approach to only define value. We list key properties (axioms) that any naturalistic measure of information value should have, and arrive a working metric that satisfies these. Our self-referential approach to information value is extremely general for the same reasons as Shannon's original theory: we examine how memory changes with learning, but do not consider what the memory refer to in the world; what it means. Here memories are just a collection of (transformed) symbols. 
+% TODO review fictive
+
+Shannon developed information theory without any sense of what information ``means''. He focused on transmitting symbols, not what those symbols refer to. This made the theory extremely general \citep{Shannon1948}. We seek a similarly general way to value information. To do this we followed Shannon's lead and developed a set axioms. But unlike Shannon we don't study how symbols in an alphabet are transmitted. We study how states from the world are remembered.
+
+The basic idea is simple. The more memory changes when observing a state, the more valuable that observation is. It doesn't matter what that state was, only how the memory changes.
+
+Many attempts have since been since Shannon to instill information theory with meaning and value \citep{Kolchinsky2018}. Most of these attempts require a ``salience'', or ``relevance'', or ``training'' signal (where all three terms amount to near the same thing; \cite{Deacon2015,Tishby}), while others have used evolutionary theory to create a reference \citep{Kolchinsky2018,Deacon2015}. Here we require no outside reference to estimate value. 
+
+To state the axioms first we need to introduce some notation and definitions. We ask for a bit of patience from the reader. The definitions are necessarily abstract, as we are developing a theory of information value that is independent of any particular model of animal cognition or learning.
+
 
 To state the axioms first we need to introduce notation for states $S$, actions $A$, and a memory $M$. These definitions are abstract, as we try and develop a theory of information value that is independent of any particular model of cognition or learning. To clarify these abstractions, we offer concrete examples for how they can be realized in practice. In doing so we also make clear just how (purposely) broad the proofs we develop are.
 
-\subsubsection*{States and actions}
-Here we study a number of $N$ finite states $s$ in a world $s \in S$. This is analogous to Shannon's initial formulation of symbols $s$ in an alphabet $X$. A state though can be a visual scene \cite{Mnih2015}, or an odor vector \cite{Dasgupta2017,Calhoun2014}, an index into a symbol table, or a set of spatial coordinates, or any set of numbers, vectors, or tensors. All that matters is the states are unique and self-consistent, i.e. $s$ does not change with time or experience. 
-
-\subsubsection*{A definition of memory}
-We limit the number of actions $a$ animal might take to a finite set $A$ of size $K$, $a \in A^K$, Like $S$, we allow the set $A$ to conceivably be any set of numbers, vectors, or tensors.
-
-A memory $M$ is a set of transformed states, defined recursively by the encoder $f$ as $M \leftarrow f(M, s)$. The base case for $M$ is said to be the empty set $M_{0} = \emptyset$. In defining $f$ we assume the encoding  of any $s$ can, in principle, create or modify multiple memories in $M$. That is we do not assume a bijection  and not only one element $m_i \leftarrow f(s, m_i)$ from $M = \{m_1, m_2, m_i, \ldots\}$. We do not require $M$ be finite like $S$ which means in theory it's possible to form more memories than there are states. 
-
-We require that the memory $M$ can decoded by function $g$ to produce recollection $z$ by $g(M, s) \rightarrow z$. We don't concern ourselves with details of $z$. They are as open as the definition of states in $S$.
-
-We define time $t$ as a index of sequential state observations of $s \in S$, such that $t = (0,1,2,3,\ldots,T)$.
-
-To finish our definition of $M$ we add one critical restriction to the encoder $f$: it must be invertible. That is, if there exists $M_{t+1} = f(M_{t}, s)$ then there must also exist an inversion $f^{-1}$ so $M_{t} = f^{-1}(M_{t+1}, s)$. 
-
-We summarize the requirements for memory $M$ in Definition~\ref{def:memory}.
-
-\begin{definition}
-\label{def:memory}
-We define a memory $M$ as a set defined over a finite state space $s \in S^N$ whose elements are added by an invertible encoder $f$, such that $M_{t+1} = f(M_{t}, s)$ and $M_{t} = f^{-1}(M_{t+1}, s)$. Elements $z$ from $M$ are recovered by a decoder $g$, such that $z = g(M, s)$. We define the initial memory $M_{0}$ as the empty set, $M_{0} = \emptyset$.
-\end{definition}
-
+% --
+% TODO: this needs to be 2-3 sentences in total
 Definition~\ref{def:memory} covers simple and complex ideas of a memory. In the simplest case where $f$ and $g$ are identity functions, then $M$ is just a simple direct record, or subset, of the states observed by the animal $M \subseteq S$. If $f$ is a probability function, $0 \geq f(s) \leq 1; \sum_{S}^{i} f(s_i) = 1$, then $M$ is a distribution over $S$, and $g(M, s_i) = p(s_i)$. Likewise, if $f$ is not only a probability function implements Bayes' rule, then $M$ can be a conditional distribution. In principle Definition~\ref{def:memory} also encompass hierarchical Bayesian learning, VAE and other generational approaches found in modern machine learning / artificial neural networks, as well as sequential and recurrent memories, like echo state networks, FORCE, LTSM and GRU. It also extends also to cases not often considered memories \textit{per se} but which include an encoder-decoder pair-- including dimensionality reduction techniques (\textit{e.g.} PCA, NMF, tSNE), clustering methods (KNN), and mixture models (GMM, kernel).
 
 Several of these methods--especially those we've labeled as more complex--are defined implicitly or explicitly with an encoder and decoder. Most do not explicitly or implicitly include a inverse decoder $f^{-1}$. However all we require is that $f^{-1}$ could be constructed, \textit{in principle} (Theorem~\ref{theorem:opt_sub}).
-
-\subsubsection*{Memory space}
-As we'll seen in the next section, to make information value axiomatic we rely on comparing sequential changes to the memory $M$, as it moves from $M_{t}$ to $M_{t+1}$. This comparison is made using a distance metric $d(x,y)$, which is minimally constrained by $d(x,y) \geq 0$ and $d(x,y) = 0$ if and only if $x = y$. We do not require that $d$ obeys the triangle inequality, nor that is be symmetric. 
-
-% TODO: is this precise enough? Do I need to say what x and y are?
-\begin{definition}
-\label{def:distance}
-We define a distance $d$ to be any function where $d(x,y) \geq 0$ and $d(x,y) = 0$ if and only if $x = y$.
-\end{definition}
-
-The distances for two sequential memories $M_{t}$ to $M_{t+1}$ are measured using the distance $d$ on the decoded set of memories $d(z_{t+1},z_{t})$. This assumption let's us separate the definition (and eventual implementation) of $M$ from the distance $d$.
+% --
 
 \subsubsection*{The value axioms}
-We denote information value as $E$, subject to the following axiomatic constraints.
+We denote information value as $E$, subject to the following axiomatic constraints. Under each formal Axiom, we offer an informal summary.
 
 \begin{axiom} 
     $E$ is a function which measures the distance $d$ between $M_{t+1}$ and $M_{t}$ to a real number, $E: (M_{t+1}, M_{t1}) \rightarrow \mathbb{R}$.
     \label{ax:1}
-\end{axiom}
+\end{axiom} \\
+\noindent
+Value is subjective, and so should only depend on an animals memory. (Working with just sequential memories,$M_{t+1}$ and $M_{t}$ and scalars, simplifies the problem mathematically.)
+
 \begin{axiom}
     $E \geq 0$.
     \label{ax:2}
 \end{axiom}
+\noindent
+New information about the world is always valuable, even if its later consequences might not be. The consequences of the information may not always be good, but that's a separate issue.
+
 \begin{axiom}
     $E = 0$ if and only if $M_{t+1} = M_{t}$.
     \label{ax:3}
 \end{axiom}
+\noindent
+If you remember something perfectly, there is no value in learning it again.
+ 
 \begin{axiom}
-    $E$ is strictly monotonic with the total change in $d$ measured between $M_{t+1}$ and $M_{t}$, for all $s \in S$.
+    $E$ is strictly monotonic with the total change in $d$ measured between $M_{t+1}$ and $M_{t}$.
     \label{ax:4}
 \end{axiom}
+\noindent
+The information value should track the total change in memory. 
+
 \begin{axiom}
-    $E$ is monotonic with the compactness $C$ of $d$ measured between $M_{t+1}$ and $M_{t}$, for all $s \in S$ (Eq.~\ref{eq:compactcude}).
+    $E$ is monotonic with the compactness $C$ (Eq.~\ref{eq:compactcude}) of $d$ measured between $M_{t+1}$ and $M_{t}$.
     \label{ax:5}
 \end{axiom}
-
- We ultimately want to address specificity of information in Axiom~\ref{ax:5}. To make the idea of specificity formal, we study the compactness of the memory; compactness has an established precise meaning. 
- 
- The compactness $C$ of a hyper-cube has a simple formula, $C = \frac{P^2}{A}$ where $P$ is the cube's perimeter and $A$ is its area. Therefore as $M_{t}$ moves to $M_{t+1}$, the we can measure the distances $\{d_i, d_{i+1}, d_{i+2},\ldots d_{N}\}$ for all $s \in S^N$ and treat them as if they formed a $N$-dimensional hyper-cube. By measuring this imagined cube we arrive at a geometric estimate for change in compactness of $M$ (Eq.~\ref{eq:compactcude}).
+\noindent
+Specific information is more always more valuable than less specific information. (We use geometrical compactness as surrogate for specificity, which doesn't seem to have a precise meaning.)
+\\ \\
+The compactness $C$ of a hyper-cube has a simple formula, $C = \frac{P^2}{A}$ where $P$ is the cube's perimeter and $A$ is its area. Therefore as $M_{t}$ moves to $M_{t+1}$, the we can measure the distances $\{d_i, d_{i+1}, d_{i+2},\ldots d_{N}\}$ for all $O \leq N$ observed states $Z$, such that $Z \subseteq S$ and treat them as if they formed a $O$-dimensional hyper-cube. In measuring this imagined cube we arrive at a geometric estimate for change the compactness of our memory $M$ (Eq.~\ref{eq:compactcude}).
 
 \begin{equation} \label{eq:compactcude}
 \begin{split}
-    C & = \frac{\Big ( 2 \sum_{N}^{i} d_i \Big )^2}{\prod_{N}^{i} d_i}
+    C & = \frac{\Big ( 2 \sum_{O}^{i} d_i \Big )^2}{\prod_{O}^{i} d_i}
 \end{split}
 \end{equation}
 
-Formality complete we restate the axioms informally to illuminate their motivations.
-
-\begin{statement}
-    (Axiom 1.) Any subjective value depends \textit{only} on the subject's own experience. Information value about $s$ is subjective, so should depend only on how past experience is changed.
-\end{statement}
-\begin{statement}
-    (Axiom 2.) Learning new information is always good, in principle. The consequences of the information may not always be good, but that's a separate issue.
-\end{statement}
-\begin{statement}
-    (Axiom 3.) If you know something perfectly, there is no value in learning it again.
-\end{statement}
-\begin{statement}
-    (Axiom 4.) If information value should track the total change in memory. 
-\end{statement}
-\begin{statement}
-    (Axiom 5.) If the amount of total change is held constant, more specific information is more always more valuable than less specific information. $E_t$ should therefore scale itself with specificity, which we measure using the idea of geometrical compactness (Eq.~\ref{eq:compact}).
-\end{statement}
 
 % ---------------------------------------------------------------------------
-\subsection*{Information value as a dynamic programming problem}
-Exploration is almost universally regarded as stochastic process \cite{Sutton2018,Jaegle}. Our value axioms and related definitions allow for a different take. We'll now show how to recast exploration as a deterministic, rational, search process. Specifically, we'll borrow a tool from computer science and cast exploration as a dynamic programming problem \cite{TODO}. To do this we need to make an additional assumption about animal learning.
+% \subsection*{Information value as a dynamic programming problem}
+% Exploration is almost universally regarded as stochastic process \cite{Sutton2018,Jaegle}. Our value axioms and related definitions allow for a different take. We'll now show how to recast exploration as a deterministic, rational, search process. Specifically, we'll borrow a tool from computer science and cast exploration as a dynamic programming problem \cite{TODO}. To do this we need to make an additional assumption about animal learning.
+
+We maximize information value using the Belman equation. 
 
 To use theorems from dynamic programming we must prove our memory $M$ has a special property called ``optimal substructure''. Optimal substructure means that one can take a problem and break into to a small number of sub-problems or series. If these sub-problems have \textit{optimal substructure} then they will keep any relevant optimality present in the original series. By proving we can decompose a problem keeping its optimally intact, we also prove that we can grow it optimally; induction proofs become trivial when a problem has an optimal substructure. 
 

@@ -1,0 +1,27 @@
+\subsubsection*{States and actions}
+Here we study a number of $N$ finite states $s$ in a world $s \in S$. This is analogous to Shannon's initial formulation of symbols $s$ in an alphabet $X$. A state though can be a visual scene \cite{Mnih2015}, or an odor vector \cite{Dasgupta2017,Calhoun2014}, an index into a symbol table, or a set of spatial coordinates, or any set of numbers, vectors, or tensors. All that matters is the states are unique and self-consistent, i.e. $s$ does not change with time or experience. 
+
+We limit the number of actions $a$ animal might take to a finite set $A$ of size $K$, $a \in A^K$, Like $S$, we allow the set $A$ to conceivably be any set of numbers, vectors, or tensors.
+
+\subsubsection*{A definition of memory}
+\begin{definition}
+    \label{def:memory}
+    We define a memory $M$ as a set defined over a finite state space $s \in S^N$ whose elements are added by an invertible encoder $f$, such that $M_{t+1} = f(M_{t}, s)$ and $M_{t} = f^{-1}(M_{t+1}, s)$. Elements $z$ from $M$ are recovered by a decoder $g$, such that $z = g(M, s)$. We define the initial memory $M_{0}$ as the empty set, $M_{0} = \emptyset$.
+\end{definition}
+
+A memory $M$ is a set of transformed states, defined recursively by the encoder $f$ as $M \leftarrow f(M, s)$. The base case for $M$ is said to be the empty set $M_{0} = \emptyset$. In defining $f$ we assume the encoding  of any $s$ can, in principle, create or modify multiple memories in $M$. That is we do not assume a bijection  and not only one element $m_i \leftarrow f(s, m_i)$ from $M = \{m_1, m_2, m_i, \ldots\}$. We do not require $M$ be finite like $S$ which means in theory it's possible to form more memories than there are states. 
+
+We require that the memory $M$ can decoded by function $g$ to produce recollection $z$ by $g(M, s) \rightarrow z$. We don't concern ourselves with details of $z$. They are as open as the definition of states in $S$.
+
+We define time $t$ as a index of sequential state observations of $s \in S$, such that $t = (0,1,2,3,\ldots,T)$.
+
+To finish our definition of $M$ we add one critical restriction to the encoder $f$: it must be invertible. That is, if there exists $M_{t+1} = f(M_{t}, s)$ then there must also exist an inversion $f^{-1}$ so $M_{t} = f^{-1}(M_{t+1}, s)$. 
+
+\subsection*{Memory space}
+\begin{definition}
+    \label{def:distance}
+    We define a distance $d$ to be any function where $d(x,y) \geq 0$ and $d(x,y) = 0$ if and only if $x = y$.
+\end{definition}
+    
+The distances for two sequential memories $M_{t}$ to $M_{t+1}$ are measured using the distance $d$ on the decoded set of memories $d(z_{t+1},z_{t})$. This assumption let's us separate the definition (and eventual implementation) of $M$ from the distance $d$.
+    
