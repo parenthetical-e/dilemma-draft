@@ -49,20 +49,6 @@
     The exploration-exploitation dilemma is considered a fundamental but intractable problem in the learning and decision sciences. Here we show a way around it. We define separate mathematical objectives for exploration and exploitation. To make the objective for exploration independent of reward, we derive a set of general axioms for information value. These let us develop a greedy algorithm which provably and optimally maximizes information value and reward. The cost to this solution is an increase in worst-case sample efficiency when compared to the equivalent reinforcement learning problem. The severity of the cost depends on the size of the environment, and the rate of rewards.
 \end{abstract}
 
-% \dates{This manuscript was compiled on \today}
-% \doi{\url{www.pnas.org/cgi/doi/10.1073/pnas.XXXXXXXXXX}}
-
-\begin{document}
-\verticaladjustment{-2pt}
-\maketitle
-
-% TODO: talk about how max E can reduce bias in ML algs, as discussed by: 
-% Perspective | Published: 09 April 2019
-% Lessons for artificial intelligence from the study of natural stupidity
-% https://www.nature.com/articles/s42256-019-0038-z
-% the r + bI approach can not reduce bias in the same way?
-
-% TODO: make sure symbols have a colloquial def.
 \thispagestyle{firststyle}
 \ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
 If a mouse is placed in a familiar maze it can face a dilemma. Should it exploit the arm it knows to expect a reward in, or should it explore another unknown arm of the maze to find a more rewarding choice. Given the unknown nature of choice, its hard to form a rational strategy. 
