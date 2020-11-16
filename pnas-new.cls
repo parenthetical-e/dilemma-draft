@@ -104,7 +104,7 @@
   \SetWatermarkAngle{45}
   \SetWatermarkColor{gray!20}
   \SetWatermarkFontSize{3cm}
-  \SetWatermarkText{{\fontfamily{bch}\bfseries DRAFT}}
+  \SetWatermarkText{{\fontfamily{bch}\bfseries PREPRINT}}
 }{}
 }
 
@@ -220,7 +220,7 @@
 
 \makeatletter
 \fancypagestyle{firststyle}{
-   \fancyfoot[R]{\footerfont XXX\hspace{7pt}|\hspace{7pt}\textbf{\today}\hspace{7pt}|\hspace{7pt}vol. XXX\hspace{7pt}|\hspace{7pt}no. XX\hspace{7pt}|\hspace{7pt}\textbf{\thepage\textendash\pageref{LastPage}}}
+   \fancyfoot[R]{\footerfont \hspace{7pt}\textbf{\today}\hspace{7pt}|\hspace{7pt}\textbf{\thepage\textendash\pageref{LastPage}}}
    \fancyfoot[L]{\footerfont\@ifundefined{@doi}{}{\@doi}}
 }
 \makeatother
@@ -234,7 +234,7 @@
 \rfoot{}%
 \makeatletter
 \fancyfoot[LE]{\footerfont\textbf{\thepage}\hspace{7pt}|\hspace{7pt}\@ifundefined{@doi}{}{\@doi}}
-\fancyfoot[RO]{\footerfont XXX\hspace{7pt}|\hspace{7pt}\textbf{\today}\hspace{7pt}|\hspace{7pt}vol. XXX\hspace{7pt}|\hspace{7pt}no. XX\hspace{7pt}|\hspace{7pt}\textbf{\thepage}}
+\fancyfoot[RO]{\footerfont \hspace{7pt}\textbf{\today}\hspace{7pt}|\hspace{7pt}\textbf{\thepage}}
 \fancyfoot[RE,LO]{\footerfont\@ifundefined{@leadauthor}{}{\@leadauthor}\ifnum \value{authors} > 1\hspace{5pt}\textit{et al.}\fi}
 
 % Use footer routine for line numbers

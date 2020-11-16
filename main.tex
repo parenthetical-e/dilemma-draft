@@ -1,370 +1,297 @@
 \documentclass[9pt,twocolumn,twoside]{pnas-new}
+
 % Use the lineno option to display guide line numbers if required.
 % Note that the use of elements such as single-column equations
 % may affect the guide line number alignment. 
+\templatetype{pnasresearcharticle} 
 
-\templatetype{pnasresearcharticle} % Choose template 
+% Choose template 
 % {pnasresearcharticle} = Template for a two-column research article
 % {pnasmathematics} = Template for a one-column mathematics article
 % {pnasinvited} = Template for a PNAS invited submission
+\usepackage{amsthm} 
+\usepackage{amsmath} 
+\usepackage{amssymb} 
+\usepackage{multicol} 
+\usepackage{array}
+\usepackage{hyperref}
 
-\usepackage{amsthm}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{multicol}
-
-
-\DeclareMathOperator*{\argmax}{argmax}
-\newtheorem{corollary}{Corollary}
-\newtheorem{axiom}{Axiom}
-\newtheorem{statement}{Statement}
+\DeclareMathOperator*{\argmax}{argmax} 
+\newtheorem{axiom}{Axiom} 
 \newtheorem{theorem}{Theorem}
-\newtheorem{definition}{Definition}
-\newtheorem{lemma}[theorem]{Lemma}
 
+% \title{Curiosity is an optimal solution to the exploration-exploitation dilemma}
 \title{A way around the exploration-exploitation dilemma.}
 
-% Use letters for affiliations, numbers to show equal authorship (if applicable) and to indicate the corresponding author
-\author[a,1]{Erik J Peterson}
-\author[a,b]{Timothy D Verstynen}
-\affil[a]{Department of Psychology}
-\affil[b]{Center for the Neural Basis of Cognition, Carnegie Mellon University, Pittsburgh PA}
-
-% Please give the surname of the lead author for the running footer
+\author[a,b,1]{Erik J Peterson} 
+\author[a,b,c,d]{Timothy D Verstynen} 
+\affil[a]{Department of Psychology} 
+\affil[b]{Center for the Neural Basis of Cognition} 
+\affil[c]{Carnegie Mellon Neuroscience Institute}
+\affil[d]{Biomedical Engineering, Carnegie Mellon University, Pittsburgh PA}
 \leadauthor{Peterson} 
-
-% Please add here a significance statement to explain the relevance of your work
-\significancestatement{We show a way around the exploration-exploitation dilemma. In our approach exploration is done only to maximize information value--a quantity we define axiomatically. Maximizing information value forces the animal to learn a general, reward-independent, memory of the world. An important ``side effect'' of this general learning is that reward learning improves--to optimality. We call this view of reinforcement learning dual value learning and show that dual value learning allows for a simple greedy deterministic solution to the exploration-exploitation dilemma.}
-
-% Please include corresponding author, author contribution and author declaration information
-% \authorcontributions{EJP?.}
 \authordeclaration{The authors have no conflicts of interest to declare.}
+
 % \equalauthors{\textsuperscript{1}A.O.(Author One) and A.T. (Author Two) contributed equally to this work (remove if not applicable).}
 \correspondingauthor{\textsuperscript{1}To whom correspondence should be addressed. E-mail: Erik.Exists@gmail.com}
 
-% Keywords are not mandatory, but authors are strongly encouraged to provide them. If provided, please include two to five keywords, separated by the pipe symbol, e.g:
-% \keywords{Keyword 1 $|$ Keyword 2 $|$ Keyword 3 $|$ ...} 
-
 \begin{abstract}
-    The exploration-exploitation dilemma is considered a fundamental but intractable problem in the learning and decision sciences. Here we show a way around it. We define separate mathematical objectives for exploration and exploitation. To make the objective for exploration independent of reward, we derive a set of general axioms for information value. These let us develop a greedy algorithm which provably and optimally maximizes information value and reward. The cost to this solution is an increase in worst-case sample efficiency when compared to the equivalent reinforcement learning problem. The severity of the cost depends on the size of the environment, and the rate of rewards.
+For all animals the decision to explore comes with a risk of getting less. For example, a foraging bee might find less nectar, or hunting hawk less prey. This loss is often formalized as regret. It's been mathematically proven that exploring an uncertain world with a specific goal always has some regret. This is why exploration-exploitation can be a dilemma. Given this proof we wondered if the common advice to ``focus on learning and not the goal'' might have mathematical merit. So we re-imagined exploration in the dilemma as an open ended search for any new information. We then developed a new minimal description of information value, which generalizes existing ideas like curiosity, novelty and information gain. We use this description to model the dilemma as a competition between strategies that maximize reward and information independently. Here we prove this competition has a no regret solution. When we study this solution in simulation -- using classic bandit tasks -- it outperforms standard approaches, especially when rewards are sparse.
 \end{abstract}
 
-\thispagestyle{firststyle}
-\ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
-If a mouse is placed in a familiar maze it can face a dilemma. Should it exploit the arm it knows to expect a reward in, or should it explore another unknown arm of the maze to find a more rewarding choice. Given the unknown nature of choice, its hard to form a rational strategy. 
+% SIGNIFICANCE
+\significancestatement{
+The uncertainty of the unknown can always be recast as an opportunity to learn. But learning doesn't look like enough compensation when, for example, you're a bee foraging for nectar or a hawk hunting for prey. An animal exploring though quickly finds itself with a difficult question. Is it better to keep exploring, or stick with the known? This problem, the exploration-exploitation dilemma, is mathematically intractable. 
 
-The exploration-exploitation dilemma is not limited to mice in mazes, but is thought to be a hard and fundamental problem in decision science. This dilemma arises when deciding where to eat to dinner, which job to take, and when to marry. It seems that mice and humans share some intrinsic desire to learn about the unknown, and often go exploring. Given this behavior, the theoretical problem for decision science is explaining how and when exploration decisions are made. The most common answer is found in reinforcement learning \cite{Sutton2018a}. 
+When one mathematical problem can’t be solved perfectly, it’s often good to find another related problem that can be. In this work we show that when exploration is re-imagined as an open-ended search to learn as much as possible, it actually becomes possible to solve exploration-exploitation optimally. Perhaps learning is enough, after all.
+}
+% \dates{This manuscript was compiled on \today}
+% \doi{\url{www.pnas.org/cgi/doi/10.1073/pnas.XXXXXXXXXX}}
+\begin{document} 
+\verticaladjustment{-2pt} 
+\maketitle
 
-Reinforcement learning is learning how to map situations (what we'll call states) to actions, with the goal of maximizing reward. 
+\thispagestyle{firststyle} \ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
 
-Theoretical study of the dilemma problem using reinforcement learning has proven it is not just hard problem, but is formally intractable. That is, it's not possible to always find single mathematically optimal solution. It is however possible to approximate an answer--on average. The approximate solutions are typically complex, are require strong but difficult to verify assumptions about animal cognition. 
+% TODO: the search for reward depends on having a good world model. This is not made clear. Such limits are not discussed... enough? Fix this during revision!
+\section*{Introduction}
+Decision making in the natural world often leads to a dilemma. As an example let's imagine a bee foraging in a meadow (Figure~\ref{fig:f1}\textbf{A}). The bee could go to the location of a flower it's been to before to gather nectar. Or the bee go somewhere new, and explore. Exploration comes though with the risk of getting less nectar. Perfectly optimizing away this risk is a mathematically intractable problem; there is no way to explore without enduring some regret \cite{Thrun1992a,Dayan1996,Findling2018,Gershman2018b}, and so the decision can become a dilemma.
 
-Formalizing exploration-exploitation is not just essential to understanding natural behavior. Theoretical study of the dilemma is also central to progress in machine learning, artificial intelligence, and casual reasoning. While the dilemma as a reinforcement problem is intractable, there might exist related problems which are tractable. This report offers a viable alternative.
+Resource gathering is not the only reason animals explore. Many animals, like our bee, explore out of curiosity (Figure~\ref{fig:f1}\textbf{B}). This exploration lets them learn about their environment, developing an often simplified model that helps them in planning actions and making future decisions \cite{Ahilan2019,Poucet1993}. Borrowing from the field of artificial intelligence we refer to these models as \textit{world models} \cite{`Schmidhuber2019,Sutton2018,Schmidhuber1991'}. World models offer a principled explanation for why animals are intrinsically curious \cite{Mehlhorn2015,Gupta2006,Berger-Tal2014,Gottlieb2018,Schwartenbeck2019,Pathak2017}, and prone to explore even when no rewards are present or expected \cite{Hughes1997}. 
 
-Here we challenge a basic tenant of both the dilemma and of reinforcement learning: exploration is a search for (more) reward. We conjecture that exploration should \textit{only} try to maximize information.
+Curiosity raises the question of whether animals need to explore looking for specific goals or rewards are all. Perhaps we've misinterpreted their actions, and so misconceived of a fundamental problem in the learning and decision sciences. Here we explore a bold conjecture:
 
-Our challenge rests on a simple behavioral observation. If you place a naive mouse in maze for the very first time, it will explore the maze even though it can have no expectation of reward. Animals seem to be intrinsically motivated by information. Of course, we're not the first to note this.
+\begin{quote}
+`Exploration for reward is never needed. The only exploratory behavior an animal needs is that which builds its world model. '   
+\end{quote}
 
-Curiosity and exploration have a long history \cite{}. Our contribution is in recognizing:
+\begin{figure}
+	[tbhp] \centering 
+	\includegraphics[width=.95\linewidth]{figures/fig1.png} 
+	\caption{Two views of exploration and exploitation. \textbf{A}. The classic dilemma: either exploit an action with a known reward (e.g., return to the previous plant) or explore other actions on the chance they will return a better outcome (e.g., find a plant with more flowers). \textbf{B.} Here we offer an alternative view of the dilemma, with two different competitive goals: maximize rewards (e.g., keep returning to known flower locations) \texti{or} build a world model by learning new information (e.g., layout of the environment). Exploration here focused on learning in general, not on reward learning specifically. \textit{Artist credit}: Richard Grant.}
+	\label{fig:f1} 
+\end{figure}
 
-\textit{Information value should never depend on reward value.}
+Our contribution is threefold. We define a new minimal (axiomatic) description for information value, which generalizes existing ideas like curiosity, novelty and information gain. In fact, the axioms let us formally disconnect information theory \cite{Shannon1948} from information value, suggesting we may have uncovered a new universal theory. Next we prove that the computer science method of dynamic programming \cite{Bellmann1954,Sutton2018} provides an optimal way to maximize this kind of information value. Finally, we describe a simple winner-take-all scheduling algorithm that can optimally solve a competition between strategies which independently maximize information value and reward. 
 
-Why would an animal explore for \textit{only} information if it is trying to maximize reward, to do reinforcement learning? An answer can be found in the environment most animals live in. Most rewards in the natural world repeat themselves in the short-term \cite{}. Different seasons bring different hardships and opportunities, on a daily basis competitors come and go, as do food sources, mates and shelter. Because of this variability it is mistake to motivate exploration, and learn good exploration policies, based on specific rewards, and on traditional reinforcement learning. That is, reinforcement policy must change as the reward distribution does, while a good exploration policy can and should be robust. 
+\section*{Results}
+Tangible rewards are a conserved resource, but learned information isn't. For example, if a rat shares potato chip with a cage-mate, she must necessarily split up the chip leaving less food for herself. Whereas if student shares the latest result from a scientific paper with a lab-mate, they do not necessarily forget a portion of that result. These differences  make reward and information different concepts, and so considering information as a kind of reward isn't consistent.  
 
-We suppose that information seeking builds knowledge for both the long-term and short-term, while reward seeking often only satisfies short-term needs. 
+If information value isn't a reward, we need another way to study and value it. To do this we first looked to the field of information theory \cite{Shannon1948}, but the problem of information value is not based in the statistical problem of transmitting symbols, as was Shannon’s goal. It is based on the problem of learning and remembering them.
 
-% TODO: 
-Figure 1 shows theoretical frameworks for reinforcement learning (Fig.~\ref{}) and information theory (Fig.~\ref{}). During reinforcement learning an agent observes states $s_t$ from a finite environment $S^N$, using an action policy function $\pi$ to map $s_t$ to an action $a_t$ which is drawn from a finite of number of possibilities $A^K$. Each action on the environment returns a reward $R_t$ and a new state $s_{t+1}$, by its transition function $s_{t+1} = \delta(a_t)$.  
+\subsection*{A minimal model of memory}
+World models are memories with some amount of simplification \cite{Schmidhuber1991,Ha2018}. They can range from simple novelty signals \cite{Kakade2002}, to location or state counts \cite{Bellemare2016,Dayan1993}, state and action prediction \cite{Schmidhuber1991,Pathak2017,Friston2016}, flow \cite{Yang2019}, learning progress \cite{Lopes2012}, classic working or episodic memories \cite{Miller1956,Tulving2002}, Bayesian and hierarchical Bayesian models \cite{Park2017,Itti2009,Friston2016,Tenenbaum2006}, latent spaces \cite{Kingma2013} and recurrent neural networks \cite{Ganguli2008,Ha2018,Schmidhuber2015a,Mante2013}. 
 
-During information transmission a symbol $x$ from a finite alphabet $X$ is transmitted on a noisy channel $C$ to receiver $R$. If we interpret states $S$ a symbols in $X$, we can model state observation in information theory combining both approaches into a single framework and allowing information to effect reward learning. In some forms the information theoretic properties are of the channel are used, in others the channel is said to have a memory $M$. Often, the $M$ is a probability distribution that learned via Bayes rule (Eq.\ref{}).  
+We have no mathematical reason to prefer any one kind of world model over any other. So we designed a new minimal definition, designed to overlap with all of them.
 
-% TODO: additive form.
-% TODO: dual form
+We must introduce some intial notation. We assume that time is a continuous value and denote increases in time using the differential quantity $dt$. We can then express changes in $M$ (our world model, defined below) as a gradient, $\nabla M$. We also assume that observations about the environment $s$ are real numbers sampled from a finite state space $s \in S$, whose size is $N$ (denoted $S^N$). Actions are also real numbers $a$, drawn from a finite space $A^K$. Rewards $R_t$ -- when they appear -- are binary $(0,1)$ and are provided \textit{only} by the external environment. 
 
-We conjecture the dilemma is really two separate problems. One problem is exploration, and the other is exploitation (Eq.~\ref{} and Eq.~\ref{}).
+\textit{Definition 1.} We can now formally define a world model $M$ as a finite set of real numbers, whose maximum size is $L$ ($M^L$). We say that every world model has a pair of functions $f$ and $g$. Learning of $s$ at time $t$ (i.e. $s_t$) by $M$ is done by the invertible encoder function $f$, $M_{t+dt} = f(M_{t}, s_{t})$ and $M_{t} = f^{-1}(M_{t+dt}, s_{t})$. Memories $\hat s_t$ about $s_t$ are recalled by the decoder function $g$, $\hat s_t = g(M_t, s_t)$. 
 
-It's possible to solution to our dual value optimization problem using a Bayesian approach. Doing this creates an equivilance between our axiomatic notion of value and prior work on information gain / Bayesian surprise. We'll show this with some examples in Fig.~\ref{}. Taking a Bayesian approach implies the validity of any solution to the dilemma we find depends on a strict Bayesian assumption. This is could prove a burdensome requirement if it turns out that animals are not actually pure Bayesian reasoning systems. 
+The invertibility of $f$, denoted as $f^{-1}$, is a mathematical way to ensure that any observations encoded in the world model can also be forgotten. This is both an important aspect of real memory, and a critical point for our mathematical analysis.
 
-Instead, we borrow essential properties from prior work on Bayesian learn and information theoretic analysis in order to generalize them. As a result of our borrowing the value axioms we develop below produce a value measure identical to previous work when it is in fact possible to safely assume Bayesian learning. However, the axioms are general enough to allow for a very large range of alternative definitions of memory. 
+The details of $f$ and $g$ define what kind of world model or memory $M$ is. Let's consider some examples. If $f$ adds states $s_t$ to the memory, and $g$ tests whether $s_t$ is in $M$, then $M$ is a model of novelty \cite{Kakade2002}. If $f$ counts states and $g$ returns those counts, then $M$ is a count-based heuristic \cite{Bellemare2016,Dayan1993}. If $f$ follows Bayes rule and $g$ decodes the probability of $s_t$, then $M$ is a Bayesian memory \cite{Itti2009,Friston2016,Tenenbaum2006,Schmidhuber1991,Pathak2017,Friston2016}. If the size of $M$ is much smaller than the size of the state space $S^N$, then $f$ can be seen as learning a latent or compressed representation im $M$ \cite{Kingma2013,Schmidhuber2008,Levi-Aharoni2019,Ganguli2010,Ha2018,Schmidhuber2015a,Mante2013,Park2017}, and $g$ decodes a reconstruction of $s$ ($\hat s_t$) or future states ($\hat s_{t+dt}$).
+ 
+% \subsubsection*{Axioms for information value}
+% In all of these examples, the value of any observation made by an agent who is learning a world model depends entirely on what the agent learns by making that observation.
+% \begin{axiom}
+% 	[Axiom of Memory] The value of $E(s_t)$ depends \emph{only} on how the memory $M$ changes.
+% \label{ax:1} \end{axiom}
+% \noindent This axiom does two things. It ensures value depends only on the memory, and how it changes. And in particular it ensures value depends only on the most recent change in $M$. That driven by observing $s_t$. Readers familiar with reinforcement learning can see this as a natural way to induce the Markov property on the memory.
+% \begin{axiom}
+% 	[Axiom of Novelty] The value of $E(s_t)$ is zero only when $\nabla M$ is zero. 
+% \label{ax:2} \end{axiom}
+% \begin{axiom}
+% 	[Axiom of Scholarship] Learning can't lead to negative value, so the value of $E(s_t) \geq 0$.
+% \label{ax:3} \end{axiom}
+% \begin{axiom}
+%     [Axiom of Maximum Difference] The value of $E(s_t)$ should be the maximum value which depends on the total change in $M$.
+% \label{ax:4} \end{axiom}
 
-Our value axioms require only three weak assumptions: \textit{1.} An animal has a memory $M$ which is large enough to remember its environment. \textit{2.} What can be remembered can be in $M$ can also be forgotten. \textit{3.} There is a way to measure how memory changes with experience. 
+% \begin{axiom}
+%     [Axiom of Specificity] If the total change in memory $M$ due to observation $s_t$ is held constant ($\frac{dM}{dt} = h$), the more compact (Eq.~\ref{eq:compactcude}) the change in memory the more valuable the observation. 
+% \label{ax:4} \end{axiom}
+% \noindent Axiom~\ref{ax:4} adds two critical and intertwined properties. It ensures that if all else is held equal, more specific observations are more valuable that less specific observations \cite{Berlyne1950,Kidd2015}. It also ensures that an observation that leads to a simplifying or parsimonious insight (is equivalent to a compression of the memory, \cite{Schmidhuber2008}) is more valuable than one that changes memory the same total amount but does not lead to compression.
 
-\begin{definition}
-    \label{def:memory}
-    Let a memory $M$ be finite set whose maximum size is $N$--defined over a finite state space $s \in S^N$--whose elements are added by an invertible encoder $f$, such that $M_{t+1} = f(M_{t}, s)$ and $M_{t} = f^{-1}(M_{t+1}, s)$ and whose elements $z$ from $M$ are recovered by a decoder $g$, such that $z = g(M, s)$. The initial memory $M_{0}$ is said to be the empty set, $M_{0} = \emptyset$.
-\end{definition}
+% TODO: this can be violated easily. Visit the full def of PAC learning
+% and just use that... skip NP?
+% \begin{axiom}
+% 	[Axiom of Equilibrium] An observation $s_t$ must be learnable by $M$. $\frac{d^2M(s_t)}{dt^2} \leq 0$. 
+% \label{ax:5} \end{axiom}
 
-\begin{center}{\textit{The Value Axioms}.}\end{center}
-\begin{axiom} 
-    Information value $E$ is the distance between on the two most recent memories, $M_{t+1}$ and $M_{t}$.
-    \label{ax:1}
-\end{axiom} 
+% TODO: this whole section needs a re-write based on the slides
+\subsection*{A minimal description of information value.}
+To formalize information value we use two axioms that define a real valued function, $E(s)$, that measures the value of any observation $s_t$ given a world model $M$ and a distance metric $d$.
 
 \begin{axiom}
-    $E \geq 0$. New information about the world is always \textit{in principle} valuable.
-    \label{ax:2}
-\end{axiom}
+    [Axiom of Change] The value of information $E(s_t)$ depends only on the total distance $M$ moves by making observation $s_t$.
+\label{ax:4} \end{axiom}
 
+\noindent This axiom does three important things. It ensures information value depends only on the world model, that value is a distance in memory, and that value learning has the Markov property \cite{Sutton2018}. Now, let's unpack it.
+
+By distance we mean a function $\delta = d(m,m')$, where $m \in M$ and $m' \in M'$ are discrete memories drawn from two memories $M$ and $M'$. We define $d$ so $d \ge 0$ for all $s \in S$, and let $d = 0$ only if $M = M'$. Our definition of $d$ \textit{does not} require the distance in memories from $M$ to $M'$ be the same as from $M'$ to $M$. Nor for the triangle inequality to hold. For the technically inclined, this definition makes $d$ a pre-metric. 
+
+By total distance we mean the norm $||\Delta||$, where $\Delta = \{\delta_1, \delta_2,...,\delta_L\}$. 
+
+In summary, Let $E \equiv ||\Delta||$.
+
+Different $f$ and $g$ pairs will naturally need different ways to measure distances in $M$. For example, in a novelty world model \cite{Kakade2002} either the hamming or Manhattan distance are applicable and would produce binary distance values, as would a count model \cite{Bellemare2016,Dayan1993}. A latent memory \cite{Schmidhuber1991,Pathak2017} might instead use the euclidean norm of its own error gradient \cite{Pascanu2013}. While a probabilistic or Bayesian memory would likely use the Kullback–Leibler (KL) divergence \cite{Park2017,Friston2016}.
+ 
 \begin{axiom}
-    $E = 0$ if and only if $M_{t+1} = M_{t}$. If you remember something perfectly there is no value in learning it again. 
-    \label{ax:3}
+	[Axiom of Equilibrium] To be valuable an observation $s_t$ must be learnable by $M$ 
+\label{ax:5} 
 \end{axiom}
 
-\noindent
-The contents of memory are potentially arbitrary. As a result there is no way to ahead of time say what comparison to make when valuing information. The simplest and most robust solution is to simply value each state against the memory as a whole (Axiom~\ref{ax:4}. 
-\begin{axiom}
-    $E$ is monotonic with the average change in $M$.
-    \label{ax:4}
-\end{axiom}
+\noindent By learnable we mean two things. First, with every (re)observation of $s$, $M$ should change. Second, the change in $M$ must eventually reach a learned equilibrium. To formalize these we constrain the average gradient of $M$, so $\mathbb{E}\big [\nabla^2 M \big ] \leq 0$. 
 
-\noindent
-In general, specific information is more valuable than less specific information. As surrogate for specificity, we formalize this with the geometric notion of compactness.
-\begin{axiom}
-    $E$ is monotonic with the compactness $C$ of the change $M$ (Eq.~\ref{eq:compactcude}).
-    \label{ax:5}
-\end{axiom}
-\noindent
+Most attempts to value information rest their definition on information theory. Value might rest on the intrinsic complexity of an observation (i.e., its entropy) \cite{Haarnoja2018} or on its similarity to the environment (i.e., mutual information) \cite{Kolchinsky2018}, or on some other salience signal \cite{Tishby2000}. In our analysis, learning alone drives value. This is because learning might happen on a true world model or with a faulty world model, or be about a fictional narrative. The observation might be simple, or complex. From a subjective point of view, which is the right point of view for value, all of these are the same; value depends only on the total knowledge gained.
 
-% TODO Ax 6: fisher eq?
-Figure~\ref{} shows how our definition of value fits into reinforcement learning and information theory. 
-
-Our definition of memory is extremely general. For example, if $f$ and $g$ are identity functions (functions that return what they are given), then $M$ becomes a simple episodic memory, an ongoing record of which states have been visited. If you can add a state to $M$ you can take it out which meets the requirement for invertibility / forgettability (Def~\ref{def:ineq}). One way to measure the distance between two memories of this kind is to simply compare their size (i.e., cardinality). If instead $f$ is temporal encoder, which adds both the state $s$ and the time $t$ to $M$, then $M$ functions like a temporal episodic memory.  
-
-Both kinds of episodic memory are really just data stores to which we can apply a range of $g$ decoders, including dimensionality reduction techniques (\textit{e.g.} PCA, NMF, tSNE), clustering methods (k-NN), and mixture models (GMM, kernel), as well as modern methods for learning in artificial networks (GANs, VAEs). By working a the real number space, each of these is associated with one or more was to measure distance between memories (e.g., the euclidian distance). With a way to measure distance, it is should be universally possible to satisfy the value axioms.
-
-As a second example we can let $f$ and $g$ be probability functions which means $M$ becomes a probability distribution. If you can increases the probability estimate of a state you can equally decrease it, satisfying invertibility. Likewise, there are a number of ways to measure the distance between two distributions (e.g., the KL divergence).
-
-The basic properties guaranteed by the axioms and memory definition are sufficient to derive an optimal action policy to maximize total $E$. 
-
-The Bellman equation provides the optimal policy to maximize $E$ over $S$ for any memory $M$. This is proved in Theorems~\ref{theorem:opt_sub}. Critically, the proof depends only on the idea that $M$ is invertible--that items in $M$ can be forgotten. 
-
-% TODO: Bellman
-
-Having a policy that maximizes $E$ does not ensure the memory that is learned is accurate (has high mutual information between its contents and the world, Fig~\ref{}). The encoding and decoding functions are responsible for accuracy. We leave open the possibility that either function is noisy, forgetful or otherwise imperfect. We only intend that information value is purely subjective measure, concerned only with self-consistency not accuracy. As scientists we'd hope maximizing value would also lead to accuracy. As experimentalists its clear this is not always the case. An animal, especially perhaps a human animal, might learn an very inaccurate model of the world, but as long as it learns it consistently total $E$ can be reach its optimal value.
-
-Having a policy that maximizes $E$ does not necessarily ensure exploration is of good quality in terms of also maximizing reward. Relying on Axiom 6, in Theorems~\ref{theorem:Z} and~\ref{theorem:convergence} we prove our optimal policy for information value, $\pi^*_E$, leads to a complete and exhaustive exploration of any \textit{finite} space $S$. That is,
-
-\begin{enumerate}[noitemsep,wide=0pt,leftmargin=\dimexpr\labelwidth+2\labelsep\relax]
-    \item The optimal policy $\pi^*_E$ must visit each state in $s \in S$ at least once (Theorem~\ref{theorem:Z}).
-    \item The optimal policy $\pi^*_E$ must revisit each $s \in S$ until learning about each state $s$ plateaus when $g(M_{t+1}, s) = g(M_{t},s)$. (Theorem~\ref{theorem:convergence}).
-\end{enumerate}
-
-There exists a number of reinforcement learning algorithms. We shown one example in Eq~\ref{}. 
-
-Equation~\ref{} gives us a strategy to optimize both while ensuring their individual properties and optimality hold. 
-
-In Equation~\ref{} we regard animal behavior as fixed resource--where only one action can be taken at the time--we can imagine the greedy policies in Eq~\ref{} and Eq~\ref{} are simply two possible ``jobs'' competing for ``execution'' (behavioral control). This view turns the dilemma into a problem of optimal scheduling. 
-
-% TODO: meta-greedy
-
-The solution to scheduling problems with 1. non-negative value and 2. identical run times is known to be a greedy algorithm (Theorem~\ref{}). (As each policy only results in a single action $a \sim A$ it's reasonable to say the time it takes to make an action (i.e. the run time) is a constant value).
-
-The scheduling algorithm in Eq~\ref{} will maximize the joint value of $R$ and $E$, but does not ensure each maintains its properties. The constraints we introduce (Eq~\ref{})) ensure $E$ will plateau, and that when it does the reward policy takes control and always chooses the highest value action. 
-
-In stochastic environments $M$ may show small continual fluctuations which get reflected in $E$. To allow Eq~\ref{pipi} to achieve a stable solution we introduce $\epsilon$, which acts as boredom threshold for exploration. To be consistent with the value axioms, $\epsilon > 0$ and $E + \epsilon \geq 0$. 
-
-To ensure the default policy is greedy reward maximization, Eq~\ref{} breaks ties between $R_t$ and $E_t$ in favor of the reward policy.
-
-% In contrast to our approach, a common way to approximate a solution to the dilemma is shown in Eq~\ref{}. In this form the reward $R$ is supplemented by some fictive reward, or information term, $I$. $I$ is typically rescaled by the parameter $\beta$ (if $\beta = 1$ there is no scaling). The true aim here it maximize $R$ but to encourage exploration we add $I$. The term $I$ can be a information theoretic term (e.g., entropy, mutual information, or the KL divergence), a novelty bonus, or a curiosity/error term. Regardless of choice, all these realizations share a common limitation--finding the optimal reward is not certain. Some $I$ will succeed in some cases and $\beta$ choices while others won't. 
-
-% Given a history of action choices, the most valuable option is always chosen in our dual value approach to the dilemma. The cost of this way of doing things is time. It's now a problem of optimal scheduling. In the best schedule w.r.t. value time is taken up by actions to maximize information value that do no \textit{necessarily} provide information about reward. This is especially true if there are actions that are never rewarding but that are complex enough--high entropy enough--to require several observations to learn. 
-
-Trying to maximize reward creates a dilemma between exploration and exploitation. Trying to maximize information avoids the dilemma, but does at a cost to worst case sample efficiency. 
-
-The worst case sample efficiency for $\pi_{\pi}$ is additive in its policies. That is, if in isolation it takes $T_E$ steps to earn $E_{T} = \sum_{T_E} E$, and $T_R$ steps to earn $r_{T} = \sum_{T_R} R$, then the worst case training time for $\pi_{\pi}$ is $T_E + T_R$, if that is neither policy can learn from the other's control. There is however no reason each policy can't observe the transitions $(s_t, a_t, R, s_{t+1})$ caused by the other. If this is allowed,  worst case training time improves to $\max(T_E, T_R)$. 
-
-
-The Kullback--Leibler ($KL$) divergence satisfies all five value axioms (Eq.~\ref{eq:KL}). In expressing $E$ in terms of KL it also allows us to more concretely demonstrate the mathematical properties implied in our axioms (See Methods).
-
+\subsection*{Exploration as a dynamic programming problem} Dynamic programming is a popular optimization method because it guarantees value is maximized using a simple algorithm that always chooses the largest option. In Theorem~\ref{theorem:opt_sub} (see \textit{Mathematical Appendix}) we prove that our definition of memory has one critical property, optimal substructure, that is needed for an optimal dynamic programming solution \cite{Bellmann1954,Roughgarden2019}. The other two required properties, $E \ge 0$ and the Markov property \cite{Bellmann1954,Roughgarden2019}, are fulfilled by the \textit{Axiom 1}. 
+To write down our dynamic programming solution we introduce a little more notation. We let $\pi$ denote an action policy, a function that takes a state $s$ and returns an action $a$. We let $\delta$ denote the transition function, which takes a state-action pair $(s_{t},a_t)$ and returns a new state, $s_{t+dt}$. This function acts as an abstraction for the actual world. For notational consistency with the standard Bellman approach we also redefine $E(s)$ as a \textit{payoff function}, $F(M_{t}, a_t)$ \cite{Bellmann1954}.
+ 
 \begin{equation}
-    KL(M', M) = \sum_{s \in S} M'(s) \text{log} \frac{M'(s)}{M(s)} 
-    \label{eq:KL}
+	\begin{split}\label{eq:payout} 
+		F(M_{t}, a_t) = E(s)\\
+		\text{subject to the constraints} \\
+		a_{t} = \pi(s_t) \\
+		s_{t+dt} = \delta(s_{t}, a_t),\\
+		M_{t+dt} = f(M_{t}, s_{t}) 
+	\end{split}
 \end{equation}
 
+\noindent The value function for $F$ is,
 
-% TODO Bandit results
+\begin{equation}\label{eq:V_E} 
+	\begin{split}
+		V_{\pi_E}(M_0) = \Big [ \max_{a \in A} \sum_{t=0}^{\infty} F(M_t, a_t) \ \Big | \ M, \ d, \ S \ \Big ]. 
+	\end{split}
+\end{equation}
 
+\noindent And the recursive Bellman solution to learn this value function is,
+
+\begin{equation}\label{eq:bellman_iter} 
+	V^*_{\pi_E}(M_{t}) = F(M_{t}, a_{t}) + \max_{a \in A} \Big [ F(M_{t+dt}, a_t) \Big ].
+\end{equation}
+
+For the full derivation of Eq~\ref{eq:bellman_iter} see the \textit{Mathematical Appendix}, where we also prove that Eq~\ref{eq:bellman_iter} leads to exhaustive exploration of any finite space $S$ (Theorems~\ref{theorem:Z} and~\ref{theorem:convergence}).
+
+% Axiom~\ref{ax:5} requires that learning in $M$ converge. Axiom~\ref{ax:4} requires information value increases with surprise, re-scaled by specificity. When combined with a greedy action policy like $\pi^*_E$, these axioms naturally lead to active learning \cite{Shyam2018,Pathak2019,Schwartenbeck2019} and to adversarial curiosity \cite{Schmidhuber2019a}.
+
+\subsection*{Scheduling a way around the dilemma} Remember that the goal of reinforcement learning is to maximize reward, an objective approximated by the value function $V_R(s)$ and an action policy $\pi_R$. 
+
+\begin{equation}\label{eq:V_R} 
+	V^{\pi_R}_R(s) = \mathbb{E} \Big [ \sum_{k=0}^{\infty} R_{t+k+1} \big | s = s_t \Big ]
+\end{equation}
+
+Remember too that our overall goal is to find an algorithm that maximizes both information and reward value. To do that we imagine the policies for exploration and exploitation are possible ``jobs'' competing to control behavior. We know that, by definition, each of these jobs produces non-negative values: $E$ for information or $R$ for reinforcement learning. So our goal is to find an optimal scheduler for these two jobs. 
+
+To do this we further simplify our assumptions. We assume each action takes a constant amount of time, and has no energetic cost. We assume the policy can only take one action at a time, and that those actions are exclusive. Most scheduling solutions also assume that the value of a job is fixed, while in our problem information value changes as the world model improves. In a general setting however, where one has no prior information about the environment, the best predictor of the next value is the last or most recent value \cite{Hocker2019,Roughgarden2019}. We assume this precept holds in all of our analysis.
+
+With these assumptions in place, the optimal solution to this kind of scheduling problem is known to be a purely local, winner-take-all, algorithm \cite{Bellmann1954,Roughgarden2019}. We state this winner-take-all solution here as a set of inequalities where $R_t$ and $E_t$ represent the value of reward and information at the last time-point.
+
+\begin{equation}
+\label{eq:pipi} 
+	\begin{split}
+		\pi_{\pi}(s_t) = 
+		\begin{cases}
+			\pi^*_E(s_t) & : E_t - \eta > R_t \\
+			\pi_R(s_t) & : E_t - \eta \le R_t \\
+		\end{cases}
+		\\
+		\text{subject to the constraints}\\
+		p(\mathbb E[R]) < 1 \\
+		E - \eta \geq 0
+	\end{split}
+\end{equation}
+
+To ensure that the default policy is reward maximization, Eq.~\ref{eq:pipi} breaks ties between $R_t$ and $E_t$ in favor of $\pi_R$. In stochastic environments, $M$ can show small continual fluctuations. To allow Eq.~\ref{eq:pipi} to achieve a stable solution we introduce $\eta$, a boredom threshold for exploration. Larger values of $\eta$ devalue information exploration and favor exploitation of reward.
+
+ The worst case algorithmic run time for Eq~\ref{eq:pipi} is linear and additive in its policies. So if in isolation it takes $T_E$ steps to earn $E_{T} = \sum_{T_E} E$, and $T_R$ steps to earn $r_{T} = \sum_{T_R} R$, then the worst case training time for $\pi_{\pi}$ is $T_E + T_R$. It is worth noting that this is only true if neither policy can learn from the other's actions. There is, however, no reason that each policy cannot observe the transitions $(s_t, a_t, R, s_{t+dt})$ caused by the other. If this is allowed, worst case training time improves to $\max(T_E, T_R)$.
+
+\subsection*{Exploration without regret} Suboptimal exploration strategies will lead to a loss of potential rewards by wasting time on actions that have a lower expected value. Regret $G$ measures the value loss caused by such exploration. $G = \hat V - V_a$, where $\hat V$ represents the maximum value and $V_a$ represents the value found by taking an exploratory action rather than an exploitative one \cite{Sutton2018}. 
+
+Optimal strategies for a solution to the exploration-exploitation dilemma should maximize total value with zero total regret. 
+
+\begin{figure}
+	[tbhp] \centering 
+	\includegraphics[width=.95\linewidth]{figures/fig2.png} 
+	\caption{ \label{fig:f2} Bandits. Reward probabilities for each arm in bandit tasks I-IV. Grey dots highlight the optimal (i.e., highest reward probability) arm. See main text for a complete description.} 
+\end{figure}
+
+\begin{figure}
+	[tbhp] \centering 
+	\includegraphics[width=.75\linewidth]{figures/fig3.png} 
+	\caption{ \label{fig:f3} Regret and total accumulated reward across models and bandit task. Median total regret (left column) and median total reward (right column) for simulations of each model type ($N=100$ experiments per model). See main text and Table~\ref{tab:agents} for description of each model. Error bars in all plots represent median absolute deviation.} 
+\end{figure}
+
+To evaluate dual value learning (Eq.~\ref{eq:pipi}) we compared total reward and regret across a range of both simple, and challenging multi-armed bandit tasks. Despite its apparent simplicity, the essential aspects of the exploration-exploitation dilemma exist in the multi-armed bandit task \cite{Sutton2018}. Here the problem to be learned is the distribution of reward probabilities across arms (Figure ~\ref{fig:f2}).  To estimate the value of any observation $s_t$, we compare sequential changes in this probabilistic memory, $M_{t+dt}$ and $M_t$ using the KL divergence (i.e. relative entropy; Figure \ref{fig:supf1}\textbf{A}-\textbf{B}). The KL divergence is a standard way to measure the distance between two distributions \cite{MacKay2003} and is, by design, consistent with our axioms (see the \textit{Supplementary Materials} for a more thorough discussion). 
+
+We start with a simple experiment involving a single high value arm. The rest of the arms have a uniform reward probability (Bandit \textbf{I}). This represents a trivial problem. Next we tried a basic exploration test (Bandit \textbf{II}), with one winning arm and one distractor arm whose value is close to but less than the optimal choice. We then move on to a more difficult sparse exploration problem (Bandit \textbf{III}), where the world has a single winning arm, but the overall probability of receiving any reward is very low ($p(R) = 0.02$ for the winning arm, $p(R) = 0.01$ for all others). Sparse reward problems are notoriously difficult to solve, and are a common feature of both the real world and artificial environments like Go, chess, and class Atari video games \cite{Mniha,Silver2016b,Silver2018}. Finally, we tested a complex, large world exploration problem (Bandit (\textbf{IV}) with 121 arms, and a complex, randomly generated reward structure. Bandits of this type and size are near the limit of human performance \cite{Wu2018}. 
+
+We compared the reward and regret performance of 6 artificial agents. All agents used the same temporal difference learning algorithm (TD(0), \cite{Sutton2018}); see \textit{Supplementary materials}). The only difference between the agents was their exploration mechanism (Table~\ref{tab:agents}).  The e-greedy algorithm is a classic exploration mechanism \cite{Sutton2018}. Its annealed variant is common in state-of-the-art reinforcement learning papers, like Mnih \emph{et al} (\cite{Mniha}). Other state-of-the-art exploration methods are models that treat Bayesian information gain as an intrinsic reward and the goal of all exploration is to maximize total reward (extrinsic plus intrinsic) \cite{Jaegle2019,Schmidhuber1991}. To provide a lower bound benchmark of performance we included an agent with a purely random exploration policy.
+
+\newcolumntype{L}{>{\arraybackslash}m{4cm}} 
+\begin{table}[] 
+    \centering 
+	\caption{Artificial agents.} \label{tab:agents} 
+	\begin{tabular}
+		{|l|L|} \hline \textbf{Agent} & \textbf{Exploration mechanism} \\
+		\hline Dual value & Our algorithm (Eq~\ref{eq:pipi}). \\
+		\hline E-greedy & With probability $1-\epsilon$ follow a greedy policy. With probability $\epsilon$ follow a random policy. \\
+		\hline Annealed e-greedy & Identical to E-greedy, but $\epsilon$ is decayed at fixed rate. \\
+		\hline Bayesian reward & Use the KL divergence as a weighted intrinsic reward, sampling actions by a soft-max policy. $\sum_T R_t + \beta E_t$ \\
+		\hline Random & Action are selected with a random policy (no learning) \\
+		\hline 
+	\end{tabular}
+\end{table}
+
+All of the classic and state-of-the-art algorithms performed well at the different tasks in terms of accumulation of rewards (right column, Figure \ref{fig:f3}). The one exception to this being the sparse low reward probability condition (Bandit \textbf{III}), where the dual value algorithm consistently returned more rewards than the other models. In contrast, most of the traditional models still had substantial amounts of regret in most of the tasks, with the exception of the annealed variant of the e-greedy algorithm during the sparse, low reward probability task (left column, Figure~\ref{fig:f3}). In contrast, the dual value learning algorithm consistently was able to maximize total reward with zero or near zero (Bandit \textbf{III}) regret, as would be expected by an optimal exploration policy.
+
+
+\section*{Discussion}
+\subsection*{Past work}
+We are certainly not the first to quantify information value \cite{Kolchinsky2018,CogliatiDezza2017}, or use that value to optimize reward learning \cite{Kelly1956,Schmidhuber1991,Dayan1996,deAbril2018,Itti2009}. Information value though is typically framed as a means to maximize the amount of tangible rewards (e.g., food, water, money) accrued over time \cite{Sutton2018}. This means that information is treated as an analog of these tangible or external rewards (i.e., an \textit{intrinsic reward}) \cite{Schmidhuber1991,Berger-Tal2014,Itti2009,Friston2016}. This approximation does drive exploration in a practical and useful way, but doesn't change the intractability of the dilemma \cite{Thrun1992a,Dayan1996,Findling2018,Gershman2018b}. 
+
+% Many accounts of information value rely on both Bayesian reasoning, and information theory \cite{Kelly1956,Itti2009,Friston2016}. In a formal, descriptive, or mathematical world, using these makes sense. However for a naturalistic theory of learning these are strong assumptions, that may not hold up. For example, if it turns out that animals are not in fact general Bayesian reasoning systems. 
+
+At the other extreme from reinforcement learning are pure exploration methods, like curiosity \cite{Berlyne1950,Jaegle2019,Pathak2017} or PAC approaches \cite{Valiant1984}. Curiosity learning is not generally known to converge on rewarding actions with certainty, but never-the-less can be an effective heuristic \cite{Pathak2017,Burda2018,Colas2019}. Within some bounded error, PAC learning is certain to converge \cite{Valiant1984}. For example, it will find the most rewarding arm in a bandit, and do so with a bounded number of samples \cite{Even-Dar2002}. However, the number of samples is fixed and based on the size of the environment (but see \cite{Even-Dar2006,Strehl2009}). So while PAC will give the right answer, eventually, its exploration strategy also guarantees high regret.
+
+% Cisek (2019) traced the evolution of perception, cognition, and action circuits from the Metazoan to the modern age \cite{Cisek2019}. The circuits for reward exploitation and observation-driven exploration appear to have evolved separately, and act competitively--exactly the model we suggest. In particular he notes that exploration circuits in early animals were closely tied to the primary sense organs (i.e. information) and, historically anyway, had no input from the homeostatic circuits needed for reward valuation \cite{Keramati2014,Cisek2019,Juechems2019}. 
+
+
+\subsection*{Animal behavior}
+In psychology and neuroscience, curiosity and reinforcement learning have developed as separate disciplines \cite{Berlyne1950,Kidd2015,Sutton2018}. And they are separate problems, with links to different basic needs: gathering resources to maintain physiological homeostasis \cite{Keramati2014,Juechems2019} and gathering information to plan for the future \cite{Valiant1984,Sutton2018}. Here we suggest that though they are separate problems, they are problems that can, in large part, solve one another.
+
+The theoretical description of exploration in scientific settings is probabilistic \cite{Calhoun2014,Song2019a,Gershman2018b,Schulz2018a}. By definition probabilistic models can't make exact predictions of behavior, only statistical ones. Our approach is deterministic, and so does make exact predictions. Our theory predicts that it should be possible to guide exploration in real-time using, for example, optogenetic methods in neuroscience, or well timed stimulus manipulations in economics or other behavioral sciences. 
+
+In species ranging from human to \textit{Caenorhabditis elegans}, there are hundreds perhaps thousands of exploration-exploitation experiments. Analysis of their behavior has been generally been limited to aggregate distributions. A deterministic theory can, in principle, open up entirely new avenues for reanalysis--using our model to make exact temporal predictions.
+
+\subsection*{Exploration in the brain}
+% TODO - some animals have exploration modules which seem to be orthoonal from reward.
+
+\subsection*{Artificial intelligence}
+Progress in reinforcement learning and artificial intelligence research is limited by three factors: data efficiency, exploration efficiency, and transfer learning \cite{Ha2018}. Our algorithm speaks directly to all three of these limits. 
+
+In the large and complex environments that modern machine learning operates in random exploration takes too long to be practical. So there is a critical need for more efficient exploration strategies \cite{Ha2018}. These are often known as active sampling, or directed exploration. A range of heuristics for this kind of exploration have been explored \cite{Gottlieb2018,Epshteyn2008,Thrun1992b,Ishii2002a,Bellemare2016,Haarnoja2018}. But our dual value algorithm offers a principled approach. Designing efficient exploration reduces to two questions: what should our agent remember? How should we measure change change in that memory? This is subject to the axioms and Eq.~\ref{eq:pipi}, of course.
+
+\subsection*{In the classroom}
+
+
+\subsection*{Everyday life} The uncertainty of the unknown can always be recast as an opportunity to learn. But rather than being a trick of psychology, we prove this view is--in our formalism--mathematically optimal.
+
+
+\subsection*{Acknowledgments.}
+EP and TV wish to thank Jack Burgess, Matt Clapp, Kyle ``Donovank'' Dunovan, Richard Gao, Roberta Klatzky, Jayanth Koushik, Alp Muyesser, Jonathan Rubin, and Rachel Storer for their comments on earlier drafts. EP also wishes to thank Richard Grant for his illustration work in Figure 1.
+
+The research was sponsored by the Air Force Research Laboratory (AFRL/AFOSR) award FA9550-18-1-0251. The views and conclusions contained in this document are those of the authors and should not be interpreted as representing the official policies, either expressed or implied, of the Army Research Laboratory or the U.S. government. TV was supported by the Pennsylvania Department of Health Formula Award SAP4100062201, and National Science Foundation CAREER Award 1351748.
 
 \bibliography{library}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% --------------------------------------------------------------------------
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\clearpage
-\newpage
-\section*{Mathmatical Appendix.}
-\subsection*{Compactness}
-The compactness $C$ of a hyper-cube has a simple formula, $C = \frac{P^2}{A}$ where $P$ is the cube's perimeter and $A$ is its area. Therefore as $M_{t}$ moves to $M_{t+1}$, the we can measure the distances $\{d_i, d_{i+1}, d_{i+2},\ldots d_{N}\}$ for all $O \leq N$ observed states $Z$, such that $Z \subseteq S$ and treat them as if they formed a $O$-dimensional hyper-cube. In measuring this imagined cube we arrive at a geometric estimate for change the compactness of our memory $M$ (Eq.~\ref{eq:compactcude}).
-
-\begin{equation} \label{eq:compactcude}
-\begin{split}
-    C & = \frac{\Big ( 2 \sum_{O}^{i} d_i \Big )^2}{\prod_{O}^{i} d_i}
-\end{split}
-\end{equation}
-
-\subsection*{Exploration as a dynamic programming problem}
-To use theorems from dynamic programming \cite{Bellman,Sutton2018a} we must prove our memory $M$ (Def.~\ref{def:memory}) has optimal substructure. By optimal substructure we mean that $M$ can be partitioned into to a small number collection or series, each of which is an optimal dynamic programming solution. In general by proving we can decompose some optimization problem in a set of smaller problems whose optimal solution is easy to find or prove, it trivial to prove we can also grow the series optimally which in turns allows for direct proofs by induction.
-
-Here we prove the optimal substructure of $M$ over a series of state observations $P = (s_t, s_{t+1}, s_{t+2}, ... s_{t+T-1})$. For consistency with standard notation for dynamic programming we redefine $E$ as the payoff function, $F(M_{t}, a_t)$ (Eq.~\ref{eq:payout}). 
-
-\begin{equation}
-    \begin{split} \label{eq:payout}
-    F(M_{t}, a_t) = E(M_{t+1}, M_{t})\\
-    \text{subject to the constraints} \\
-    a_{t} = \pi(s_t) \\
-    s_{t+1} = \delta(s_{t}, a_t),\\ 
-    M_{t+1} = f(M_{t}, s_{t})
-    \end{split} 
-\end{equation}
-
-Using Eq~\ref{eq:payout} we can write down the total information value $V_{\pi_E}$, as the sum of all payouts for some policy $\pi_E$, made over some observation period $T$, where time $t$ is an index $t = (1,2,3,\ldots,T)$. 
-
-\begin{equation} \label{eq:V}
-    \begin{split}
-        V_{\pi_E} = \sum_{t \in T} F(M_{t}, a_t)\\
-    \end{split}
-\end{equation}
-
-Our overall goal is to derive a algorithm to maximize $V_{\pi_E}$. Our specific goal is to derive a iterative greedy algorithm to maximize $V_{\pi_E}$, i.e. a dynamic programming solution.
-
-% --------------------------------------------------------------------------
-\subsubsection*{A proof of optimal substructure}
-A first step in solving a dynamic programming problem is isolating the relevant sub-problem, and proving it has an optimal substructure--that the problem can be decomposed into an iteratively optimal series. In Theorem we prove that any two sequential memories $M_{t+1}$ and $M_{t}$ have optimal substructure.
-
-\begin{theorem}[Optimal substructure] \label{theorem:opt_sub}
-    Assuming transition function $\delta$ is deterministic, if $V^*_{\pi_E}$ is the optimal information value given by $\pi_E$, a memory $M_{t+1}$ has optimal substructure if the the last observation $s_t$ can be removed from $M_t$, by $M_{t+1} = f^{-1}(M_{t+1}, s_t$ where the resulting value $V^*_{t-1} = V^*_{t} - F(M_t, a_t)$ is also optimal. 
-\end{theorem}
-\begin{proof}
-    Given a known optimal value $V^*$ given by $\pi_E$ we assume for the sake of contradiction there also exists an alternative policy $\hat \pi_E \neq \pi_E$ that gives a memory $\hat M_{t-1} \neq M_{t-1}$ and for which $\hat V^*_{t-1} > V^*_{t-1}$. 
-
-    To recover the known optimal memory $M_t$ we lift $\hat M_{t-1}$ to $M_t = f(\hat M_{t-1}, s_t)$. This implies $\hat V^* > V^*$ which in turn contradicts the purported original optimality of $V^*$ and therefore $\hat \pi_E$.
-\end{proof}
-
-% --------------------------------------------------------------------------
-\subsubsection*{A Bellman solution}
-Given $M$ has optimal substructure (Theorem~\ref{theorem:opt_sub}), we can use the Bellman equation \cite{Bellman} to write down an optimal greedy policy for maximizing information value $E$ over the time horizon $T$. This is given by Eqs.~\ref{eq:V_star}-\ref{eq:bellman_seq}.
-
-\begin{equation} \label{eq:V_star}
-    \begin{split}
-        V^*_{\pi_E}(M_0) = \max_{a \in A} \sum_{t \in T} F(M_t, a_t)
-    \end{split}
-\end{equation}
-
-\begin{equation} \label{eq:bellman_seq}
-    \begin{split}
-        V^*_{\pi_E}(M_0) &= \max_{a \in A} \Big [\sum_{t \in T} F(M_t, a_t)\Big ]\\
-                         &= \max_{a \in A} \Big [F(M_0, a_0) + \sum_{t \in T} F(M_{t+1}, a_{t+1})\Big ]\\
-                         &= F(M_0, a_0) + \max_{a \in A} \Big [\sum_{t \in T} F(M_{t+1}, a_{t+1}) \Big ]\\
-                         &= F(M_0, a_0) + V^*_{\pi_E}(M_{t+1}) + V^*_{\pi_E}(M_{t+2}),\ \ldots
-    \end{split}
-\end{equation}
-
-The final line in Eq.~\ref{eq:bellman_seq} lends itself to a recursive reformulation (Eq.~\ref{eq:bellman_iter}).
-
-\begin{equation} \label{eq:bellman_iter}
-    V^*_{\pi_E}(M_{t}) = F(M_{t}, a_{t}) + \max_{a \in A} \Big [ [F(M_{t+1}, a_t) \Big ]
-\end{equation}
-    
-% ---------------------------------------------------------------------------
-\subsection*{Exploration as a dynamic programming problem}
-The dynamic programming solution to maximize information value is also a dynamic programming solution for exploration. By making a weak assumption on the learning of $M$, we can prove that our greedy policy $\pi^*_E$ leads to a complete and exhaustive exploration of any finite space $S$. Specifically, we show:
-
-\begin{enumerate}[noitemsep,wide=0pt,leftmargin=\dimexpr\labelwidth+2\labelsep\relax]
-    \item The optimal policy $\pi^*_E$ must visit each state in $s \in S$ at least once.
-    \item The optimal policy $\pi^*_E$ must revisit each $s \in S$ until learning about each state $s$ plateaus when $g(M_{t+1}, s) = g(M_{t},s)$.
-\end{enumerate}
-
-
-% HERE: re-write this assumption using f. Weaken it compared to below. Convex doesn't matter.
-\subsubsection*{An assumption of learning progress}
-The study of information geometry models learning as an approach to information equilibrium. As learning progress plateaus, variance decreases, and therefore so does entropy. The rate at which learning plateaus is governed by the Fisher information metric, which is the hessian of the KL-divergence.
-
-% HERE: re-watch Baez talk...
-
-Exploration depends on learning progress. We assume that every every state observation is accompanied by change in $M$. This change can be arbitrarily small, but must be non-zero. 
-% To make our proofs work we assume each observation $s$ is learned--to some small degree perhaps--by the memory $M$. Formally then, and with \textit{a loss of generality}, we assume that $\mathcal{L}_M$ is convex, and that every observation $s$ leads to learning progress on the memory $M$. Unless, that is, $\mathcal{L}_M(s) = 0$. That is, the gradient of $\triangledown \mathcal{L}_M < 0$ for all $s \in P$ when $L(s) \neq 0$. If $\triangledown \mathcal{L}_M = 0$, then for a convex learner we are at the global minimum, and so exploration and learning should cease. Having completed our initial proofs we then show under what conditions these assumptions can be relaxed.
-
-\subsubsection*{Sorting preliminaries}
-Our proofs for exploration are really sorting problems. If every state must be visited (or revisited) until learned, then under a greedy policy every state's value must--at one time or another--be the maximum value. 
-
-Sorting requires ranking. Ranking requires that we make a definition for both the greater $>$ and less than inequalities $<$. For three real numbers, ${a,b,c} \in \mathbb{R}$.
-
-\begin{definition} \label{def:ineq}
-    \begin{align}
-        a \leq b \Leftrightarrow \exists c; b = a + c \\
-        a > b \leftrightarrow (a \neq b) \wedge (b \leq a) 
-    \end{align}
-\end{definition}
-
-\subsubsection*{A greedy policy explores optimally}
-% TODO need intro.....
-
-% we let $ F_0 = 0$, talk about f_0 > 0. Somew
-
-\begin{definition}
-    Let $Z$ be set of all visited states, where $Z_0$ is the empty set $\{\}$ and $Z$ is built iteratively over a path $P$, such that $Z = \{s | s \in P\ \text{and}\ s \not\in Z\}$.    
-\end{definition}
-
-\begin{theorem}[State search -- completeness and uniqueness] \label{theorem:Z}
-A greedy policy $\pi$ is the only deterministic policy which ensures all states in $S$ are visited, such that $Z = S$.
-\end{theorem}
-\begin{proof}    
-    Let $\mathbf{E} = (E_1, E_2, ...)$ be ranked series of $E$ values for all states $S$, such that $(E_1 \geq E_2, \geq ...)$. To swap any pair of values ($E_i \geq E_j$) so ($E_i \leq E_j$) by Def.~\ref{def:ineq} $E_i - c = E_j$.  
-
-    Therefore, again by Def.~\ref{def:ineq}, $\exists \int \delta E(s) \rightarrow -c$. 
-
-    \textit{Recall}: $\triangledown \mathcal{L}_M < 0$
-
-    However if we wished to instead swap ($E_i \leq E_j$) so ($E_i \geq E_j$) by definition $\not \exists c; E_i + c = E_j$, as $\not \exists \int \delta \rightarrow c$. 
-
-    To complete the proof, assume that some policy $\hat \pi_E \neq \pi^*_E$. By definition policy $\hat \pi_E$ can any action but the maximum leaving $k-1$ options. Eventually as $t \rightarrow T$ the only possible swap is between the max option and the $kth$ but as we have already proven this is impossible as long as $\triangledown \mathcal{L}_M < 0$. Therefore, the policy $\hat \pi_E$ will leave at least 1 option unexplored and $S \neq Z$.
-\end{proof}
-
-\begin{theorem}[State search -- convergence] \label{theorem:convergence}
-    Assuming a deterministic transition function $\Lambda$, a greedy policy $\pi_E$ will resample $S$ to convergence as $t \rightarrow T$, $E_t \rightarrow 0$.
-\end{theorem}
-\begin{proof}
-    \textit{Recall}: $\triangledown \mathcal{L}_M < 0$. 
-
-    Each time $\pi^*_E$ visits a state $s$, so $M \rightarrow M'$, $F(M', a_{t+1}) < F(M, a_t)$
-
-    In Theorem~\ref{theorem:Z} we proved only deterministic greedy policy will visit each state in $S$ over $T$ trials.
-    
-    By induction, if $\pi^*E$ will visit all $s \in S$ in $T$ trials, it will revisit them in $2T$, therefore as $T \rightarrow \infty$, $E \rightarrow 0$. 
-\end{proof}
-
-If the transition function $\Lambda$ is stochastic, the noisy state changes will prevent $E$ from fully converging to 0. This might be ideal, as it will force continual re-exploration of the world. However if we redefine the converge of $E$ not to 0 but to some criterion $\epsilon$, we can once again ensure convergence in noisy worlds. That is, in the limit of $t \rightarrow T$, $E_t \rightarrow \epsilon$, where $0 leq \epsilon \ll E_0$ with $E_0$ denoting the initial value of $E$. Too large though, and $\epsilon$ will interfere with potential optimality of $\pi^*_E$ (by Theorem.~\ref{theorem:Z}). 
-
-\subsection*{Optimality of $\pi_{\pi}$}
-
-\begin{theorem}[Optimality of $\pi_{\pi}$] \label{theorem:meta}
-    Assuming an infinite time horizon, if $\pi_E$ is optimal and $\pi_R$ is optimal, then $\pi_{\pi}$ is also optimal in the same sense as $\pi_E$ and $\pi_R$.
-\end{theorem}
-\begin{proof}
-    The optimality of $|\pi_{\pi}$ can be seen by direct inspection. If, $p(R = 1) < 1$ and we have an infinite horizon, the $\pi_E$ will have a unbounded number of trials meaning the optimally of $P^*$ holds. Likewise, $\sum E < \epsilon$ as $T \rightarrow \infty$, ensuring $pi_R$ will dominate $\pi_{\pi}$ therefore $\pi_R$ will asymptotically converge to optimal behavior.
-\end{proof}
-
-In proving the total optimality of $\pi_{\pi}$ we limit the probability of a positive reward to less than one, denoted by $p(R_t = 1) < 1$. Without this constraint the reward policy $\pi_R$ would always dominate $\pi_{\pi}$ when rewards are certain. While this might be useful in some circumstances, from the point of view $\pi_E$ it is extremely suboptimal as the model would never explore. Limiting $p(R_t = 1) < 1$ is reasonable constraint, as rewards in the real world are rarely certain. A more naturalistic but complex way to handle this edge case would be to introduce reward satiety, and have reward value decay asymptotically with repeated exposure. 
-
-\subsubsection*{An optimally rewarding policy}
-If learning during $\pi_{\pi}$ is allowed to continue until $\pi_E$ converges so $E_t - \epsilon = 0$ then, by definition the animal will have completely explored its world. This implies that in turn $\pi_R$ has seen every state, and so can then choose the overall optimal value. Thus is there is a globally optimally reward policy, $\pi_{\pi}$ guarantees it will be found. Classic reinforcement learning views this search as costing potential reward. Dual value learning instead asserts a net gain. Either from information value, from rewards, or both. We suggest that rather than being fundamental, the exploration-exploitation dilemma follows from asking too little from an animal's learning objectives.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % --------------------------------------------------------------------------
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\clearpage
-\newpage
-\section*{Supplementaty methods.}
+\include{supplement}
+\include{appendix} 
 
-\subsection*{E and KL.}
-The Kullback--Leibler divergence (KL) is a widely used information theory metric, which measures the information gained by replacing one distribution with another. It is highly versatile and widely used in machine learning \cite{Goodfellow-et-al-2016}, Bayesian reasoning \cite{Itti2009,Friston2016}, visual neuroscience \cite{Itti2009}, experimental design \cite{Lopez-Fidalgo2007}, compression \cite{Mackay,Still2012} and information geometry \cite{Ay2015}. Using a Bayesian approach, Itti and Baladi \citep{Itti2009} developed an approach similar to ours for visual attention, where our information value is identical to their \textit{Bayesian surprise}. Itti and Baladi (2009) showed that compared to range of other theoretical alternative, information value most strongly correlates with eye movements made when humans look at natural images. Again in a Bayesian context, KL plays a key role in guiding \textit{active inference}, a mode of theory where the dogmatic central aim of neural systems is make decisions which minimize (probabilistic) free energy \cite{Friston2016,Schwartenbeck2019}. 
-
-\subsection*{Intial values.} If both reward and information policies are deterministic, the dilemma mathematically becomes an initial value problem. Generally reward value begins at zero. However the initial set of information values, $E_0$, cannot be 0. If $E_0 = 0$, the meta-policy will never explore. While if $E_0 > 0$, Theorem~\ref{theorem:opt_sub} ensures that any $E_0$ will do. Likewise, theorem~\ref{theorem:Z} ensures that any initial choice will not effect the final optimality of the search. While the magnitude of $E_0$ does not change long term behavior, it will change its short-term dynamics. This might be important in modeling real behavior and in choosing good values for the stopping parameter $\epsilon$ (Eq~\ref{eq:meta_greedy}). 
-
-In our simulations we assume that at the start of learning an animal should have a uniform prior over the possible actions $A \in \mathbb{R}^K$. Thus $p(a_k) = 1/K$ for all $a_k \in A$. We transform this uniform action prior into $E_0$ giving an value well scaled our KL-based realization of $E$, $E_0 = \sum_K p(a_k)\ \text{log}\ p(a_k)$. 
-
-By definition a greedy policy can't handle ties; there is no way to rank equal values. Theorems~\ref{theorem:convergence} and~\ref{theorem:Z} ensure that any tie breaking strategy is valid, making tie breaking in one sense an arbitrary. However like the choice of $E_0$, tie breaking can strongly effect the transient dynamics of $\pi_E$ and so can be quite important in practice. Viable tie breaking strategies taken from experimental work include, ``take the closest option'', ``repeat the last option'', or ``take the option with the highest marginal likelihood''. In our simulations we break ties by ``choosing the next action'' where we placed actions in an arbitrary order.
-
-\subsection*{Hyperparameter tuning.}
-Hyper-parameter tuning involved setting the learning rates for both policies in $\pi_{\pi}$ (Eq~\ref{eq:meta_greedy}), and the convergence threshold for exploration, $\epsilon$. 
-
-\end{document}
+\end{document} 
+\bibliography{sample}
