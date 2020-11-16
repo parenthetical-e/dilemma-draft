@@ -1,0 +1,76 @@
+This is BibTeX, Version 0.99d (TeX Live 2018)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: main.aux
+The style file: vancouver-elife.bst
+Database file #1: library.bib
+Warning--I didn't find a database entry for "gittins1974dynamic"
+Warning--I didn't find a database entry for "Kearns2002"
+Warning--I didn't find a database entry for "Brafman2002"
+Warning--I didn't find a database entry for "Sutton1990"
+Warning--I didn't find a database entry for "dayan1996exploration"
+Warning--I didn't find a database entry for "Sutton1998-kw"
+Warning--I didn't find a database entry for "daw2006cortical"
+Warning--I didn't find a database entry for "findling2018computational"
+Warning--I didn't find a database entry for "gershman2018deconstructing"
+Warning--I didn't find a database entry for "mehlhorn2015unpacking"
+Warning--I didn't find a database entry for "hughes1997intrinsic"
+Warning--I didn't find a database entry for "kidd2015psychology"
+Warning--I didn't find a database entry for "Lopes2012Miller1956"
+Warning--I didn't find a database entry for "Mniha"
+Warning--I didn't find a database entry for "burKeramati2014"
+Warning--I didn't find a database entry for "Goodfellow-et-al-2016"
+Warning--I didn't find a database entry for "Mackay"
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+`journal' is a missing field, not a string, for entry Bergstra
+while executing---line 1927 of file vancouver-elife.bst
+Warning--empty year in Bergstra
+`journal' is a missing field, not a string, for entry Ganguli2010
+while executing---line 1927 of file vancouver-elife.bst
+`journal' is a missing field, not a string, for entry Hocker2019
+while executing---line 1927 of file vancouver-elife.bst
+Warning--missing publisher in MacKay2003
+Warning--can't use both volume and number fields in Roughgarden2019
+Warning--missing publisher in Roughgarden2019
+Warning--there's a number but no volume in Schwartenbeck2019
+You've used 66 entries,
+            3492 wiz_defined-function locations,
+            1197 strings with 18562 characters,
+and the built_in function-call counts, 147435 in all, are:
+= -- 19053
+> -- 1400
+< -- 44
++ -- 720
+- -- 443
+* -- 12905
+:= -- 16401
+add.period$ -- 223
+call.type$ -- 66
+change.case$ -- 491
+chr.to.int$ -- 66
+cite$ -- 71
+duplicate$ -- 14120
+empty$ -- 13037
+format.name$ -- 597
+if$ -- 33668
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 685
+newline$ -- 361
+num.names$ -- 200
+pop$ -- 1366
+preamble$ -- 1
+purify$ -- 483
+quote$ -- 0
+skip$ -- 1216
+stack$ -- 0
+substring$ -- 25983
+swap$ -- 1654
+text.length$ -- 11
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 582
+warning$ -- 5
+while$ -- 680
+width$ -- 0
+write$ -- 901
+(There were 3 error messages)
