@@ -12,28 +12,30 @@ To understand curiosity in animals we have become interested in curiosity in art
 
 This list is unusually broad for a learning algorithm. There is however no mathematics to let us understand this. 
 
-So what is curiosity? We define it as an open-ended search to learn any information \cite{Kidd2015}. We assume this search should be efficient, and is motivated by value. What we would like is a way to describe these ideas mathematically, for kind of any learning algorithm. This is because curiosity depends on many different kinds of learning. In the broadest case, curiosity would then allow for any kind of learning. So this is the setting we have chosen. 
+So then what is curiosity? 
+
+We define curiosity as an open-ended search to learn any information \cite{Kidd2015}. We assume this search should be efficient, and is motivated by value. What we would like is a way to describe these ideas mathematically, for any kind of learning algorithm. This is because curiosity depends on many different kinds of learning. In the broadest case, curiosity would then allow for any kind of learning. So this is the setting we have chosen. 
 
 \subsection{Memory and learning} 
-Any notion of information value seems to require that there must be a memory $\Theta$, a way to learn $f$. For our general mathematical theory we will define memory as,
+Any notion of information value seems to require that there must be a memory, $\Theta$, and a way to learn, $f$. For our general mathematical theory we will define memory as,
 
 \begin{itemize}
 \item A set of real valued numbers
 \item Embedded in a finite space, with $N$ dimensions 
-\item That is closed and bounded
+\item Closed and bounded
 \end{itemize}
 
-Let us then define learning in a matching way then. We say a learning function \textit{can be any function} which maps observations $x$ into memory. Using the function-arrow notation this kind of learning is denoted by, $f(x);\Theta) \rightarrow \Theta'$. Likewise a forgetting function \textit{can be any function} which inverts the memory, $f^{-1}(x;\ \Theta') \rightarrow \Theta$. 
+Let us then define learning in a matching way then. We say a learning function \textit{can be any function} which maps observations $x$ into memory. Using the function-arrow notation this kind of learning is denoted by, $f(x;\Theta) \rightarrow \Theta'$. Likewise a forgetting function \textit{can be any function} which inverts the memory, $f^{-1}(x;\ \Theta') \rightarrow \Theta$. 
 
-So what are observations? It is convenient to assume all observations are also embedded in a finite real space, $x \sim X \in \mathbb{R}^m$, as are actions $a \sim A \in \mathbb{R}^k$ and that rewards are positive real numbers, $R \in \mathbb(R^{+})$. 
+So what are observations? It is convenient to assume that all observations are also embedded in a finite real space, $x \sim X \in \mathbb{R}^m$, as are actions $a \sim A \in \mathbb{R}^k$ and that rewards are positive real numbers, $R \in \mathbb(R^{+})$. 
 
-In calling them ``observations'' we do not mean to imply they must from the senses. Observations could be internally generated from thought, or externally generated from the senses, or both in combination. Observations may contain action information, or they may not. Observations may contain reward information, or they may not. We have no preference and wish to accommodate all the different kinds of cognition \cite{needed}. % TODO -- huge citation dump
+In calling them ``observations'' we do not mean to imply they must arise from the senses. Observations could be internally generated from thought, or externally generated from the senses, or both in combination. Observations may contain action information, or they may not. Observations may contain reward information, or they may not. We have no preference and wish to accommodate all the different kinds of cognition \cite{needed}. % TODO -- huge citation dump
 
 \subsection{Information value} 
-Let's say we have a memory $\Theta$ which has been learned by $f$ over a history of observations, $[f(x_0; \Theta_0), f(x_1; \Theta_1), f(x_2; \Theta_2), \ldots]$. Can we measure how much value the next observation $f(x_t)$ should have? If there is such a measure $E$, we think it reasonable to require it to have certain properties.
+Let us say we have a memory $\Theta$, which has been learned by $f$ over a history of observations, $[f(x_0; \Theta_0), f(x_1; \Theta_1), f(x_2; \Theta_2), \ldots]$. Can we measure how much value the next observation $f(x_t)$ should have? If there is such a measure $E$, we think it is reasonable to require that it have certain properties.
 
 \begin{enumerate}
-	\item $E$ should depend only on memory, and what can be immediately learned. ($x$, $\Theta$, and $f$)
+	\item $E$ should depend only on a memory, and what can be immediately learned. ($x$, $\Theta$, and $f$)
 	\item An observation that is known completely, or cannot be learned, should have a value of 0. (If $\Delta \Theta = 0$, then $E=0$)
 	\item $E$ should be non-negative because learning is never itself harmful. ($E \ge 0$)
 	\item $E$ should increase monotonically with the change in memory. ($E \propto \Delta \Theta$)
@@ -46,7 +48,7 @@ We can satisfy all these by taking a geometric view of learning, as given in the
 
 \begin{itemize}
 	\item[] \textbf{Definition 1} Let $E$ be the norm of $|| f_{\Theta}(x) - \Theta ||$.	
-	\item[] \textbf{Definition 2} Let $|| f_{\Theta}(x)$ be constrained such that $\nabla^2 \Theta < 0$ for all $ t \ge T^*$. 	
+	\item[] \textbf{Definition 2} Let $|| f_{\Theta}(x)||$ be constrained such that $\nabla^2 \Theta < 0$ for all $ t \ge T^*$. 	
 \end{itemize}
 
 \begin{figure}
@@ -65,7 +67,7 @@ We can satisfy all these by taking a geometric view of learning, as given in the
 \begin{featurebox}
 \caption{Norms.}
 \label{box:norm}
-A \textbf{norm} is a mathematical way to measure the overall size or extent of an ``object'' in a space. The object we are concerned with is a mathematical object with a form given by, $\Delta \Theta = f_{\Theta}(x) - \Theta$. But to define the norm let's as the first step consider a generic vector $v$. Keeping with convention will have its norm denoted by $||v||$, and defined by three properties:
+A \textbf{norm} is a mathematical way to measure the overall size or extent of an ``object'' in a space. The object we are concerned with is a mathematical object with a form given by, $\Delta \Theta = f_{\Theta}(x) - \Theta$. But to define the norm let us as the first step consider a generic vector $v$. Keeping with convention will have its norm denoted by $||v||$, and defined by three properties:
 
 \begin{enumerate}
   \item $||v|| > 0$ when $v \neq 0$ and $||v|| = 0$ only if $v=0$ (point separating)
@@ -73,14 +75,14 @@ A \textbf{norm} is a mathematical way to measure the overall size or extent of a
   \item $||v + w|| \leq ||v|| + ||w||$ (the triangle inequality)
 \end{enumerate}
 
-What does this mean for $\Delta \theta$? A norm over a changing memory gives most the properties we require. It depends only on learning (and forgetting), that dependence must be monotonic, a norm is zero only when nothing in the space/memory changes and is positive definite. These satisfy the first four properties. For the fifth, see Box \ref{box:laplacian}.
+What does this mean for $\Delta \Theta$? A norm over a changing memory provides most the properties we require for our definition of $E$. It depends only on learning (and forgetting), that dependence must be monotonic, a norm is zero only when nothing in the space/memory changes and is positive definite. These satisfy the first four properties. For the fifth, see Box \ref{box:laplacian}.
 \medskip
 \end{featurebox}
 
 \begin{featurebox}
 	\caption{The Laplacian.}
 	\label{box:laplacian}
-	Here we use $\nabla^2$ to represent the \textbf{Laplacian}, which will give us the remaining property we need. (See Box \ref{box:norm} for the others). To explain why, suppose we are working with a 1- dimensional memory. In this case the Laplacian reduces to the second derivative on our memory, $\frac{d^2\Theta}{dx^2} < 0$. A negative second derivative will force the changes in memory to be decelerating, by definition. In higher dimensions of memory then, a reader can think of the Laplacian as the ``second derivative'' of vector-valued functions like $f$. That is, negative Laplacian imply decelerating by definition.
+	Here we use $\nabla^2$ to represent the \textbf{Laplacian}, which provides the second derivative of vector value functions \cite{needed}, giving us the remaining property we need. (See Box \ref{box:norm} for the others). To explain why, suppose we are working with a 1- dimensional memory. In this case the Laplacian reduces to the second derivative on our memory, $\frac{d^2\Theta}{dx^2} < 0$. A negative second derivative will force the changes in memory to be decelerating, by definition. In higher dimensions of memory then, a reader can think of the Laplacian as the ``second derivative'' of vector-valued functions like $f$. That is, negative Laplacian imply decelerating by definition.
 	\medskip
 \end{featurebox}
 % --------------------------------------------------------------------------
@@ -89,9 +91,9 @@ What does this mean for $\Delta \theta$? A norm over a changing memory gives mos
 % We choose these definitions because their minimalism makes them extremely general, covering all modes of working or episodic memory (17, 18), probabilistic memory (19–21), count-based memory, predictive coding, and even memories based categorization, compression or latent-states (22, 23). 
 
 \subsection{Exploration as a dynamic programming problem}
-Curiosity is a search to maximize information value, again in the boarded sense possible. We decided to seek a dynamic programming solution to maximizing curiosity. This is useful because it would guarantee value is maximized, which because of the way we have made our definitions also guarantees that learning is complete. It is also convenient because dynamic programming is the basis for reinforcement learning \cite{Sutton2018}. 
+Curiosity is a search to maximize information value, again in the broadest sense possible. We decided to seek a dynamic programming solution to maximizing curiosity. This is useful because it would guarantee value is maximized, which, because of the way we have made our definitions, also guarantees that learning is complete. It is also convenient because dynamic programming is the basis for reinforcement learning \cite{Sutton2018}. 
 
-The normal route to find a dynamic programming solution is to first prove your problem has ``optimal substructure'', then to derive the final result using Bellman optimality, and this is the route we will follow. For a more complete introduction to optimal substructure, see Box~\ref{box:substructure}. For more on dynamic programming and Bellman optimality, see\ref{box:bellman}. 
+The normal route to find a dynamic programming solution is to first prove your problem has ``optimal substructure'', then to derive the final result using Bellman optimality, and this is the route we will follow. For a more complete introduction to optimal substructure, see Box~\ref{box:substructure}. For more on dynamic programming and Bellman optimality, see Box~\ref{box:bellman}. 
 
 In Theorem~\ref{theorem:opt_sub} (mathematical appendix) we prove our definition of memory has optimal substructure. This proof relies on the forgetting function $f^{-1}$ to succeed. Even though we have said little about it until now, this why we include forgetting in our early definitions. 
 
@@ -99,21 +101,21 @@ In Theorem~\ref{theorem:opt_sub} (mathematical appendix) we prove our definition
 \begin{featurebox}
 	\caption{Dynamic programming and Bellman optimality.}
 	\label{box:bellman}
-	The goal of dynamic programming is to find a series of action $(a_1, a_2, ..a_T)$ drawn from $A$ that maximize each payout $(r_1, r_2, ..., r_{T})$ so the total payout received is as large as possible. If there is a policy $a = \pi(x)$ to take actions, based on a series of observations $(x_0, x_1, ..x_{T}),$, then an optimal policy $\pi^*$ will always find the maximum total value $V^* = \argmax_{A} \sum_T r_t $. The question that Bellman and dynamic programming solve then is how to make the search for finding $\pi*$ tractable. In the form above one would need to reconsider the entire sequence of actions for any one change to that sequence, leading to a combinatorial explosion. 
-	\\
-	Bellman's insight was a way to make the problem simpler, and break it down into a small set of problems that we can solve in a tractable way without an explosion. This is his principle of optimality, which reads:
+	The goal of dynamic programming is to find a series of actions $(a_1, a_2, ..a_T)$, drawn from a set $A$, that maximize each payout $(r_1, r_2, ..., r_{T})$ so the total payout received is as large as possible. If there is a policy $a = \pi(x)$ to take actions, based on a series of observations $(x_0, x_1, ..x_{T}),$, then an optimal policy $\pi^*$ will always find the maximum total value $V^* = \argmax_{A} \sum_T r_t $. The question that Bellman and dynamic programming solve then is how to make the search for finding $\pi*$ tractable. In the form above one would need to reconsider the entire sequence of actions for any one change to that sequence, leading to a combinatorial explosion. 
+	
+	Bellman's insight was a way to make the problem simpler, and break it down into a small set of problems that we can solve in a tractable way without an explosion in complexity. This is his principle of optimality, which reads:
 
 	\begin{quote}
 		An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. \cite{needed}
 	\end{quote}
 
-	Mathematically this allows us to translate the full problem, $V^* = \argmax_{\pi} \sum_T r_1, r_2, ..., r_{T}$ to a recursive one, which is given below. Using this new form we can find an optimal solution by moving though the sequence of action iteratively, and solving each step independently.
+	Mathematically this allows us to translate the full problem, $V^* = \argmax_{\pi} \sum_T r_1, r_2, ..., r_{T}$ to a recursive one, which is given below. 
 
 	\begin{equation}
 		V^* = \argmax_{\pi} \ \Big [ r_0 + V(x_1) \ \Big ]
 	\end{equation}
 	
-	The question which remains though is how can we ensure our problem can be broken down this way? This is addressed in Box~\ref{box:substructure}.
+	Using this new form we can find an optimal solution by moving though the sequence of action iteratively, and solving each step independently. The question which remains though is how can we ensure our problem can be broken down this way? This is addressed in Box~\ref{box:substructure}.
 	\medskip
 \end{featurebox}
 % -------------------------------------------------------------------------
@@ -131,7 +133,7 @@ In Theorem~\ref{theorem:opt_sub} (mathematical appendix) we prove our definition
 \end{featurebox}
 % -------------------------------------------------------------------------
 
-The Bellman derivation leads to an especially practical and simple result (Eq. \ref{eq:V_E}). Given an arbitrary starting value $E_0 > 0$, the dynamic programming solution to maximizing $E$ is given by~\ref{eq:V_E_bellman}. A full derivation is provided in the mathematical appendix. We denote our policy that follows this solution as $\pi_E$.
+The Bellman derivation leads to an especially practical and simple result (Eq. \ref{eq:V_E}). Given an arbitrary starting value $E_0 > 0$, the dynamic programming solution to maximizing $E$ is given by Eq. ~\ref{eq:V_E_bellman}. A full derivation is provided in the mathematical appendix. We denote our policy that follows this solution as $\pi_E$.
 
 \begin{equation}
 	\label{eq:V_E_bellman} 
@@ -139,7 +141,7 @@ The Bellman derivation leads to an especially practical and simple result (Eq. \
 \end{equation}
 
 
-However as long as the search for $E$ continues until learning is at a steady-state, and as result information value is zero, then are a range of equally good solutions (Theorem \ref{TODO}). These let us simplify Eq. \ref{eq:V_E_bellman} further, giving Eq. \ref{eq:EE}. 
+However as long as the search for $E$ continues until learning is at a steady-state, and as result information value is zero, then there are a range of equally good solutions (Theorem \ref{TODO}). These let us simplify Eq. \ref{eq:V_E_bellman} further, giving Eq. \ref{eq:EE}. 
 
 \begin{equation}
 	\label{eq:EE} 
@@ -149,7 +151,7 @@ However as long as the search for $E$ continues until learning is at a steady-st
 \subsection{Optimal exploration, and the importance of boredom}
 In our opening we said curiosity is a search for information, but we also said it should be an efficient search. So what would it mean for a curiosity search  to be efficient? Does our Bellman solution ensure it?
 
-We have discussed maximizing curiosity by means of $E$ but to study efficiency must now discuss limiting it. This is necessary because exploration is limited in practice by the available energy, hunger, greed, thirst or other biological priorities. But more importantly search must be limited to avoid the central limit of curiosity: it can become distracted by minutia. A good example of minutia was given \cite{Pathak2017} who asks us to, ``Imagine a scenario where the agent is observing the movement of tree leaves in a breeze. Since it is inherently hard to model breeze, it is even harder to predict the location of each leaf''. This will imply, they note, that a curious agent will always remain curious about the leaves, to its own detriment. 
+We have discussed maximizing curiosity by means of $E$ but to study efficiency we must now discuss limiting it. This is necessary because exploration is limited in practice by the available energy, hunger, greed, thirst or other biological priorities. But more importantly search must be limited to avoid the central limit of curiosity: it can become distracted by minutia. A good example of minutia was given \cite{Pathak2017} who asks us to, ``Imagine a scenario where the agent is observing the movement of tree leaves in a breeze. Since it is inherently hard to model breeze, it is even harder to predict the location of each leaf''. This will imply, they note, that a curious agent will always remain curious about the leaves, to its own detriment. 
 
 The solutions to both problems are the same. To limit curiosity we will draw on its opposite, boredom \cite{Schmidhuber1991}. Others have considered boredom an adaptive trait as well, arguing it is a useful way to motivate aversive tasks \cite{Bench2013}. We take a slightly different view and consider boredom as a means to ignore the marginal, and as a tunable free parameter, $\eta \ge 0$. That is, we say curious exploration should cease once $E$ becomes marginal as given by Eq.~\ref{eq:null}. 
 \begin{equation}
@@ -157,7 +159,7 @@ The solutions to both problems are the same. To limit curiosity we will draw on 
 	E \le \eta : \pi_E \rightarrow \pi_{\emptyset}
 \end{equation}
 
-Here we use $\pi_{\emptyset}$ to denote any other action policy that is not $\pi_E$. Informally what Eq.~\ref{eq:null} this means that once $E$ is below the boredom threshold, E is marginal, and the learner should change its behavior from exploration to some other policy. This change in behavior could be towards an aversive policy (as in \cite{Bench2013}) or it could be towards reward seeking, as we will assume.
+Here we use $\pi_{\emptyset}$ to denote any other action policy that is not $\pi_E$. Informally what Eq.~\ref{eq:null} means is that once $E$ is below the boredom threshold, E is marginal, and the learner should change its behavior from exploration to some other policy. This change in behavior could be towards an aversive policy (as in \cite{Bench2013}) or it could be towards reward seeking, as we will assume.
 
 We think it is reasonable to call a curious search optimal if it meets the three criteria below. In Theorem~\ref{needed} we prove that $\pi_E$ satisfies these, when $\eta > 0$.
 
@@ -168,7 +170,7 @@ We think it is reasonable to call a curious search optimal if it meets the three
 \end{enumerate}
 
 \subsection{The importance of determinism in search}
-The work so far has built up the idea that the most valuable, and most efficient, curious search will come from a deterministic algorithm. That is, every step strictly maximizes $E$. (It is also this determinism which will let us resolve the dilemma, later on.) But a deterministic view of exploration is at odds with how the problem is generally viewed today, which involves some amount of randomness. Whereas if our analysis is correct, randomness is not needed or desirable, as it must lead to less value and a longer search. We confirm and illustrate this result using a simple information foraging task (Fig.\label{fig:task_outline}\textbf{a}). The results of which are shown in Figure~\ref{needed}. 
+The work so far has built up the idea that the most valuable, and most efficient, curious search will come from a deterministic algorithm. That is, every step strictly maximizes $E$. It is also this determinism which will let us resolve the dilemma, later on. A deterministic view of exploration is at odds with how the problem is generally viewed today, which involves some amount of randomness. Whereas if our analysis is correct, randomness is not needed or desirable, as it must lead to less value and a longer search. We confirm and illustrate this result using an exmple of a simple information foraging task (Fig.\label{fig:task_outline}\textbf{a}). The results of which are shown in Figure~\ref{needed}. 
 
 Besides offering a concrete example, performance in this Task 1 is a first step in showing that even though $\pi_E$'s optimality is proven for a deterministic environment in our proofs, it will perform well if not optimal in stochastic settings.
 
@@ -185,7 +187,7 @@ Besides offering a concrete example, performance in this Task 1 is a first step 
 \begin{figure}
 	\begin{fullwidth}
 	\includegraphics[width=.6\linewidth]{img/curiosity1.pdf} 
-	\caption{Comparing deterministic and stochastic curiosity in a simple information foraging task (Task 1). Deterministic results are shown in the left column, and stochastic are shown in the right. The hyperparameters for both models were found by random search, which is decribed in the Methods.
+	\caption{Comparing deterministic and stochastic curiosity in a simple information foraging task (Task 1). Deterministic results are shown in the left column, and stochastic are shown in the right. The hyperparameters for both models were found by random search, which is described in the Methods.
 	\textbf{a-b}. Examples of choice behavior.
 	\textbf{c-d}. Information value plotted with time for the behavior shown in a-b.
 	\textbf{e-f}. Regret plotted with time for the behavior shown in a-b. Note how our only deterministic curiosity generates zero regret, inline with theoretical predictions.
@@ -198,7 +200,7 @@ Besides offering a concrete example, performance in this Task 1 is a first step 
 \end{figure}
 
 \subsection{The dilemma}
-How can we justify using curiosity for the dilemma problem when the goal of exploitation is reward collection? Intuitive suggests that searching for in an open-ended way must be less efficient than a direct search. We have an answer in two conjectures:
+How can we justify using curiosity for the dilemma problem when the goal of exploitation is reward collection? Intuition suggests that searching for in an open-ended way must be less efficient than a direct search. We have an answer in two conjectures:
 
 \begin{itemize}
 	\item \textbf{Conjecture 1} Reward value and information value are equally important.
@@ -214,11 +216,11 @@ We will answer this last question using the framework of regret minimization, wh
 	G = V^* - V
 \end{equation}
 
-An optimal value algorithm with zero regret always makes the most valuable choice. But this is impossible to achieve when exploring any variable environment, using stochastic search. 
+An optimal value algorithm with zero regret always makes the most valuable choice. But this is impossible to achieve when exploring any dynamic or uncertain environment using stochastic search. 
 
-To find the algorithm that maximizes both information and reward value with zero regret, we imagined the policies for exploration and exploitation acting as two possible ``jobs'' competing for control of behavior, a fixed resource. We know (by definition) each of these jobs produces non-negative values which an optimal job scheduler could use: $E$ for information or $R$ for reward/reinforcement learning. We can also ensure (by definition) that each of the jobs takes a constant amount of time and that each policy can only take one action at a time. These two properties, and one further assumption, are it turns out sufficient.
+To find the algorithm that maximizes both information and reward value with zero regret, we imagined the policies for exploration and exploitation acting as two possible ``jobs'' competing for control of behavior, a fixed resource. We know (by definition) each of these jobs produces non-negative values which an optimal job scheduler could use: $E$ for information or $R$ for reward/reinforcement learning. We can also ensure (by definition) that each of the jobs takes a constant amount of time and that each policy can only take one action at a time. These two properties, and one further assumption, are sufficient.
 
-We believe it is reasonable to assume that there will be no model of the environment available to lhe learner at the start of a problem, and that its environment is nonlinear but deterministic. 
+We believe it is reasonable to assume that there will be no model of the environment available to the learner at the start of a problem, and that its environment is nonlinear but deterministic. 
 
 We arrived at our solution by taking the simplest possible path available. We just wrote down the simplest equation that could have zero regret answer, and began to study that. This is Eq.~\ref{eq:meta_greedy}. We refer to it as a meta-greedy algorithm, as it decides in greedy fashion which of our independent policies to use.
 
@@ -232,12 +234,14 @@ We arrived at our solution by taking the simplest possible path available. We ju
 	\argmax_{\pi^{\pi}} \ \Big [ E_{t-1},\ R_{t-1} \Big ]_{\textbf{(2, 1)}}
 \end{equation}
 	
-We have in Eq. \ref{eq:meta_greedy} modified traditional argmax notation. It now includes a vector $(2,1)$ to denote a ranking system for which value/policy should be prefered in the event of a tie. (Smaller numbers are more preferred.)We add this notation because an exact rule for tie breaking is critical to our mathematical proofs (which follow below). 
+We have in Eq. \ref{eq:meta_greedy} modified traditional argmax notation. It now includes a vector $(2,1)$ to denote a ranking system for which value/policy should be preferred in the event of a tie. Smaller numbers are more preferred. We add this notation because an exact rule for tie breaking is critical to our mathematical proofs (which follow below). 
 
-In Eq. \ref{eq:meta_greedy} we also limit the probability of having zero reward to be itself non-zero. That is, $p(R_t=0) > 0$. This is necessary to ensure exploration. For reasons of mathematical convenience we also limit $E_t$ to be positive and non-zero when used with boredom, $(E_t - \eta) \geq 0$. 
+In Eq. \ref{eq:meta_greedy} we also limit the probability of having zero reward to be, itself, non-zero. That is, $p(R_t=0) > 0$. This is necessary to ensure exploration. For reasons of mathematical convenience we also limit $E_t$ to be positive and non-zero when used with boredom, $(E_t - \eta) \geq 0$. 
 
-In Theorem \ref{theorem:meta_total} we prove Eq. \ref{eq:meta_greedy} is Bellman optimal, and so it will always find a maximum value sequence of $E$ and $R$ values. Given that is, an initial value $E_0 > 0$, and that the environment is deterministic. In Theorem \ref{theorem:meta} we also prove that with a judicious choice in boredom $\eta$, the reward policy $\pi_R$ will also converge to its optimal value, assuming it has one. For full details the mathematical appendix.
+In Theorem \ref{theorem:meta_total} we prove Eq. \ref{eq:meta_greedy} is Bellman optimal, and so it will always find a maximum value sequence of $E$ and $R$ values. Given, that is, an initial value $E_0 > 0$, and that the environment is deterministic. In Theorem \ref{theorem:meta} we also prove that with a judicious choice in boredom $\eta$, the reward policy $\pi_R$ will also converge to its optimal value, assuming it has one. For full details the mathematical appendix.
 
+% PUT IN TIT-FOR-TAT AND MENTION WIN-STAY LOSE-SHIFT.
+Another way to think independent policies and Eq. \ref{needed} is as a animal playing a game of tit-for-tat against the past. Tit-for-tat is the strategy is famous game theory result, where a play mirrors their opponent’s actions. We see the same kind of pattern as useful here, except the opponent is simply the animal’s own past decisions. That is, if there was more reward value then information value on the last turn (action), then choose the reward policy this time or if more information value was found last time, then choose the information policy this time.
 
 % -------------------------------------------------------------------------
 \begin{featurebox}
@@ -263,12 +267,11 @@ In Theorem \ref{theorem:meta_total} we prove Eq. \ref{eq:meta_greedy} is Bellman
 \end{featurebox}
 % -------------------------------------------------------------------------
 
-% ---------------------------
 \subsection{Simulations of reward collection} We will now focus on practical performance, believing it is a compelling way to make the case for curiosity as sufficient. The general form of the 7 tasks we will study is depicted in Fig~\ref{fig:task_outline}. They are all variations of the classic multi-armed bandit \cite{Sutton2018}. The payouts for each are shown in Fig.~\ref{fig:payout1}-\ref{fig:payout2}. 
 
 Each task was designed to either test exploration performance in a way that matches recent experimental study(s), or to test the limits of curiosity. On each trial was with a set of $n$ choices. Each choice returns a “payout”, according to a predetermined probability. Payouts are information, reward, or both (Fig.~\ref{fig:task_diagram}). Note that information was symbolic, denoted by a color code, “yellow” and “blue” and as is custom reward was a positive real number. A summary for each task, and a visual depiction of its payouts, are shown in Fig ~\ref{fig:payout}.
 
-We have chosen a range of other exploration strategies to compare against. We feel it is broad enough that we have made a fair representation of today's state of the art. They are drawn from both neuroscience, and machine learning. They have in common that their central design goal was to maximize reward value, often supplemented by some other goal. For a brief description of each, see Table~\ref{tab:agents}. The results in full for all tasks and exploration strategies are shown in Fig.~\ref{fig:summary}. Note that all learners, including ours, used the same exploitation policy, based on the TD(0) learning rule \cite{Sutton2018,needed}.
+We have chosen a range of other exploration strategies to compare against. We feel it is broad enough that we have made a fair representation of today's state of the art. They are drawn from both neuroscience, and machine learning. They have in common that their central design goal was to maximize reward value, often supplemented by some other goal. For a brief description of each, see Table~\ref{tab:agents}. The results in full for all tasks and exploration strategies are shown in Fig.~\ref{fig:summary}. Note that all learners, including ours, used the same exploitation policy, based on the temporal difference learning rule \cite{Sutton2018,needed}.
 
 \begin{figure}
 	\begin{fullwidth}
@@ -366,9 +369,11 @@ As above exploitation by deterministic curiosity produced top-3 performance on b
 	\end{fullwidth}
 \end{figure}
 
+% -------
+% Move to discussion
 If our deterministic solution is working as the mathematics predict it should,  then adding a random aspect to either exploration or exploitation should only act to degrade performance. We showed an example of this in Fig.~\ref{fig:independent2}. Here adding two levels of random noise to the choices only served to increase variability of convergence (left) and reduce the total rewards collected (right). When we then compare performance between curiosity and the other strategies as noise smoothly changes we see performance eventually decline to chance levels. 
 
-In studying noise in Fig ~\ref{fig:forced} many of the strategies showed a peak in performance as noise increased, suggesting a minimum level is needed. There were two who did not--entropy and Bayesian. They showed some ability to operate well with low stochasticity. If this trend when removing stochasticity completely, then that would be half of the ingredients needed to find another set of zero regret solutions. When however we ``forced'' determinism on these and other strategies, performance declined to chance (Fig ~\ref{fig:forced}b). The exception to this is the Bayesian strategy, whose median performance approaches the ideal (0.8). Hope for this exception is limited however by its having substantially more variance than any others. In other words, it appeared to be unreliable.
+In studying noise in Fig ~\ref{fig:forced} many of the strategies showed a peak in performance as noise increased, suggesting a minimum level of noise is needed for satisfactory performance. There were two strategies where this was not the case: entropy and Bayesian. These showed some ability to operate well low stochasticity. If this trend when removing stochasticity completely, then that would be half of the ingredients needed to find another set of zero regret solutions. When however we ``forced'' determinism on these and other strategies, performance declined to chance (Fig ~\ref{fig:forced}b). The exception to this is the Bayesian strategy, whose median performance approaches the ideal (0.8). Hope for this exception is limited however by its having substantially more variance than any others. In other words, it appeared to be unreliable.
 
 \begin{figure}
 	\begin{fullwidth}
