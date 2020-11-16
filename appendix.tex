@@ -1,0 +1,92 @@
+\section*{Mathematical Appendix.}
+\subsection*{Information value as a dynamic programming problem} To find greedy dynamic programming \cite{Roughgarden2019,Sutton2018} answers we must prove our memory $M$ has optimal substructure. By optimal substructure we mean that $M$ can be partitioned into a small number, collection, or series of memories, each of which is itself a dynamic programming solution. In general by proving we can decompose some optimization problem into a small number of sub-problems whose optimal solution are known, or easy to prove, it becomes trivial to prove that we can also grow the series optimally. That is, proving optimal sub-structure nearly automatically allows for proof by induction \cite{Roughgarden2019}. 
+
+\begin{theorem}[Optimal substructure] \label{theorem:opt_sub} 
+	Assuming transition function $\delta$ is deterministic, if $V^*_{\pi_E}$ is the optimal information value given by $\pi_E$, a memory $M_{t+dt}$ has optimal substructure if the the last observation $s_t$ can be removed from $M_t$, by $M_{t+dt} = f^{-1}(M_{t+dt}, s_t)$ where the resulting value $V^*_{t-dt} = V^*_{t} - F(M_t, a_t)$ is also optimal. 
+\end{theorem}
+\begin{proof}
+	Given a known optimal value $V^*$ given by $\pi_E$ we assume for the sake of contradiction there also exists an alternative policy $\hat \pi_E \neq \pi_E$ that gives a memory $\hat M_{t-dt} \neq M_{t-dt}$ and for which $\hat V^*_{t-dt} > V^*_{t-dt}$. 
+	
+	To recover the known optimal memory $M_t$ we lift $\hat M_{t-dt}$ to $M_t = f(\hat M_{t-dt}, s_t)$. This implies $\hat V^* > V^*$ which in turn contradicts the purported original optimality of $V^*$ and therefore $\hat \pi_E$.
+\end{proof}
+
+\subsection*{Bellman solution} Armed with optimal substructure of $M$ we want to do the next natural thing and find a recursive Bellman solution to maximize our value function for $F$ (Eq.~\ref{eq:payout}). (A Bellman solution of $F$ is also a solution for $E$ (Eq.\ref{eq:V_E}). We do this in the classic way by breaking up the series for $F$ into an initial value $F_0$, and the remaining series in the summation. We can then apply this same decomposition recursively (Eq~\ref{eq:bellman_iter}) to arrive at a final ``twp-step'' or recursive form which is shown Eq.~\ref{eq:bellman_seq}). 
+
+\begin{equation}\label{eq:bellman_seq} 
+	\begin{split}
+		V^*_{\pi_E}(M_0) &= \max_{a \in A} \Big [\sum_{t=0}^{\infty} F(M_t, a_t)\Big ]\\
+		&= \max_{a \in A} \Big [F(M_0, a_0) + \sum^{\infty}_{t=1} F(M_{t+dt}, a_{t+dt})\Big ]\\
+		&= F(M_0, a_0) + \max_{a \in A} \Big [\sum_{t=1}^{\infty} F(M_{t+dt}, a_{t+dt}) \Big ]\\
+		&= F(M_0, a_0) + V^*_{\pi_E}(M_{t+dt}) + V^*_{\pi_E}(M_{t+2}),\ \ldots 
+	\end{split}
+\end{equation}
+
+\subsection*{A greedy policy explores exhaustively} To prevent any sort of sampling bias, we need our exploration policy $\pi_E$ (Eq.\ref{eq:bellman_iter}) to visit each state $s$ in the space $S$. As our policy for $E$ is a greedy policy, proofs for exploration are really sorting problems. That is if a state is to be visited it must have highest value. So if every state must be visited (which is what we need to prove to avoid bias) then under a greedy policy every state's value must, at one time or another, be the maximum value. 
+
+We assume implicitly here the action policy $\pi_E$ can visit all possible states in $S$. If for some reason $\pi_E$ can only visit a subset of $S$, then the following proofs apply only to exploration of that subset.
+
+To begin our proof, some notation. Let $Z$ be the set of all visited states, where $Z_0$ is the empty set $\{\}$ and $Z$ is built iteratively over a path $P$, such that $Z_{t+\dt} = \{s | s \in P\ \text{and}\ s \not\in Z_t\}$. As sorting requires ranking, we also need to formalize ranking. To do this we take an algebraic approach, are define inequality for any three real numbers $(a,b,c)$ (Eq.~\ref{eq:ineq}). 
+
+\begin{align}\label{eq:ineq} 
+	a \leq b \Leftrightarrow \exists \ c;\ b = a + c \\
+	a > b \Leftrightarrow (a \neq b) \wedge (b \leq a) 
+\end{align}
+
+\begin{theorem}[State search: breadth] \label{theorem:Z} 
+	A greedy policy $\pi$ is the only deterministic policy which ensures all states in $S$ are visited, such that $Z = S$. 
+\end{theorem}
+\begin{proof}
+	Let $\mathbf{E} = (E_1, E_2, ...)$ be ranked series of $E$ values for all states $S$, such that $(E_1 \geq E_2, \geq ...)$. To swap any pair of values ($E_i \geq E_j$) so ($E_i \leq E_j$) by Eq.~\ref{eq:ineq} $E_i - c = E_j$. 
+	
+	Therefore, again by Eq.~\ref{eq:ineq}, $\exists \int \delta E(s) \rightarrow -c$. 
+	
+	\textit{Recall}: Axiom 5.
+	
+	However if we wished to instead swap ($E_i \leq E_j$) so ($E_i \geq E_j$) by definition $\not \exists c; E_i + c = E_j$, as $\not \exists \int \delta \rightarrow c$. 
+	
+	To complete the proof, assume that some policy $\hat \pi_E \neq \pi^*_E$. By definition policy $\hat \pi_E$ can be any action but the maximum, leaving $k-1$ options. Eventually as $t \rightarrow T$ the only possible swap is between the max option and the $kth$, but as we have already proven this is impossible as long as Axiom 5 holds. Therefore, the policy $\hat \pi_E$ will leave at least 1 option unexplored and $S \neq Z$. 
+\end{proof}
+\begin{theorem}[State search: depth] \label{theorem:convergence} 
+	Assuming a deterministic transition function $\Lambda$, a greedy policy $\pi_E$ will resample $S$ to convergence at $E_t \leq \eta$. 
+\end{theorem}
+\begin{proof}
+	\textit{Recall}: Axiom 5.
+	
+	Each time $\pi^*_E$ visits a state $s$, so $M \rightarrow M'$, $F(M', a_{t+dt}) < F(M, a_t)$
+	
+	In Theorem~\ref{theorem:Z} we proved only a deterministic greedy policy will visit each state in $S$ over $T$ trials.
+	
+	By induction, if $\pi^*E$ will visit all $s \in S$ in $T$ trials, it will revisit them in $2T$, therefore as $T \rightarrow \infty$, $E \rightarrow 0$. 
+\end{proof}
+
+\subsection*{Optimality of $\pi_{\pi}$} \label{sec:opt_pipi} 
+In the following section we prove two things about the optimality of $\pi_\pi$. First, if $\pi_R$ and/or $\pi_E$ had any optimal asymptotic property for value learning before their inclusion into our scheduler, they retain that optimal property under $\pi_\pi$. Second, we use this Theorem to show if both $\pi_R$ and $\pi_E$ are greedy, and $\pi_\pi$ is greedy, then Eq~\ref{eq:pipi} is certain to maximize total value. This is analogous to the classic activity selection problem \cite{Roughgarden2019}.
+
+\subsubsection*{Independent policy convergence}
+\begin{theorem}[Independence policy convergence under $\pi_{\pi}$] \label{theorem:meta} 
+	Assuming an infinite time horizon, if $\pi_E$ is optimal and $\pi_R$ is optimal, then $\pi_{\pi}$ is also optimal in the same senses as $\pi_E$ and $\pi_R$. 
+\end{theorem}
+\begin{proof}
+	The optimality of $\pi_{\pi}$ can be seen by direct inspection. If $p(R = 1) < 1$ and we have an infinite horizon, then $\pi_E$ will have a unbounded number of trials meaning the optimally of $P^*$ holds. Likewise, $\sum E < \eta$ as $T \rightarrow \infty$, ensuring $pi_R$ will dominate $\pi_{\pi}$ therefore $\pi_R$ will asymptotically converge to optimal behavior. 
+\end{proof}
+
+In proving this optimality of $\pi_{\pi}$ we limit the probability of a positive reward to less than one, denoted by $p(R_t = 1) < 1$. Without this constraint the reward policy $\pi_R$ would always dominate $\pi_{\pi}$ when rewards are certain. While this might be useful in some circumstances, from the point of view $\pi_E$ it is extremely suboptimal. The model would never explore. Limiting $p(R_t = 1) < 1$ is reasonable constraint, as rewards in the real world are rarely certain. A more naturalistic to handle this edge case is to introduce reward satiety, or a model physiological homeostasis \cite{Keramati2014,Juechems2019}.
+
+\subsubsection*{Optimal scheduling for dual value learning problems}
+In classic scheduling problems the value of any job is known ahead of time \cite{Bellmann1954,Roughgarden2019}. In our setting, this is not true. Reward value is generated by the environment, \textit{after} taking an action. In a similar vein, information value can only be calculated \textit{after} observing a new state. Yet Eq.~\ref{eq:pipi} must make decisions \textit{before} taking an action. If we had a perfect model of the environment, then we could predict these future values accurately with model-based control. In the general case though we don't what environment to expect, let alone having a perfect model of it. As result, we make a worst-case assumption: the environment can arbitrarily change--bifurcate--at any time. This is, it is a highly nonlinear dynamical system \cite{Strogatz1994}. In such systems, myopic control--using only the most recent value to predict the next value-- is known to be an robust and efficient form of control \cite{Hocker2019}. We therefore assume that last value is the best predictor of the next value, and use this assumption along with Theorem~\ref{theorem:meta} to complete a trivial proof that Eq.~\ref{eq:pipi} maximizes total value.
+
+\subsubsection*{Optimal total value}
+If we prove $\pi_{\pi}$ has optimal substructure, then using the same replacement argument \cite{Roughgarden2019} as in Theorem~\ref{theorem:meta}, a greedy policy for $\pi_\pi$ will maximize total value.
+
+\begin{theorem}[Total value maximization of $\pi_{\pi}$] \label{theorem:meta_total} 
+    $\pi_\pi$ must have an optimal substructure. 
+\end{theorem}
+\begin{proof}
+    \textit{Recall}: Reinforcement learning algorithms are embedded in Markov Decisions space, which by definition have optimal substructure.
+    
+    \textit{Recall}: The memory $M$ has optimal substructure (Theorem~\ref{theorem:opt_sub}.
+    
+    \textit{Recall}: The asymptotic behavior of $\pi_R$ and $\pi_E$ are independent under $\pi_\pi$ (Theorem~\ref{theorem:meta}
+	
+	If both $\pi_R$ and $\pi_E$ have optimal substructure, and are asymptotically independent, then $\pi_\pi$ must also have optimal substructure. 
+\end{proof}
