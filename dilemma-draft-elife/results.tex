@@ -141,7 +141,7 @@ What would it mean for a curiosity search to be efficient? Does our Bellman solu
 
 Exploration is limited in practice by available energy, hunger, greed, thirst and other biological priorities. More importantly search should be limited to avoid the central failure of curiosity: it can become distracted by what we call minutia. Those details which have no use. A good example of this was given by \cite{Pathak2017} who asks us to, ``Imagine a scenario where the agent is observing the movement of tree leaves in a breeze. Since it is inherently hard to model breeze, it is even harder to predict the location of each leaf''. This will imply, they note, that a curious agent will always remain curious about the leaves, to its own detriment. 
 
-To limit curiosity we will draw on its opposite, boredom, which we consider to be an adaptive trait. Others have considered boredom this way, arguing it is a useful way to motivate aversive tasks \citep{Bench2013}. We take a slightly different view and consider boredom as a means to ignore the marginal. We treat it as a tunable free parameter, $\eta \ge 0$, and then say all curious exploration should cease once $E \le \eeta$. In other words, once learning becomes marginal the action policy must change, as given by Eq.~\ref{eq:null}. 
+To limit curiosity we will draw on its opposite, boredom, which we consider to be an adaptive trait. Others have considered boredom this way, arguing it is a useful way to motivate aversive tasks \citep{Bench2013}. We take a slightly different view and consider boredom as a means to ignore the marginal. We treat it as a tunable free parameter, $\eta \ge 0$, and then say all curious exploration should cease once $E \le \eta$. In other words, once learning becomes marginal the action policy must change, as given by Eq.~\ref{eq:null}. 
 
 \begin{equation}
 	\label{eq:null}
@@ -383,5 +383,3 @@ As we observed in our other model comparisons, exploitation by deterministic cur
 	\label{fig:robust}
 	\end{fullwidth}
 \end{figure}
-
-
