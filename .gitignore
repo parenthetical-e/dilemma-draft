@@ -1,2 +1,5 @@
 .vscode/*
 *.bbl
+
+*.DS_Store
+__*.tex
