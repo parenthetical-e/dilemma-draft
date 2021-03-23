@@ -4,7 +4,7 @@ The choice between exploring and exploiting is indeed faced routinely by learner
 
 In the natural world exploration already finds two explanations. If there is no reason to expect a reward, exploration is described theoretically as a search for information, what we will call curiosity \citep{Berlyne1950,Schmidhuber1991,Kidd2015,deAbril2018,Jaegle2019,Friston2016}. On the other hand, if reward is expected, then exploration gets re-interpreted as we described above, as a search for reward, and this specific interpretation is what leads the famous dilemma \citep{Kelly1956,Berger-Tal2014,Dayan1996,Thrun1992,Mehlhorn2015,Kobayashi2019}. 
 
-Our goal is to maximize the return of reward in this paper, but have come to believe that curiosity is better goal for exploitation in this problem. Our ``curiosity trick'' to the dilemma is a counterintuitive suggestion, but we will prove exploration is better handled by a curiosity search even when the long-term goal is rewards. We illustrate this trick in Fig. \ref{fig:bee}b.
+Our goal is to maximize the return of reward in this paper, but have come to argue curiosity is better goal for exploration in this problem. Our ``curiosity trick'' to the dilemma is a counterintuitive suggestion, but we will prove exploration is better handled by a curiosity search even when the long-term goal is rewards. We illustrate our view of dilemma, and our trick, in Fig. \ref{fig:bee}b.
 
 \begin{figure}
 	\begin{fullwidth}
@@ -14,4 +14,4 @@ Our goal is to maximize the return of reward in this paper, but have come to bel
 	\end{fullwidth}
 \end{figure}
 
-The first half of this paper is devoted to developing a new view of curiosity that is simple but general. This effort, it turns out, lets us make a new contribution to information theory, defining subjective information value without considering meaning of any kind. This lets us also develop new proofs that define an ideal curious search. The second half uses these first results to prove curiosity can generate an optimal value solution to all explore-exploit decisions that are normally based on rewards.
+The first half of this paper is devoted to developing a view of curiosity that is mathmatically general. This effort, it turns out, lets us make a new contribution to information theory--defining subjective information value without considering meaning at all. This lets us also develop new proofs that define an ideal curious search. The second half uses these first results to prove curiosity can generate an optimal value solution to all explore-exploit decisions that are normally based on rewards.
