@@ -9,14 +9,20 @@ If the animal has incomplete knowledge of the environment challenge it faces in 
 	The agent must try a variety of actions and progressively favor those that appear to be best. 	
 \end{quotation}
 
-Here we suggest two fairly radical changes. Don’t stop searching progressively, do so suddenly. Explore only out of curiosity, where curiosity is an open-ended search to learn any information \citep{Kidd2015}. 
+Here we suggest two fairly radical changes. Don’t stop searching progressively, do so suddenly. Explore only out of curiosity. 
 
+Why curiosity? Curiosity is a rational behavoir \cite{Rich2016a}, or so we argue. Curiousity is just as important for survival as reward collection \cite{Thrun1992}. Curiosity is a primary drive in most, if not all, animals \cite{Inglis2001}. It is as strong, if not sometimes stronger, than the drive for reward \cite{Loewenstein1994,Kidd2015,Gottlieb2018}. Curiosity, as an algorithm, is highly effective at solving optimization problems \cite{Schmidhuber1991,Pathak2017,Stanton2018,Lehman201,Mouret2011b1,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Schwartenbeck2019.Laversanne-Finot2018}. In short, curiosity is necesssary, omnipresent, and effective.
 
-The question we know consider is how can we define curiosity in domain general and learning rule independent. What we would like is a way to describe curiosity mathmatically so it does not depend on any one kind of learning, because natural curiosity itself depends on many different kinds of memory and learning. The most extremely general definition of curiosity would allow for any kind of learning. So this is the setting we have chosen. We will know try and prove this choice was a useful one.
+But what is curiosity? Curiosity is an open-ended search to learn any information, informally speaking \citep{Kidd2015}. Working models of curiosity tend to conflate the learning rule, with the objective itself. We will now describe an optimal value, but deterministic model, of curiosity. It is defined by some easily satisfiable requirements (axioms). This basis makes curiosity domain general, and learning rule independent. We do assume it should be value driven, and as time-efficient as possible.
+
 
 \subsection{Memory and learning} 
 % TODO - cites
-Sustained firing, the strength between two synapses, elevated Calcium concentration are three simple examples of memory in the nervous system. A chalk board after a lecture and a picture of this written page are two examples of embodied memory. An hard drive, or old fashion punch cards, are two examples of computer memory. Each of these can though be represented as a vector space. Generally we will regard memory $\Theta$ as encoding a sequence of observations X, that have arrived via a communications channel $C$. A learning function can be any function $f$ that maps observations into memory $\Theta$. And function f is considered to be a valid learning function as long as the mapping changes $\Theta$ some small amount. The function $f$ offers a non constant mapping, in other words.
+Sustained firing, the strength between two synapses, elevated Calcium concentration are three simple examples of learning and memory in the nervous system. A chalk board after a lecture and a picture of this written page are two examples of embodied memory. An hard drive, or old fashion punch cards, are two examples of computer memory. Each of these can though be represented as a vector space. Generally we will regard memory $\Theta$ as encoding a sequence of observations X, that have arrived via a communications channel $C$. A learning function can be any function $f$ that maps observations into memory $\Theta$. And function f is considered to be a valid learning function as long as the mapping changes $\Theta$ some small amount. The function $f$ offers a non-constant mapping, in other words.
+
+We would like to describe curiosity in this general way because in ecologically-speaking curiosity does not seem to depend on any one single kind of learning. Curiosity will depend on many different mechanisms of memory and learning. The most general definition of curiosity would allow for any kind of learning. So this is the setting we have chosen. We will now describe this new formalism, and try and prove it is a useful one.
+
+The question we now consider is how to value the information from a channel $C$. If the communication channel who output we are valuing is agnostic to semantics, we assume value should be as well. We argue the value information from a channel can be stated in terms of the dynamics of memory alone, as we will know show. As seems clear, our setting for defining information value closely follows that of Shannon and his definition of a communication channel.
 
 As has been common elsewhere \cite{Schmidhuber1991,Oudeyer2016,Pathak2017,Gottlieb2018,Wilson2020,Schwartenbeck2019} we do not assume that $f$ has only one objective to say minimize the error between the memory and the observation. We instead assume the learning function is chosen to be well suited for survival, loosely defined, in the environment and neural circuits for which it will operate, and for the kinds of observations it may encode. If the memory is a computer memory, and $f$ represents a learning function for simple linear regression then error may in fact be minimized. If error is the memory of a child or a human adult, then it is entirely possible learning will inspire a new idea, insight, imagination, or novely approach. It others, we argue that not every curious action is driven to itself minimize uncertainty.
 
@@ -35,7 +41,9 @@ So what are observations? It is convenient to assume that all observations are a
 In calling them ``observations'' we do not mean to imply they must arise from the senses, or direct from states $S$. Observations could be internally generated from thought, or externally generated from the senses or from the environment, Or both in combination, as is common to recurrent neural networks . Observations may contain action information, or they may not. Observations may contain reward information, or they may not. Our account of learning has no preference.
 
 \subsection{Information value} 
-Let us say we have a memory $\Theta$, which has been learned by $f$ over a history of observations, $[f(x_0; \Theta_0), f(x_1; \Theta_1), f(x_2; \Theta_2), \ldots]$. Can we measure how much value the next observation $f(x_t)$ should have? We think it is reasonable to require that this meaasure $E$ should have certain properties.
+Treating memory as vector space, and our open-ended definition of learning, are two of the essential and innovative ideas we use to define information value in agnostic terms. The third and final piece, again taking the lead from Shannon, it to rest our final result on some easily satisfied requirements (axioms).
+
+So we have a memory $\Theta$, which has been learned by $f$ over a history of observations, $[f(x_0; \Theta_0), f(x_1; \Theta_1), f(x_2; \Theta_2), \ldots]$. Can we measure how much value the next observation $f(x_t)$ should have? We think this measure $E$ should have certain properties.
 
 \begin{enumerate}
 	\item $E$ should depend only on a memory, and what can be immediately learned. ($x$, $\Theta$, and $f$)
@@ -45,9 +53,9 @@ Let us say we have a memory $\Theta$, which has been learned by $f$ over a histo
 	\item $E$ for the same observation should become decelerating in finite time. ($E \rightarrow 0$ as $t \rightarrow T^*$)
 \end{enumerate}
 
-These properties are in part inspired by Shannon's axioms for information theory, and in part borrowed from other's theories of information maximization \cite{Itti2009,Jaegle2019,Schmidhuber1991}, and information foraging \citep{Inglis2001,Reddy2016,Pirolli2007}. What we have done is remove Bayes rule, or any explicit learning rule and replaced some general requirments (our axioms)). This is important not for its own sake, but because anything we prove in this more general setting must be true for any learning algorithm. This includes Bayesian reasoning. 
+These properties are in part inspired by Shannon's axioms for information theory, and in part borrowed from other's theories of information maximization \cite{Itti2009,Jaegle2019,Schmidhuber1991}, and information foraging \citep{Inglis2001,Reddy2016,Pirolli2007}. What we have done is remove Bayes rule, or any explicit learning rule, and replaced some general requirments (our axioms). This is important not for its own sake, but because anything we prove in this  setting must be true for any learning algorithm. This includes Bayesian reasoning. 
 
-We can satisfy all these properties by taking a geometric view of learning, as given in the definitions below. They are also shown graphically in Fig.~\ref{fig:cartoon} and described in detail in Boxes ~\ref{box:norm}-\ref{box:laplacian}.
+We can satisfy all these properties by taking a geometric view of learning using two definitions. They are also shown graphically in Fig.~\ref{fig:cartoon} and described in detail in Boxes ~\ref{box:norm}-\ref{box:laplacian}.
 
 \begin{itemize}
 	\item[] \textbf{Definition 1} Let $E$ be the norm of $|| f_{\Theta}(x) - \Theta ||$.	
