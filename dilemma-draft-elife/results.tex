@@ -1,12 +1,26 @@
 \section{Results} 
-To understand curiosity in animals we turn to the fields of artificial life and machine learning. This is because curiosity in algorithmic form is unusually effective. In fact we are aware of no other approach to machine learning that is as flexible, or broadly effective, as curiosity. It has been shown to solve reinforcement learning problems, including sparse rewards, \citep{Schmidhuber1991,Pathak2017,Stanton2018}, and deceptive reward problems \citep{Lehman2011}, multi-objective problems where no one solution is correct \citep{Mouret2011b,Fister2019}, and can lead to diverse skills \citep{Colas2020} that are robust to environment instability \citep{Mouret2015} and robust to damage \citep{Cully2015}.
+We consider an animal who interacts with an environment over a sequence of states, actions and rewards, embedded in the now standard Markov decision process. The goal is to select actions in a way that maximizes the total reward collected from the environment. 
 
-What is missing to extend these insights to understand animal behavior is a mathematical understanding of curiosity. We need an understanding that can span fields, in other words. 
+% TODO - notation....
 
-Here we define curiosity as an open-ended search to learn any information \citep{Kidd2015}. We assume it should be efficient and motivated by value. What we would like is a way to describe curiosity so it does not depend on any one kind of learning, because curiosity itself depends on many different kinds of learning. In the most extreme case curiosity would then allow for any kind of learning. So this is the setting we have chosen. 
+If the animal has incomplete knowledge of the environment challenge it faces in this kind learning to maximize reward is to succeed in the tradeoff between exploration and exploitation. The standard way of approaching this problem is well described by \cite{Sutton2018} who wrote,
+
+\begin{quotation}
+	The agent must try a variety of actions and progressively favor those that appear to be best. 	
+\end{quotation}
+
+Here we suggest two fairly radical changes. Don’t stop searching progressively, do so suddenly. Explore only out of curiosity, where curiosity is an open-ended search to learn any information \citep{Kidd2015}. 
+
+
+The question we know consider is how can we define curiosity in domain general and learning rule independent. What we would like is a way to describe curiosity mathmatically so it does not depend on any one kind of learning, because natural curiosity itself depends on many different kinds of memory and learning. The most extremely general definition of curiosity would allow for any kind of learning. So this is the setting we have chosen. We will know try and prove this choice was a useful one.
 
 \subsection{Memory and learning} 
-Any notion of information value requires that there must be a memory, $\Theta$, and a way to learn, $f$. For our general mathematical theory we will define memory as,
+% TODO - cites
+Sustained firing, the strength between two synapses, elevated Calcium concentration are three simple examples of memory in the nervous system. A chalk board after a lecture and a picture of this written page are two examples of embodied memory. An hard drive, or old fashion punch cards, are two examples of computer memory. Each of these can though be represented as a vector space. Generally we will regard memory $\Theta$ as encoding a sequence of observations X, that have arrived via a communications channel $C$. A learning function can be any function $f$ that maps observations into memory $\Theta$. And function f is considered to be a valid learning function as long as the mapping changes $\Theta$ some small amount. The function $f$ offers a non constant mapping, in other words.
+
+As has been common elsewhere \cite{Schmidhuber1991,Oudeyer2016,Pathak2017,Gottlieb2018,Wilson2020,Schwartenbeck2019} we do not assume that $f$ has only one objective to say minimize the error between the memory and the observation. We instead assume the learning function is chosen to be well suited for survival, loosely defined, in the environment and neural circuits for which it will operate, and for the kinds of observations it may encode. If the memory is a computer memory, and $f$ represents a learning function for simple linear regression then error may in fact be minimized. If error is the memory of a child or a human adult, then it is entirely possible learning will inspire a new idea, insight, imagination, or novely approach. It others, we argue that not every curious action is driven to itself minimize uncertainty.
+
+Formally, any notion of information value requires that there must be a memory, $\Theta$, and a way to learn, $f$. For our general mathematical theory we will define memory as,
 
 \begin{itemize}
 \item A set of real valued numbers
@@ -14,14 +28,14 @@ Any notion of information value requires that there must be a memory, $\Theta$, 
 \item Closed and bounded
 \end{itemize}
 
-Which lets us define learning in a matching way. We say that a learning function \textit{can be any function} that maps observations $x$ into memory. Using the function-arrow notation this kind of learning is denoted by, $f(x;\Theta) \rightarrow \Theta'$. Likewise a forgetting function \textit{can be any function} that inverts the memory, $f^{-1}(x;\ \Theta') \rightarrow \Theta$. 
+We define learning in a matching way. A learning function \textit{can be any function} that maps observations $x$ into memory. Using the function-arrow notation this kind of learning is denoted by, $f(x;\Theta) \rightarrow \Theta'$. Likewise a forgetting function \textit{can be any function} that inverts the memory, $f^{-1}(x;\ \Theta') \rightarrow \Theta$. 
 
 So what are observations? It is convenient to assume that all observations are also embedded in a finite real space, $x \sim X \in \mathbb{R}^m$, as are actions $a \sim A \in \mathbb{R}^k$, and that rewards are positive real numbers, $R \in \mathbb(R^{+})$. 
 
-In calling them ``observations'' we do not mean to imply they must arise from the senses. Observations could be internally generated from thought, or externally generated from the senses, or both in combination. Observations may contain action information, or they may not. Observations may contain reward information, or they may not. We have no preference because we wish to accommodate all the different kinds of cognition.
+In calling them ``observations'' we do not mean to imply they must arise from the senses, or direct from states $S$. Observations could be internally generated from thought, or externally generated from the senses or from the environment, Or both in combination, as is common to recurrent neural networks . Observations may contain action information, or they may not. Observations may contain reward information, or they may not. Our account of learning has no preference.
 
 \subsection{Information value} 
-Let us say we have a memory $\Theta$, which has been learned by $f$ over a history of observations, $[f(x_0; \Theta_0), f(x_1; \Theta_1), f(x_2; \Theta_2), \ldots]$. Can we measure how much value the next observation $f(x_t)$ should have? If there is such a measure $E$, we think it is reasonable to require that it have certain properties.
+Let us say we have a memory $\Theta$, which has been learned by $f$ over a history of observations, $[f(x_0; \Theta_0), f(x_1; \Theta_1), f(x_2; \Theta_2), \ldots]$. Can we measure how much value the next observation $f(x_t)$ should have? We think it is reasonable to require that this meaasure $E$ should have certain properties.
 
 \begin{enumerate}
 	\item $E$ should depend only on a memory, and what can be immediately learned. ($x$, $\Theta$, and $f$)
@@ -31,7 +45,7 @@ Let us say we have a memory $\Theta$, which has been learned by $f$ over a histo
 	\item $E$ for the same observation should become decelerating in finite time. ($E \rightarrow 0$ as $t \rightarrow T^*$)
 \end{enumerate}
 
-These properties are in part inspired by Shannon's axioms for information theory, and in part found in the theories of information maximization, and information foraging \citep{Inglis2001,Reddy2016}. What we have done is remove Bayes rule as the learning rule. This is important not for its own sake but because anything we can prove in this more general setting must be true then for all practical learning algorithms \citep{MacKay2003}. 
+These properties are in part inspired by Shannon's axioms for information theory, and in part borrowed from other's theories of information maximization \cite{Itti2009,Jaegle2019,Schmidhuber1991}, and information foraging \citep{Inglis2001,Reddy2016,Pirolli2007}. What we have done is remove Bayes rule, or any explicit learning rule and replaced some general requirments (our axioms)). This is important not for its own sake, but because anything we prove in this more general setting must be true for any learning algorithm. This includes Bayesian reasoning. 
 
 We can satisfy all these properties by taking a geometric view of learning, as given in the definitions below. They are also shown graphically in Fig.~\ref{fig:cartoon} and described in detail in Boxes ~\ref{box:norm}-\ref{box:laplacian}.
 
