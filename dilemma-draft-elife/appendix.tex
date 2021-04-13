@@ -8,11 +8,49 @@
 \beginsupplement
 \setcounter{theorem}{0}
 
+% --------------------------------------------------------------------------
+\begin{featurebox}
+	\caption{Norms.}
+	\label{box:norm}
+	A \textbf{norm} is a mathematical way to measure the overall size or extent of an ``object'' in a space. The object we are concerned with is a mathematical object with a form given by, $\Delta \mathbf{M} = f_{\mathbf{M}}(x) - \mathbf{M}$. But to define the norm let us as the first step consider a generic vector $v$. Keeping with convention will have its norm denoted by $||v||$, and defined by three properties:
+	
+	\begin{enumerate}
+	  \item $||v|| > 0$ when $v \neq 0$ and $||v|| = 0$ only if $v=0$ (point separating)
+	  \item $||k v|| = ||k||\ ||v||$ (absolute scalability)
+	  \item $||v + w|| \leq ||v|| + ||w||$ (the triangle inequality)
+	\end{enumerate}
+	
+	What does this mean for $\Delta \mathbf{M}$? A norm over a changing memory provides most the properties we require for our definition of $E$. It depends only on learning (and forgetting), that dependence must be monotonic, a norm is zero only when nothing in the space/memory changes and is positive definite. These satisfy the first four properties. For the fifth, see Box \ref{box:laplacian}.
+	\medskip
+	\end{featurebox}
+	
+	\begin{featurebox}
+		\caption{The Laplacian.}
+		\label{box:laplacian}
+		Here we use $\nabla^2$ to represent the \textbf{Laplacian}, which provides the second derivative of vector valued functions, giving us the remaining property we need. (See Box \ref{box:norm} for the others). To explain why, suppose we are working with a 1- dimensional memory. In this case the Laplacian reduces to the second derivative on our memory, $\frac{d^2\mathbf{M}}{dx^2} < 0$. A negative second derivative will force the changes in memory to be decelerating, by definition. In higher dimensions of memory then, a reader can think of the Laplacian as the ``second derivative'' of vector-valued functions like $f$. That is, negative Laplacian imply decelerating by definition.
+		\medskip
+	\end{featurebox}
+	% --------------------------------------------------------------------------
+
+	
 % TODO - use F, find a way to state E?  It is time to face the Bellmans in full
 % TODO - us E(s) valid? What to write there.
 % TODO - step by step notation check. On paper?
 
 \subsection*{Information value as a dynamic programming problem} To find a dynamic programming solution based on the Bellman equation (Eq~\ref{eq:}) we must prove our memory $\Theta$ has optimal substructure. This is because the normal route, which assumes the problem rests in a Markov Space, is closed to us. By optimal substructure we mean that the process of learning in $\Theta$ can be partitioned into a collection, or series of memories, each of which is itself a solution. That is, it lets us find a kind of recursive structure in memory learning, which is what we need to apply the Bellman. Proving optimal substructure also allows for simple proof by induction \citep{Roughgarden2019}, a property we will take advantage of. 
+
+-------------------------------------------------------------------------
+\begin{featurebox}
+	\caption{Optimal substructure}
+	\label{box:substructure}
+	To use Bellman's principle of optimality (Box~\ref{box:bellman}) the problem we want to solve needs to have \textbf{optimal substructure}. This opaque term can be understood by looking in turn at another theoretical construct, Markov spaces. 
+	\\
+	In Markov spaces there are a set of states or observations $(x_0, x_1, ..., x_{T})$, where the transition to the next $x_t$ depends only on the previous state $x_{t-1}$. This limit means that if we were to optimize over these states, as we do in reinforcement learning, we know that we can treat each transition as its own ``subproblem'' and therefore the overall situation has ``optimal substructure''.
+	\\
+	In reinforcement learning the problem of reward collection is defined by fiat as happening in a Markov space \citep{Sutton2018}. The problem for curiosity is it relies on memory which is necessarily composed of many past observations, in many orders, and so it cannot be a Markov space. So if we wish to use dynamic programming to maximize $E$, we need to find another way to establish optimal substructure. This is the focus of Theorem~\ref{theorem:opt_sub}.
+	\medskip
+\end{featurebox}
+-------------------------------------------------------------------------
 
 \begin{theorem}[Optimal substructure] \label{theorem:opt_sub} 
     Let $X$, $A$, $\Theta$, $f_{\Theta}$, (Def. 1), $\pi_E$ and $\delta$ be given. Assuming transition function $\delta$ is deterministic, if $V^*_{\pi_E}$ is the optimal information value given by policy $\pi_E$, a memory $\Theta_{t+1}$ has optimal substructure if the the last observation $x_t$ can be removed from $\Theta_t$, by $\Theta_{t} = f^{-1}(\Theta_{t+1}, x_t)$ such that the resulting value $V^*_{t-1} = V^*_{t} - E_{t}$ is also optimal. 
@@ -26,6 +64,29 @@
 This proof required two things. First, it was required we extend the idea of memory. We need to introduce a mechanism for forgetting of a very particular kind. We must assume that any last learning step $f(x, \theta) \rightarrow \theta'$ can be undone by a new vector valued function $f^{-1}$, such that $f(x, \theta') \rightarrow \theta$. In other words we must assume what was last remembered, can always be forgotten. 
 
 Second we must also assume the environment $\delta$ is deterministic. Determinism is consistent with the natural world, which does evolve in a deterministic way, at the scales we concerned with. This assumption is however at odds with much of reinforcement learning theory \citep{needed} and past experimental work \citep{needed}. Both tend to study stochastic environments. We'll address this discrepancy later on using numerical simulations.
+
+\begin{featurebox}
+	\caption{Dynamic programming and Bellman optimality.}
+	\label{box:bellman}
+	The goal of dynamic programming is to find a series of actions $(a_1, a_2, ..a_T)$, drawn from a set $A$, that maximize each payout $(r_1, r_2, ..., r_{T})$ so the total payout received is as large as possible. If there is a policy $a = \pi(x)$ to take actions, based on a series of observations $(x_0, x_1, ..x_{T}),$, then an optimal policy $\pi^*$ will always find the maximum total value $V^* = \argmax_{A} \sum_T r_t $. The question that Bellman and dynamic programming solve then is how to make the search for finding $\pi*$ tractable. In the form above one would need to reconsider the entire sequence of actions for any one change to that sequence, leading to a combinatorial explosion. 
+	
+	Bellman's insight was a way to make the problem simpler, and break it down into a small set of problems that we can solve in a tractable way without an explosion in complexity. This is his principle of optimality, which reads:
+
+	\begin{quote}
+		An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. \citep{Bellmann1954}
+	\end{quote}
+
+	Mathematically this allows us to translate the full problem, $V^* = \argmax_{\pi} \sum_T r_1, r_2, ..., r_{T}$ to a recursive one, which is given below. 
+
+	\begin{equation}
+		V^* = \argmax_{\pi} \ \Big [ r_0 + V(x_1) \ \Big ]
+	\end{equation}
+	
+	Using this new form we can find an optimal solution by moving though the sequence of action iteratively, and solving each step independently. The question which remains though is how can we ensure our problem can be broken down this way? This is addressed in Box~\ref{box:substructure}.
+	\medskip
+\end{featurebox}
+% -------------------------------------------------------------------------
+
 
 \subsection*{Bellman solution} Knowing the optimal substructure of $\Theta$ and given an arbitrary starting value $E_0$, the Bellman solution to curiosity optimization of $E$ is given by,
 
