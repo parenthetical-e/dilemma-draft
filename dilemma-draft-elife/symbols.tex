@@ -1,0 +1,40 @@
+Italic capital letters are used for sets. Upper-case letters are used for elements. Quantities that are real-valued vector spaces are written in bold. Parameters are denoted by greek letters.
+
+\begin{table}[]
+    \begin{tabular}{ll}
+    Symbol & Description \\
+    $\mathcal{S}$ & The state space of the environment. \\
+    $\mathcal{A}$ & The action space of the agent. \\
+    $\mathbf{S}$ & A state. \\
+    $\mathbf{S'}$ & A next state in a sequence. \\
+    $\Lambda(\mathbf{S})$ & The transition function. Generates $\mathbf{S'}$. \\
+    $\mathbf{A}$ & An action. \\
+    $R$ & Reward value from the environment. \\
+    $\hat R$ & Subjective reward value. \\
+    $\mathcal{X}$ & The observation space. \\
+    $\mathbf{X}$ & An observation. \\
+    $T(\mathbf{S},\mathbf{A},\mathbf{S'},R,\mathbf{M})$ & The observation function. Generates $\mathbf{X}$. \\
+    $\mathbf{M}$ & Memory (subjective). \\
+    $f(\mathbf{\mathbf{X},M})$ & A learning function. Generates $\mathbf{M'}$. \\
+    $\hat E$ & Subjective information value. \\
+    $E(\mathbf{M},\mathbf{M'})$ & Information value function. Generates $\hat E$. \\
+    $\pi$ & An action policy. Generates $\mathbf{A}$. \\
+    $\pi_R$ & A policy to maximize reward ($R$, $\hat R$). \\
+    $\pi_E$ & A policy to maximize information ($\hat E$). \\
+    $\pi(\mathbf{S})$ & A deterministic action policy. \\
+    $\pi(\mathbf{S}|\mathbf{A})$ & A stochastic action policy. \\
+    $J$ & A cost function. \\
+    $J_E$ & A cost function for information value ($\hat E$). \\
+    $J_R$ & A cost function for reward value ($R$, $\hat R$). \\
+    $|.|$ & Denotes set size. \\
+    $||.||$ & Denotes a vector norm. \\
+    $\Delta$ & Denotes a difference, between two scalars or vectors. \\
+    $\nabla$ & Denotes a gradient. \\
+    $\nabla^2$ & Denotes the Laplacian. \\
+    $\alpha$ & Step-size (0,1]. \\
+    $\beta$ & Softness parameter for softmax sampling (0, $\infty$). \\
+    $\epsilon$ & Probability of random choice for e-greedy policy [0,1]. \\
+    $\eta$ & Boredom [0,$\infty$). \\
+    &                          
+    \end{tabular}
+\end{table}
