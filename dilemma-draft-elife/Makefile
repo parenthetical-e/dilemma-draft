@@ -9,13 +9,13 @@ copy_bib:
 # Compile the paper into pdf
 # or clean up a compilations
 tex:
-	pdflatex $(DOCNAME).tex
+	pdflatex -interaction=nonstopmode $(DOCNAME).tex
 	bibtex $(DOCNAME).aux
-	pdflatex $(DOCNAME).tex
-	pdflatex $(DOCNAME).tex
+	pdflatex -interaction=nonstopmode $(DOCNAME).tex
+	pdflatex -interaction=nonstopmode $(DOCNAME).tex
 	
 tex2:
-	latexmk $(DOCNAME).tex
+	latexmk -interaction=nonstopmode $(DOCNAME).tex
 
 clean_tex:
 	# Spare the generate pdf...
