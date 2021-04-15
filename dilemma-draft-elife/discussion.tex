@@ -78,7 +78,7 @@ Yes. Regret is calculated for the policy which is in control of behavior, not th
 
 
 \subsection*{Is information a reward?}
-It depends. If reward is defined as more-or-less any quantity that motivates behavior, then our definition of information value is a reward. This does not mean, however, that information value and environmental rewards are interchangeable. In particular, if you add reward value and information value to motivate search you can drive exploration in practical and useful ways. But this doesn't change the intractability of the dilemma proper \citep{Thrun1992a,Dayan1996,Findling2018,Gershman2018b}. So exploration will still generate substantial regret, as we show in Fig \ref{fig:summary}. But perhaps more important is that these kinds of intrinsic rewards \citep{Schmidhuber1991,Berger-Tal2014,Itti2009,Friston2016,Kobayashi2019} introduce a bias that will drive behavior away from what, could otherwise be, ideal skill learning \citep{Ng1999,Simsek2006}.
+It depends. If reward is defined as more-or-less any quantity that motivates behavior, then our definition of information value is a reward. This does not mean, however, that information value and environmental rewards are interchangeable. In particular, if you add reward value and information value to motivate search you can drive exploration in practical and useful ways. But this doesn't change the intractability of the dilemma proper \citep{Thrun1992a,Dayan1996,Findling2018,Gershman2018b}. So exploration will still generate substantial regret, as we show in Fig \ref{fig:summary}. But perhaps more important is that these kinds of intrinsic rewards \citep{Schmidhuber1991,Berger-Tal2014,Itti2009,Kobayashi2019} introduce a bias that will drive behavior away from what, could otherwise be, ideal skill learning \citep{Ng1999,Simsek2006}.
 
 
 \subsection*{But isn't curiosity impractical?}
@@ -92,7 +92,7 @@ A significant drawback to curiosity, as an algorithm, is that it will struggle t
 
 
 \subsection*{But what about other forms of curiosity?}
-We did not intend to dismiss the niceties of curiosity that others have revealed. It is that these prior divisions parcel out the idea too soon. Philosophy and psychology consider whether curiosity is internal or external, perceptual versus epistemic, or specific versus diversive, or kinesthetic \citep{Kidd2015,Berlyne1950,Zhou2020}. Computer science tends to define it as needed, for the task at hand \citep{Stanley2004,Friston2016,Lehman2011a,Lehman2013,Mouret2015,Colas2020}. Before creating a taxonomy of curiosity it is important to first define it, mathematically. Something we have done here.
+We did not intend to dismiss the niceties of curiosity that others have revealed. It is that these prior divisions parcel out the idea too soon. Philosophy and psychology consider whether curiosity is internal or external, perceptual versus epistemic, or specific versus diversive, or kinesthetic \citep{Kidd2015,Berlyne1950,Zhou2020}. Computer science tends to define it as needed, for the task at hand \citep{Stanley2004,Lehman2011a,Lehman2013,Mouret2015,Colas2020}. Before creating a taxonomy of curiosity it is important to first define it, mathematically. Something we have done here.
 
 
 \subsection*{What is boredom, besides being a tunable parameter?}
@@ -100,7 +100,7 @@ A more complete version of the theory would let us derive a useful or even optim
 
 
 \subsection*{Does this mean you are hypothesizing that boredom is actively tuned?}
-We are predicting exactly that.
+Yes we are predicting exactly that.
 
 
 \subsection*{But do people subjectively feel they can tune their boredom?}
@@ -124,25 +124,31 @@ The need to add other values fits well within our notion of competitive simple p
 
 \begin{equation}
 \label{eq:pipi_f} 
-\pi^{\pi} = \ \Big [ \pi_E,\ \pi_R,\ \pi_F \Big ]
+\Pi^{\pi} = \ \Big [ \pi_E,\ \pi_R,\ \pi_F \Big ]
 \end{equation}
 
 \begin{equation}
 \label{eq:meta_greedy_f} 
-	\argmax_{\pi^{\pi}} \ \Big [ E_{t-1} - \eta,\ R_{t-1},\ F_{t-1} \Big ]_{\textbf{(2, 3, 1)}}
+	\argmax_{\Pi^{\pi}} \ \Big [ E - \eta,\ \hat R,\ F \Big ]_{\textbf{(2, 3, 1)}}
 \end{equation}
 
-Where we assume the fear/aversive term should take precedence when tied. Another more mundane example would be to add a policy for a grooming drive, $G$. 
+Where we assume the fear/aversive term should take precedence over all other options, whe there is a tie. 
+
+
+\subsection*{What about other values?}
+Another more mundane example would be to add a policy for a grooming drive, $C$. 
 
 \begin{equation}
 \label{eq:pipi_g} 
-\pi^{\pi} = \ \Big [ \pi_E - \eta,\ \pi_R,\ \pi_G \Big ]
+\Pi^{\pi} = \ \Big [ \pi_E,\ \pi_R,\ \pi_C \Big ]
 \end{equation}
 
 \begin{equation}
 \label{eq:meta_greedy_g} 
-	\argmax_{\pi^{\pi}} \ \Big [ E_{t-1},\ R_{t-1},\ G_{t-1} \Big ]_{\textbf{(1, 2, 3)}}
+	\argmax_{\pi^{\pi}} \ \Big [ \hat E - \eta,\ \hat R, \ \hat C \Big ]_{\textbf{(1, 2, 3)}}
 \end{equation}
+
+Where we assume the grooming term should take precedence over all other options, when there is a tie. 
 
 \subsection*{What about fitting deterministic models?}
 Exploration in the lab is often described as probabilistic \citep{Calhoun2014,Song2019a,Gershman2018b,Schulz2018a}. By definition probabilistic models do not make exact predictions of behavior, only statistical ones. Our approach is deterministic and so can make exact predictions. If, that is, we can fit it and it turns out to be correct. In species ranging from human to \textit{Caenorhabditis elegans}, there are hundreds of exploration-exploitation experiments. A deterministic theory can, in principle, open up entirely new avenues for reanalysis. Testing and exploring these is a critical next step.

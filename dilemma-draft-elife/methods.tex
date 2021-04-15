@@ -19,11 +19,11 @@ We studied seven tasks, each designed to test exploration in a common setting or
 \subsection*{Task memory}
 The tasks fit a simple discrete probabilistic model, with a memory “slot” for each choice. The memory space we defined for this is a probability space Fig~\ref{cartoon1}\textbf{a}..
 
-To measure distances in this memory space we used the Jenson-Shannon metric (JS) \citep{Endres2003}, a variation of the Kullback--Leibler divergence. The Kullback--Leibler divergence (KL) is a widely used information theory, and Bayesian modelling. It measures the information gained or lost by replacing one distribution with another. It is versatile and widely used in machine learning \citep{Goodfellow-et-al-2016}, Bayesian reasoning \citep{Itti2009,Friston2016}, visual neuroscience \citep{Itti2009}, experimental design \citep{Lopez-Fidalgo2007}, compression \citep{Mackay,Still2012} and information geometry \citep{Ay2015}.
+To measure distances in this memory space we used the Jenson-Shannon metric (JS) \citep{Endres2003}, a variation of the Kullback--Leibler divergence. The Kullback--Leibler divergence (KL) is a widely used information theory, and Bayesian modelling. It measures the information gained or lost by replacing one distribution with another. It is versatile and widely used in machine learning \citep{Goodfellow-et-al-2016}, Bayesian reasoning \citep{Itti2009}, visual neuroscience \citep{Itti2009}, experimental design \citep{Lopez-Fidalgo2007}, compression \citep{Mackay,Still2012} and information geometry \citep{Ay2015}.
 
 We used JS in place of KL to measure information value because it is a norm, while KL is not. The Bayesian exploration strategy described in the results used KL. In practice, we saw little difference in their performance.
 
-Where $P$ and $Q$ are two distributions, KL and JS are given by Eq.~\ref{eq:KL} and ~\ref{eq:JS}. In our implementation $Q$ corresponded to the updated memory $\Theta_{t_1}$ and $P$ was a “copy” of the older memory $\Theta$.
+Where $P$ and $Q$ are two distributions, KL and JS are given by Eq.~\ref{eq:KL} and ~\ref{eq:JS}. In our implementation $Q$ corresponded to the updated memory $\mathbf{M}_{t_1}$ and $P$ was a “copy” of the older memory $\mathbf{M}$.
 
 \begin{equation}
     \label{eq:KL}
@@ -41,7 +41,7 @@ By definition a greedy policy like $\pi_E$ does not distinguish between tied val
 We studied several breaking strategies, ``take the left/right option'', ``take the closest option'', or ``take the option with the lowest likelihood''. For simplicity we choose to use ``take the next option'' in all our numerical studies. Most any tie breaking scheme is fine, but should it be deterministic.
 
 \subsection*{Initializing $\pi_\pi$}
-In these simulations we assume that at the start of learning an animal should have a uniform prior over the possible actions $A \in \mathbb{R}^K$. Thus $p(a_k) = 1/K$ for all $a_k \in A$. We transform this uniform prior into the appropriate units for our JS-based $E$ using by, $E_0 = \sum_K p(a_k)\ \text{log}\ p(a_k)$. 
+In these simulations we assume that at the start of learning an animal should have a uniform prior over the possible actions $A \in \mathbb{R}^K$. Thus $p(a_k) = 1/K$ for all $a_k \in A$. We transform this uniform prior into the appropriate units for our JS-based $\hat E$ using by, $E_0 = \sum_K p(a_k)\ \text{log}\ p(a_k)$. 
 
 \subsection*{Regret calculations}
 In line with past efforts on studying value loss during optimization we quantified lost value in terms of it regret $G$, where $G$ is defined as $G = V^* - V_t$ and $V$ is the value at the current time point and $V^*$ is the best possible value that has been experienced up until $t$.
