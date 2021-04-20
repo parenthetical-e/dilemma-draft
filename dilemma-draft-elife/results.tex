@@ -133,7 +133,7 @@ The central failure mode of curiosity is what we'll call minutia, defined as tho
 To limit curiosity we will use boredom which we consider an adaptive trait. Others have considered boredom constructilvy arguing it is a useful way to motivate aversive tasks \citep{Bench2013}, or curiosity \cite{Loewenstein1994}. We take a slightly different view. We treat boredom as a tunable free parameter, $\eta \ge 0$. We consider boredom as a means to ignore marginal value, by requiring curious exploration to stop once $E \le \eta$. 
 
 
-\subsection{Of equal importance}
+\subsection{A win-stay, lose-switch solution}
 How can we justify using curiosity for the dilemma when the goal of exploitation is reward collection? Curiousity is just as important for survival as reward collection \cite{Thrun1992}. Curiosity is a primary drive in most, if not all, animals \cite{Inglis2001}. It is as strong, if not sometimes stronger, than the drive for reward \cite{Loewenstein1994,Kidd2015,Gottlieb2018}. 
 
 Still, intuition suggests that curiosity is wrong-headed. Searching in an open-ended way for information must be less efficient than a direct search for reward? In answer to this we make two conjectures.
@@ -146,8 +146,6 @@ If both reward and information are equally important, then time is not wasted in
 
 It's worth noting here that curiosity, as an algorithm, is highly effective at solving optimization problems \cite{Schmidhuber1991,Pathak2017,Stanton2018,Lehman201,Mouret2011b1,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Schwartenbeck2019.Laversanne-Finot2018}. 
 
-
-\subsection{A win-stay, lose-switch solution}
 If reward and information are equally important, how can an animal go about balancing them? If you accept our conjectures then answering this question is the same as answering the dilemma. To solve this dual value learning problem we’ve posed–-information and reward maximization–-we need an algorithm that can maximize the total value of both objectives. We found a simple answer in game theory and in the computer science sub-field of optimal scheduling.
 
 Win-stay lose-shift is a strategy famous from game theory \citep{Nowak1993}, where a player will keep its current strategy under winning conditions, and shift otherwise. We see the same kind of patterning as useful here, except the ``players'' are two different policies inside the animal. They are competing for behavioral control. Imagine that in the previous action our bee from Fig. ~\ref{fig:bee} observed 0.7 units of information value, $\hat E$, and no reward (i.e. 0). Using our rule on the next action, the bee should then choose its exploration policy. Let us say that this time $\hat E$ decreases to 0.6, and a reward value of 1.0 is observed. Now the bee should change its strategy for the next round, to exploit instead. In general then if there was more reward value then information value last round ($R_{t-1} > E_{t-1}$), our rule dictates an animal should choose the reward policy. If information value dominated, $E_{t-1} > \ge R_{t-1}$, then it should choose the information gathering policy.
@@ -230,11 +228,12 @@ The results of this simple information seeking task are shown in Figure~\ref{fig
 \end{figure}
 
 
-\subsection{Reward collection in practice} The general form of the 7 tasks we will study is depicted in Fig~\ref{fig:task_outline2}. As with our first task (Fig. ~\ref{fig:task_outline1}) they are all variations of the classic multi-armed bandit \citep{Sutton2018}. The payouts for each of the tasks are shown separately in Fig.~\ref{fig:payout}. Each was designed to either test exploration performance in a way that matches recent experimental study(s), or to test the limits of curiosity. Every trial has a set of $n$ choices. Each choice returns a “payout”, according to a predetermined probability. Payouts are information, a reward, or both. Note that, as in Task 1, information was symbolic, denoted by a color code, “yellow” and “blue” and as is custom reward was a positive real number. 
+\subsection{Reward collection in practice} 
+Our approach does not mathematically ensure a dual value solution to the dilemma maximizes reward value comparerd with other well-established methods. To findout we meaasured total reward collected over 7 tasks and 10 agents, including ours. Each agent's parameters were independently optimized for each task. For a brief description of each agent, see Table~\ref{tab:agents}. They all have in common that their central goal is to maximize total reward value, though this is often supplemented by some other goal, an intrinic reward or bonus \cite{Ng1999,Sutton1998}. 
 
-To evaluate the performance of our curiosity algorithm, we compare it against a range of other exploration strategies found in the literature. For a brief description of each, see Table~\ref{tab:agents}. We feel this set is a broad and fair representation of today's state-of-the-art approaches.
+The general form of the 7 tasks are depicted in Fig~\ref{fig:task_outline2}. As with our first task (Fig. ~\ref{fig:task_outline1}) they are all variations of the classic multi-armed bandit \citep{Sutton2018}. The payouts for each of the tasks are shown separately in Fig.~\ref{fig:payout}. Each task was designed to either test exploration performance in a way that matches recent experimental studies, or to test the limits of curiosity. Every trial has a set of $n$ choices. Each choice returns a “payout”, according to a predetermined probability. Payouts are information, a reward, or both. Note that, as in Task 1, information was symbolic, denoted by a color code, “yellow” and “blue” and as is custom reward was a positive real number. 
 
-They all have in common that their central goal is to maximize reward value, though this is often supplemented by some other goal.  The results in full for all tasks and exploration strategies are shown in Fig.~\ref{fig:summary}. All learners, including ours, used the same exploitation policy, based on the temporal difference learning rule \citep{Sutton2018}.
+The results in full for all tasks and exploration strategies are shown in Fig.~\ref{fig:summary}. All agents, including ours, used the same exploitation policy based on the temporal difference learning rule \citep{Sutton2018} (Methods).
 
 \begin{figure}
 	\begin{fullwidth}
