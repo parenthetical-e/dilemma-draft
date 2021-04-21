@@ -303,7 +303,7 @@ The results of this simple information seeking task are shown in Figure~\ref{fig
 \end{figure}
 
 
-\subsection*{Reward collection} 
+\subsubsection*{Reward collection} 
 Our approach does not mathematically ensure a dual value solution to the dilemma maximizes reward value comparerd with other well-established methods. To findout we meaasured total reward collected over 7 tasks and 10 agents, including ours. Each agent's parameters were independently optimized for each task. For a brief description of each agent, see Table~\ref{tab:agents}. They all have in common that their central goal is to maximize total reward value, though this is often supplemented by some other goal, an intrinic reward or bonus \cite{Ng1999,Sutton1998}. 
 
 The general form of the 7 tasks are depicted in Fig~\ref{fig:task_outline2}. As with our first task (Fig. ~\ref{fig:task_outline1}) they are all variations of the classic multi-armed bandit \citep{Sutton2018}. The payouts for each of the tasks are shown separately in Fig.~\ref{fig:payout}. Every trial has a set of $n$ choices. Each choice returns a “payout”, according to a predetermined probability. Payouts are information, a reward, or both. Note that, as in Task 1, information was symbolic, denoted by a color code, “yellow” and “blue” and as is custom reward was a positive real number. 
