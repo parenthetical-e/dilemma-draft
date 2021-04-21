@@ -1,45 +1,3 @@
-% % --------------------------------------------------------------------
-% % ELIFE ARTICLE TEMPLATE
-% \documentclass[9pt,lineno]{elife}
-% % Use the onehalfspacing option for 1.5 line spacing
-% % Use the doublespacing option for 2.0 line spacing
-
-% % Please note that these options may affect formatting.
-% % Additionally, the use of the \newcommand function should be limited.
-% \usepackage[version=4]{mhchem}
-% \usepackage{siunitx}
-% \usepackage{amssymb}
-% \usepackage{amsmath}
-% \usepackage{amsthm}
-
-% % Table bits
-% % \usepackage{booktabs, multirow} % for borders and merged ranges
-% % \usepackage{soul}% for underlines
-% % \usepackage[table]{xcolor} % for cell colors
-% % \usepackage{changepage,threeparttable} % for wide tables
-
-% % Math def
-% \DeclareSIUnit\Molar{M}
-% \DeclareMathOperator*{\argmax}{argmax} 
-% \newtheorem{axiom}{Axiom} 
-% \newtheorem{theorem}{Theorem}
-% \newtheorem{conjecture}{Conjecture}
-% \newtheorem{property}{Property}
-% \newtheorem{definition}{Definition}
-
-% % --------------------------------------------------------------------
-
-% % \title{Curiosity and the exploration-exploitation dilemma}
-% % \title{Solving the exploration-exploitation dilemma, with the curiosity trick}
-% \title{Curiosity is the trick for solving explore-exploit problems}
-% \author[1,2*]{Erik J Peterson}
-% \author[1,2,3,4]{Timothy D Verstynen}
-% \affil[1]{Department of Psychology}
-% \affil[2]{Center for the Neural Basis of Cognition} 
-% \affil[3]{Carnegie Mellon Neuroscience Institute}
-% \affil[4]{Biomedical Engineering, Carnegie Mellon University, Pittsburgh PA}
-% \corr{Erik.Exists@gmail.com}{EJP}
-
 \documentclass[9pt,twocolumn,twoside]{pnas-new}
 
 % Use the lineno option to display guide line numbers if required.
@@ -63,7 +21,7 @@
 \newtheorem{theorem}{Theorem}
 
 % \title{Curiosity is an optimal solution to the exploration-exploitation dilemma}
-\title{Curiosity can solve all explore-exploit problems.}
+\title{A curiosity trick can solve all explore-exploit problems.}
 
 \author[a,b,1]{Erik J Peterson} 
 \author[a,b,c,d]{Timothy D Verstynen} 
@@ -78,9 +36,6 @@
 \correspondingauthor{\textsuperscript{1}To whom correspondence should be addressed. E-mail: Erik.Exists@gmail.com}
 
 % --------------------------------------------------------------------
-% \begin{document}
-% \maketitle
-
 \begin{abstract}
     Explore-exploit problems are a common but intractable problems in reward learning, and therefore in the biological sciences. In this paper, we provide an alternative view of these problems that does not depend on exploring to optimize for reward value, even though this remains the goal of exploitation. Here exploration has no objective but learning itself which we equate to curiosity. Through theory and experiments we show this ``curiosity trick'' leads to optimal value solutions for potentially all explore-exploit problems, if that is curiosity is just as important as reward collection for survival. In particular, we show our approach succeeds in naturalistic conditions when rewards are sparse, deceptive, and non-stationary. We also suggest three experiments that might be used to distinguish our approach from other theories.
 \end{abstract}
@@ -107,7 +62,7 @@ An animal exploring a new environment quickly finds itself with a difficult ques
 \input{results}
 \input{discussion}
 \input{acknowledgements}
-\bibliography{library,tim_refs}
+\bibliography{library,tim_refs} % TODO - fix me?
 
 \newpage
 \input{appendix}
