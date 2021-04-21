@@ -210,7 +210,7 @@ If reward and information are equally important, and curiosity is sufficient, ho
 \subsubsection*{A win-stay, lose-switch solution}
 A similar dual value optimization problem to Eq.~\ref{eq:bellman_seq_ER} was posed, solved, with its regret bounded, by Robbins \cite{Robbins1952} in his derivation of the win-stay lose-swtich rule. This WLSL approach has since proven uesful in decision making and reinforcement learning \cite{Estes1994TowardAS,Worthy2014}, Bayesian sampling \cite{Bonawitz2014}, and especially in game theory \cite{Nowak1993}. We also put it to use here. 
 
-We have come to think about our two optimal value policies $\pi_R$ and $\pi_{\hat E}$ as two ``players'', who are competing for behavioral control of an animals moment-by-moment actions \cite{Estes1994TowardAS}. We a express simple solution to this game as a set of inequalities, that implement a WSLS rule, and which we term $\Pi_\pi$.
+We have come to think about our two optimal value policies $\pi_R$ and $\pi_{\hat E}$ as two ``players'' in game for behavioral control of an animal's moment-by-moment actions \cite{Estes1994TowardAS}. The simplest solution to this game, in terms computational complexity, is a WSLS rule. We denote this rule as $\Pi_\pi$, and define it here by a set of inequalities,
 
 \begin{equation} 
     \label{eq:pipi}
