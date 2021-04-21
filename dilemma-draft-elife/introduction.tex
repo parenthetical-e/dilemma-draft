@@ -1,3 +1,4 @@
+\section*{Introduction}
 Exploration behavior can have two very different explanations depending on whether an animal might receive a reward. If there is no reason to expect a reward, exploration is treated as a search for information. For example, when a rat is placed in a novel environment it will explore even if no food and water is expected \cite{Berlyne1950}. We equate this with curiosity \cite{Berlyne1950,Schmidhuber1991,Kidd2015,Jaegle2019,Sumner2019,Wang2019,Auersperg2015}. If reward is expected however exploration is interpreted as a search for reward \cite{Gupta2006,Sutton2018,Woodgate2017,Lee2011a,Schulz2018a,Calhoun2014}.
 
 An open problem in the decision sciences is to unify exploration with exploitation, which we define as the policy of choosing the most rewarding action. This union is known to be difficult and the conflict between them leads to the famous exploration-exploitation dilemma \citep{Kelly1956,Berger-Tal2014,Dayan1996,Thrun1992,Mehlhorn2015,Kobayashi2019}. We illustrate this classic paradox in Fig. \ref{fig:bee}a.
@@ -6,7 +7,7 @@ In this paper, we show that exploration is better handled by an information sear
 
 \begin{figure}
 	\begin{fullwidth}
-	\includegraphics[width=.55\linewidth]{img/bee.pdf} 
+	\includegraphics[width=.9\linewidth]{img/bee.pdf} 
 	\caption{Two views of exploration and exploitation. \textbf{a}. The dilemma: either exploit an action with a known reward (e.g., return to the previous flower) or explore other actions on the chance they will return a better outcome. The central challenge here is that the outcome of exploration is uncertain, and filled with questions. \textbf{b}. An alternative view of the dilemma, with two goals: either maximize rewards \textit{or} maximize information value,s with a curious search of the environment. \textit{Artist credit}: Richard Grant.}
 	\label{fig:bee} 
 	\end{fullwidth}
