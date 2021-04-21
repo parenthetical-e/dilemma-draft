@@ -14,17 +14,15 @@ We have offered a way around the exploration-exploitation dilemma. We proved the
 This is a controversial claim. So we will address some of its criticisms as a series of questions. The final question explains how this approach can be tested, with behavioral experiments. 
 
 \subsection*{Why curiosity?}
-Curiosity is an ecologically rational behavoir \cite{Rich2016a}. This arguemnt rests on what we feel are three well established facts. Curiousity is just as important for survival as reward collection \cite{Thrun1992}. Curiosity is a primary drive in most, if not all, animal behavoir \cite{Inglis2001}. It is as strong, if not sometimes stronger, than the drive for reward \cite{Loewenstein1994,Kidd2015,Gottlieb2018}. Curiosity as an algorithm is highly effective at solving difficult optimization problems \cite{Schmidhuber1991,Pathak2017,Stanton2018,Lehman201,Mouret2011b1,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Schwartenbeck2019.Laversanne-Finot2018}. 
-
-In other words, curiosity is not irrational \cite{}, nor a paradox \cite{}, nor a heuristic \cite{}, nor even quitesssentially cognitive \cite{Berlyne1950}. It is a basic homeostatic drive \cite{Loewenstein1994}. 
+Ourr usse of curiosity rests on three well established facts. 1. Curiosity is a primary drive in most, if not all, animal behavoir \cite{Inglis2001}. 2. It is as strong, if not sometimes stronger, than the drive for reward \cite{Loewenstein1994,Kidd2015,Gottlieb2018}. 3. Curiosity as an algorithm is highly effective at solving difficult optimization problems \cite{Schmidhuber1991,Pathak2017,Stanton2018,Lehman201,Mouret2011b1,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Schwartenbeck2019.Laversanne-Finot2018}. 
 
 
 \subsection*{What about information theory?}
 In short, the problems of communication and value are different problems that require different theories.
 
-Weaver \citep{Shannon1948} in his classic introduction to the topic, describes information as a communication problem with three levels. 1. The technical problem of transmitting accurately. 2. The semantic problem of meaning. 3. The effectiveness problem of changing behavior. He then describes how Shannon's work addresses only problem A. It has turned out that Shannon's separation of the problem allowed the information theory to have an incredibly broad application. 
+Weaver \citep{Shannon1948} in his classic introduction to the topic, describes information as a communication problem with three levels. a. The technical problem of transmitting accurately. b. The semantic problem of meaning. c. The effectiveness problem of changing behavior. He then describes how Shannon's work addresses only problem A. It has turned out that Shannon's separation of the problem allowed the information theory to have an incredibly broad application. 
 
-Unfortunately valuing information is not, at its core, a communications problem. Consider the very simple example Bob and Alice, having a phone conversation and then Tom and Bob having the exact same conversation. The personal history of Bob and Alice will determine what Bob learns in their phone call, and so determines what he values in that phone call. These might be completely different from what he learns when talking to Tom, even if the conversations are identical. What we mean by this example is that the personal history defines what is valuable on a channel, and this is independent of the channel and the messages sent. We have summarized this diagrammatically, in Fig. ~\ref{fig:info1}.
+Valuing information is not, at its core, a communications problem. Consider the very simple example Bob and Alice, having a phone conversation and then Tom and Bob having the exact same conversation. The personal history of Bob and Alice will determine what Bob learns in their phone call, and so determines what he values in that phone call. These might be completely different from what he learns when talking to Tom, even if the conversations are identical. What we mean by this example is that the personal history defines what is valuable on a channel, and this is independent of the channel and the messages sent. We have summarized this diagrammatically, in Fig. ~\ref{fig:info1}.
 
 \begin{figure}
 \begin{fullwidth}
@@ -37,13 +35,13 @@ Unfortunately valuing information is not, at its core, a communications problem.
 
 There is, we argue, an analogous set of levels for information value as those Weaver describes. a. There is the technical problem of judging how much was learned. b. There is the semantic problem of both what this learning ``means'', and also what its consequences are. c. There is an effectiveness problem of using what was learned to some other effect. In many ways b and c are similar to those in the information theory. It is a. which is most different. 
 
-For the same reasons Shannon avoided b and c in his theory, we have avoided them also. Both are very hard to measure, which makes them very hard to study. We feel it necessary to first build a theory of information value that can act as a companion for technical problem of information theory. That is to say, Shannon's account. This is why we took an axiomatic approach, and why we have tried to ape Shannon's axioms, as it made sense to do so.
-
 
 \subsection*{Is this too complex?}
-Perhaps turning a single objective into two, as we have, is too complex an answer. If this is true, then it would mean our strategy is not a parsimonious solution to the dilemma, and so we could or should reject it on that alone. 
+Perhaps turning a single objective into two, as we have, is too complex an answer. If this is true, then it would mean our strategy is not a parsimonious solution to the dilemma. We could or should reject it on that alone?
 
-Questions about parsimony are resolved by considering the benefits versus the costs. The benefits to curiosity-based search is that it leads to no regret solutions to exploration, to exploration-exploitation, and that it so far seems to do very well in practice, at reward collection. At the same time curiosity-as-exploration can also be building a model of the environment, useful for later planning \citep{Ahilan2019,Poucet1993}, creativity, imagination \citep{Schmidhuber2010}, while also building, in some cases, diverse action strategies \citep{Lehman2011a,Lehman2013,Mouret2015,Colas2020}. In other words, we argue it is a necessary complexity. 
+Questions about parsimony are resolved by considering the benefits versus the costs. The benefits to curiosity-based search is that it leads to no regret solutions to exploration, to exploration-exploitation, and that it so far seems to do very well in practice, at reward collection. At the same time curiosity-as-exploration can also be building a model of the environment, useful for later planning \citep{Ahilan2019,Poucet1993}, creativity, imagination \citep{Schmidhuber2010}, while also building, in some cases, diverse action strategies \citep{Lehman2011a,Lehman2013,Mouret2015,Colas2020}. 
+
+The cost is of curiousitieses indirectness, which could make it slower to converge in principle. There is also the risk of focusing on minutia, which we dicuss in the main text. Our numerical simulation suggests these costs are not fatal for practical successes.
 
 
 \subsection*{Is this too simple?}
@@ -51,36 +49,33 @@ Solutions to the regular dilemma are complex and require sophisticated mathemati
 
 The truth is we might have cheated, in this sense: the dilemma might have to be as hard as it has seemed. But the general case for curiosity as useful in exploration is clear, and backed up by the brute fact of its widespread presence. The question is: is curiosity so useful and so robust that it can be sufficient for all exploration with learning. 
 
-The answer to this question is empirical. If our account does well in describing and predicting animal behavior, that would be some evidence for it \citep{Sumner2019,Wang2019,Jaegle2019,Gottlieb2018,Kidd2015,Berlyne1950,Colas2020a,Rahnev2018,Wilson2020,CogliatiDezza2017b,Berger-Tal2014}. If it predicts neural structures \citep{Cisek2019,Kobayashi2019}, that would be some evidence for it (we discuss this more below). If this theory proves useful in machine learning and artificial intelligence research, that would be some evidence for it \citep{Burda2018,Schmidhuber1991,deAbril2018,Fister2019,Lehman2011a,Stanley2004a,Colas2020,Cully2015,Wilson2020,Pathak2019}. These are empirical predictions that require further investigation.
+The answer to this question is empirical. If our account does well in describing and predicting animal behavior, that would be some evidence for it \citep{Sumner2019,Wang2019,Jaegle2019,Gottlieb2018,Kidd2015,Berlyne1950,Colas2020a,Rahnev2018,Wilson2020,CogliatiDezza2017b,Berger-Tal2014}. If it predicts neural structures \citep{Cisek2019,Kobayashi2019}, that would be some evidence for it (we discuss this more below). If this theory proves useful in machine learning and artificial intelligence research, that would be some evidence for it \citep{Burda2018,Schmidhuber1991,deAbril2018,Fister2019,Lehman2011a,Stanley2004a,Colas2020,Cully2015,Wilson2020,Pathak2019}. 
 
 
 \subsection*{Is this a slight of hand, theoretically?}
-Yes. It is often useful in mathematical studies to take one problem that cannot be solved, and replace it with another related problem that can be. This is what we have done for exploration and the dilemma. The regular view of the problem has no tractable solution, without regret. Ours has a solution, with no regret.
-
-In this case, we swap one highly motivated animal behavoir (reward seeking) for another (information seeking).
+Yes. It is often useful in mathematical studies to take one problem that cannot be solved, and replace it with another related problem that can be. In this case, we swap one highly motivated animal behavoir (reward seeking) for another (information seeking).
 
 
 \subsection*{Does value as a technical problem even make sense?}
-Information value has been taken up as a problem in meaning  \citep{Kolchinsky2018}, or usefulness \citep{Tishby2000}. These are based on what we will call \textit{b-type} questions (a notion we defined in the section above). It is not that b questions are not important or are not valuable. It is that they are second order questions. The first order questions are the 'technical' or a-type questions (also defined above). 
-Having a technical definition of value, free from any meaning, might seem counterintuitive for a value measure. We argue that it is not more or less counterintuitive than stripping information of meaning in the first  place. Indeed, this is how Shannon got his information theory. The central question for our account of value is, is it useful? It is enough to ensure a complete but perfectly efficient search for information/learning in any finite space. It is enough to play a critical part in solving/replacing the dilemma, which has for many years looked intractable. 
+Having a technical definition of value, free from any meaning, might seem counterintuitive property for a value measure. We argue that it is not more or less counterintuitive than stripping information of meaning in the first  place. The central question for our account of value is, will it prove useful? 
 
 
 \subsection*{What about mutual information, or truth?}
-In other prototypical examples, information value is based on how well what is learned relates to the environment \citep{Behrens2007,Kolchinsky2018,Tishby2000}, that is the mutual information the internal memory and the external environment. Colloquially, one might call this ``truth". The larger the mutual information between the environment and the memory, the more value it is said that we should then expect. This view seems to us at odds with actual learning behavior, especially in humans. 
+In other prototypical examples, information value is based on how well what is learned relates to the environment \citep{Behrens2007,Kolchinsky2018,Tishby2000}, that is the mutual information the internal memory and the external environment. Colloquially, one might call this ``truth seeking". 
 
-As a people we pursue information which is fictional \citep{sternisko2020dark}, or based on analogy \citep{gentner1997reasoning}, or outright wrong \citep{loftus1989misinformation}. Conspiracy theories, disinformation, and our many more mundane errors, are far too commonplace for value to be based on fidelity alone. This does not mean that holding false beliefs cannot harm survival, but this is a second order question as far as learning goes. The fact that humans consistently seek to learn false things calls out us to accept that learning alone is a motivation for behavior.
+As a people we pursue information which is fictional \citep{sternisko2020dark}, or based on analogy \citep{gentner1997reasoning}, or outright wrong \citep{loftus1989misinformation}. Conspiracy theories, disinformation, and our many more mundane errors, are far too commonplace for information value to be based on mutual information, as defined aabove. This does not mean that holding false beliefs cannot harm survival, but this is a second order question as far as learning goes. 
 
 
 \subsection*{So you suppose there is always positive value for learning of all fictions, disinformation, and deceptions?}
-We must. This is our most unexpected prediction. Yet, logically, it is internally consistent with our work we believe qualitatively consistent with the behavior of humans and animals alike.
+We must. This is our most unexpected prediction. Yet, logically, it is internally consistent with our work we believe qualitatively consistent with the behavior of humans and animals alike. The fact that humans consistently seek to learn false things calls out us to accept that learning alone is a motivation for behavior.
 
 
 \subsection*{What about information foraging?}
-Our work is heavily inspired by information foraging \citep{Inglis2001,Reddy2016}. Our motivation in developing our novel strategy was that information value should not depend on only a probabilistic reasoning, as it does in information foraging. This is for the simple reason that many of the problems animals need to learn are not probabilistic problems \textit{from their point of view}. Of course, most any learning problem can be described as probabilistic from an outsider's perspective; the one scientists' rely on. But that means probabilistic approaches are descriptive approximations. We also feel curiosity is so important it needed a theoretical account that is both mechanistic and descriptive at the same time. This is why we developed an axiomatic approach that ended up addressing the technical problem of information value.
+Our work is heavily inspired by information foraging \citep{Inglis2001,Reddy2016}. Our motivation in developing our novel strategy was that information value should not depend on only a probabilistic reasoning, as it does in information foraging. This is for the simple reason that many of the problems animals need to learn are not probabilistic problems \textit{from their point of view}. 
 
 
 \subsection*{Was it necessary to build a general theory for information value just to describe curiosity?}
-No. It was an idealistic choice that worked out. The field of curiosity studies has shown that there are many kinds of curiosity. At the extreme limit of this diversity is a notion of curiosity defined for any kind of observation, and any kind of learning. If we were able to develop a theory of value driven search at this limit, we can be sure it will apply in all possible examples of curiosity that we seem sure to discover in future. At this limit we can also be sure that the ideas will span fields, addressing the problem as it appears in computer science, psychology, neuroscience, biology, and perhaps economics.
+No. It was an idealistic choice, that worked out. The field of curiosity studies has shown that there are many kinds of curiosity. At the extreme limit of this diversity is a notion of curiosity defined for any kind of observation, and any kind of learning. If we were able to develop a theory of value driven search at this limit, we can be sure it will apply in all possible examples of curiosity that we seem sure to discover in future. At this limit we can also be sure that the ideas will span fields, addressing the problem as it appears in computer science, machine learning, game theory, psychology, neuroscience, biology, and economics.
 
 
 \subsection*{Doesn't your definition of regret ignore lost rewards when the curiosity policy is in control?}
@@ -88,7 +83,11 @@ Yes. Regret is calculated for the policy which is in control of behavior, not th
 
 
 \subsection*{Is information a reward?}
-It depends. If reward is defined as more-or-less any quantity that motivates behavior, then our definition of information value is a reward. This does not mean, however, that information value and environmental rewards are interchangeable. In particular, if you add reward value and information value to motivate search you can drive exploration in practical and useful ways. But this doesn't change the intractability of the dilemma proper \citep{Thrun1992a,Dayan1996,Findling2018,Gershman2018b}. So exploration will still generate substantial regret, as we show in Fig \ref{fig:summary}. But perhaps more important is that these kinds of intrinsic rewards \citep{Schmidhuber1991,Berger-Tal2014,Itti2009,Kobayashi2019} introduce a bias that will drive behavior away from what, could otherwise be, ideal skill learning \citep{Ng1999,Simsek2006}.
+If reward is defined as more-or-less any quantity that motivates behavior, then our definition of information value is a reward. This last point does not mean, however, that information value and environmental rewards are interchangeable. Rewards from the enviroment, are a conserved resource, information is not. For example, if a rat shares a potato chip with a cage-mate, it must break the chip up leaving it less food for itself. While if a student shares an idea with a classmate, that idea is not divided up. 
+
+Furthermore, if you add reward value and information value to motivate search you can drive exploration in practical and useful ways. But this doesn't change the intractability of the dilemma proper \citep{Thrun1992a,Dayan1996,Findling2018,Gershman2018b}. 
+
+In other words, it depends. 
 
 
 \subsection*{But isn't curiosity impractical?}
