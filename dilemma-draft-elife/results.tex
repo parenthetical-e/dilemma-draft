@@ -162,22 +162,21 @@ Having a policy $\pi_E^*$ that optomally maximizes $\hat E$ does not necessarily
 
 In Theorems~\ref{theorem:Z} and~\ref{theorem:convergence} we prove that our Bellman solution $\pi_E$ satisfies these, when $\eta > 0$ and when the observations $\mathbf{X}$ contain complete state information, $\mathbf{S} \in \mathbf{X}$. See the Appendix for the proofs proper.
 
-\begin{theorem}[State search: breadth] 
+\begin{theorem}[Complete exploration] 
 	\label{theorem:Z} 
 	Given some arbitrary value $E_0$, an exploration policy governed by $\pi^*_{\hat E}$ will visit all states $\mathbf{S} \in \mathbb{S}$ in finite number of steps $T$.
 \end{theorem}
 
-\begin{theorem}[State search: depth] 
+\begin{theorem}[Efficient exploration] 
 	\label{theorem:convergence} 
 	An exploration policy governed by $\pi^*_{\hat E}$ will only revisit states for where information value is marginally useful, defined by $\hat E > \eta$.  
 \end{theorem}
 
 
-
 \subsection{Two key conjectures}
  Searching in an open-ended way for information must be less efficient than a direct search for reward? In answer to this question, we make two conjectures.
 
-\begin{conjecture}[A hypothesis of equal important]
+\begin{conjecture}[A hypothesis of equal importance]
 	Reward value and information value are equally important for survial, in changing environments 
 \end{conjecture}
 
@@ -222,26 +221,26 @@ To provide some intuition for Eq.\ref{eq:pipi}, imagine that in the previous act
 
 In general, if there was more reward value then information value last round ($R > \hat E$), our rule dictates an animal should choose the reward policy. If information value dominated, $R < \hat E$, then it should choose the information gathering policy.
 
-The WSLS rule in Eq~\ref{eq:pipi} when applied to exploration-exploitation problems can gauentee three things, shown below. In each Theoreum we assume our a finite horizon $T$ and that definitions for $\mathbf{X}$, $\mathbf{A}$, $\mathbf{M}$, $f$, $\Lambda$, and $\Pi_{\pi}$ are implicitly given.
+The WSLS rule in Eq~\ref{eq:pipi} when applied to exploration-exploitation problems can gauentee three things, shown below. 
 
-\begin{theorem}
+\begin{theorem}[No regret - reward value]
 	\label{th:no_regret_R}
 	When $\pi_R$ is in control under $\Pi_{\pi}$, all actions are zero regret in terms of $V_R$. That is, $\sum_{k=0}^{T} G = 0$.
 \end{theorem}
 
-\begin{theorem}
+\begin{theorem}[No regret - information value]
 	\label{th:no_regret_E}
 	When $\pi_{\hat E}$ is in control under $\Pi_{\pi}$, all actions are zero regret in terms of $V_{\hat E}$. That is, $\sum_{k=0}^{T} G = 0$.
 \end{theorem}
 
-\begin{theorem}
+\begin{theorem}[No regret - mixed values]
 	\label{th:no_regret_ER}
 	When either $\pi_{\hat E}$ or $\pi_R$ is in control under $\Pi_{\pi}$, all actions are zero regret in terms of $V_{\hat{E}R}$. That is, $\sum_{k=0}^{T} G = 0$.
 \end{theorem}
 
-Proofs for Theorems~\ref{th:no_regret_E} and~\ref{th:no_regret_E} follow from both reinforcement learning and our definition of information optimization having a Bellman optimality. The proof for the optimality of $V_{\hat{E}R}$ (Th~\ref{th:no_regret_ER}) in provided in the Appendix. The intuition for this proof is simple that a greedy algorithm made over two Bellman solutions is itself a Bellman solution.
+In each of theses Theoreums we assume our definitions for $\mathbf{X}$, $\mathbf{A}$, $\mathbf{M}$, $f$, $\Lambda$, and $\Pi_{\pi}$ are implicitly given, and a finite horizon $T$. Proofs for Theorems~\ref{th:no_regret_E} and~\ref{th:no_regret_E} follow from both reinforcement learning and our definition of information optimization having a Bellman optimality. The proof for the optimality of $V_{\hat{E}R}$ (Th~\ref{th:no_regret_ER}) in provided in the Appendix. The intuition for this proof is simple that a greedy algorithm made over two Bellman solutions is itself a Bellman solution.
 
-In Eq \ref{eq:meta_greedy} we compare reward $R$ and information value $\het E$ but have not ensured they have same ``units'', or are comparible valuables. We sidestep this isssue by limiting the probability of having zero reward to be, itself, non-zero. That is, $p(R_t=0) > 0$. We also limit $E_0$, the first set of values, to be positive and non-zero when used with boredom, $(E_0 - \eta) \geq 0$. These constraints ensure complete ``good'' exploration (defined above) which in turn ensures optimal reward learning is possible.
+In Eq.~\ref{eq:pipi} we compare reward $R$ and information value $\hat E$ but have not ensured they have same ``units'', or are comparible valuables. We sidestep this isssue by limiting the probability of having zero reward to be, itself, non-zero. That is, $p(R_t=0) > 0$. We also limit $E_0$, the first set of values, to be positive and non-zero when used with boredom, $(E_0 - \eta) \geq 0$. These constraints ensure complete ``good'' exploration (defined above) which in turn ensures optimal reward learning is possible.
 
 \subsection{A note about subjective reward value}
 We have been reward value is fixed. That is, where environment reward value $R$ is always equal to it subjective value to the animal $\hat R$. In natural behavior though the motivational value of reward often declines as the animal reaches satiety \citep{Keramati2014,Juechems2019,Munch2020}. Fortunately, it has already been shown a reward collection policy designed for one style will work for the other \citep{Keramati2014}. However to use a form similiar to Eq. \ref{eq:pipi} for subjective or homeostatic reward value we need to make one modification. Under homeostasis ties between values in Eq. \ref{eq:pipi} should be broken in favor of exploration because if this is not so, and exploitation remains the defult, homeostasis is not possible. This modification leads to Eq. \ref{eq:pipi_h}. 
