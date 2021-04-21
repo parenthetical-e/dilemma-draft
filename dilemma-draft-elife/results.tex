@@ -1,9 +1,18 @@
 \section*{Results} 
-We consider an animal who interacts with an environment over a sequence of states, actions and rewards. It's goal is to select actions in a way that maximizes the total reward collected from the environment, for every state. 
+We consider an animal who interacts with an environment over a sequence of states, actions and rewards. The animal's goal is to select actions in a way that maximizes the total reward collected. How should an animal do this? 
 
-How should an animal do this? To maximize reward an animal must tradeoff between exploration, and exploitation. The standard way of approaching this tradeoff is to assume, ``The agent must try a variety of actions and progressively favor those that appear to be best'' \cite{Sutton2018}. Here we suggest two fairly radical changes to this standard formula. Don’t stop searching progressively, do so suddenly (greedily). Explore only for learnings sake, out of curiosity \citep{Kidd2015}. First though we need to establish some shared formalities.
+When the enviroment is unknowen, to maximize reward an animal must tradeoff between exploration, and exploitation. The standard way of approaching this tradeoff is to assume, 
 
-\subsubsection*{Markovian formalities - reward collection}
+\begin{quote}
+The agent must try a variety of actions and progressively favor those that appear to be best'' \cite{Sutton2018}. 
+\end{quote}
+
+Here we suggest two fairly radical changes to this standard formula. Don’t stop searching progressively, do so suddenly. Explore only for learnings sake, out of curiosity \citep{Kidd2015}. 
+
+\subsection*{Theory}
+We first develop a new mathematical view of information value, curiosity, and a new understanding of ideal curious search. This new basis makes information value and curiosity domain general, and learning rule independent. We use these results to show exploration-for-curiosity leads to optimal value solutions for all explore-exploit problems, with deterministic dynamics.
+
+\subsubsection*{Markovian formalities}
 Our Markov decision process (MDP) consists of states of real valued vectors $\mathbf{S}$ from a finite set $\mathcal{S}$ of size $n$. As are actions, $\mathbf{A}$ from a finite set $\mathcal{A}$ of size $k$. Rewards are non-negative real numbers, $R$. Transitions from state to state is handled by the transition function $\Lambda(\mathbf{S},\mathbf{A})$. In our mathmatics we assume $\Lambda$ is a deterministic function of its inputs. In our simulations we assume it is a stochastic function.
 
 These prelimaries in place we can write down the value function definition, and the standard Bellman equation \cite{Bellmann1954} for reward collection, as given by reinforcement learning theory \citep{Sutton2018}. We assume below that the horizon is finite, bounded by $T$, for simplicity.
@@ -25,7 +34,7 @@ The second to last equation is the optimal Bellman equation for $V^*_R$. This ca
 V^*_R(\mathbf{S}) = \argmax_{\mathbf{A} \in \mathbb{A}} \Big [ R_{t}  + V^*_{R}(\Lambda(\mathbf{S},\mathbf{A})) \Big ]
 \end{equation}
 
-\subsubsection*{non-Markovian formalities - information collection}
+\subsubsection*{non-Markovian formalities}
 Imagine we wish to arrive an equation to maximize curious behavoir, in terms of information gained, what we'll call information value. Assume, as a stand-in, $\hat E$ represents the information value of some observation. What we would like is solution for this term $\hat E$ that would let us arrive at an equation like Eq.~\ref{eq:bellman_iter}, but for information value in place of reward. This could hypothetical equation could be written as, 
 
 \begin{equation} 
@@ -50,7 +59,7 @@ For individual animals we assume $f$ and $f^{-1}$ have been chosen by evolution 
 \subsubsection*{Formal regret}
 Regret minimization is a standard metric of optimality in reinforcement learning \citep{Sutton2018}. Formally, given \emph{any} any optimal value solution we can define regret $G$ in terms of this, given by $G = V^* - V_t$, where $V_t$ is the value of the choosen action $\mathbf{A}_t$. An optimal value algorithm can then be restated, as a ``best'' series of best actions ($\mathbf{A}_t$, $\mathbf{A}_{t+1}$, $\mathbf{A}_{t+2}$, ...) for which $\sum_{k=0}^{T} G_t = 0$.
 
-\subsection*{A general kind of (axiomatic) curiosity} 
+\subsubsection*{Axiomatic information value} 
 To make our eventual solution to the dilemma general, we first need to separate reward value from information value in a principled and general way. We do this axiomatically because working models of curiosity tend to conflate the learning rule, with the objective itself. We reason instead that the value of any observation made by an animal depends entirely on what an animal learns by making that observation–-literally how it changes that animal's memory. 
 
 We assume curiosity is driven by information value, and should be as time-efficients as possible. We will now describe an optimal value, but deterministic model, of curiosity. It is defined by some easily satisfiable requirements (axioms), which makes information value and curiosity domain general, and learning rule independent. 
@@ -92,7 +101,7 @@ That is, learning on $\mathbf{M}$ makes continual progress toward equilibrium (i
 
 All we have really done in these axioms is remove any mention of a learning rule, its properties, or learning target, its properties from previous definitions \cite{Itti2009,Jaegle2019,Schmidhuber1991,Inglis2001,Reddy2016,Pirolli2007}. This is important not for its on sake but because it with thesse axioms we can consider information value, and therefore curiosity, independent of any learning semantics, or any semantics at all. Anything we prove in this more abstract setting will be therefore be true for any learning algorithm, who meets our requirements. 
 
-\subsubsection*{Practical (geometric) information value}
+\subsubsection*{Practical information value}
 Meeting our requirements is not difficult. The practical example of axiomatic value we use throughout this paper is based on the geometric norm, $||.||$ (as shown in Fig.~\ref{fig:cartoon}). Though not necessaailry a unique solution, a norm on the memory gradient is a simple, perhaps natural, way to satisfy Axioms 1-4 (Eq \ref{eq:E_norm}). 
 
 \begin{equation}
@@ -121,7 +130,7 @@ In practice here we will not work with the gradient specifically, but use a disc
 	\end{fullwidth}
 \end{figure}
 
-\subsubsection*{Bellman curiosity}
+\subsubsection*{Optimal curiosity}
 An ideal learning-rule independent definition of curiosity would be a Bellman solution of this type \citep{Bellmann195}, as we noted above. It is ideal because it guarantees optimal value using recursion--a very biological idea. It is convenient also because the Bellman equation is the basis for the theory of reinforcement learning \citep{Sutton2018}, as we also illustrated above. 
 
 The common way to arrive at Bellman solution is to assume a Markov decision space. This is problem for our defition of memory, which we assume has a natural long-term path dependence. This breaks the Markov assumption, and its neeeded claim of optimal substructure. To get around this we proved that exact forgetting of the last observation is another way to achieve optimal substructure, and so to derive a Bellman solution.
@@ -145,13 +154,13 @@ As long learning about the different observations $\mathbf{X}$ is independent, a
 	V_E^{*}(\mathbf{X}) = \argmax_{\mathbf{A}} \Big [ E_t + E_{t+1} \Big ]
 \end{equation}
 
-\subsubsection*{A note on boredom}
+\subsubsection*{The importance of boredom}
 The central failure mode of curiosity is what we'll call minutia, defined as those learning that has little to no use, ever. A good example of this is to, ``Imagine a scenario where the agent is observing the movement of tree leaves in a breeze. Since it is inherently hard to model breeze, it is even harder to predict the location of each leaf'' \cite{Pathak2017}. This will imply, they note, a curious agent will always remain curious about chaos in the leaves even though they have no hope of successful learning of them.
 
 To limit curiosity we introduction a penalty term, $\eta$ which we treat as synomoous with boredom. We consider boredom an adaptive trait, in other words. Others have considered boredom arguing it is a useful way to motivate aversive tasks \citep{Bench2013}, or curiosity \cite{Loewenstein1994}. We take a slightly different view. We treat boredom as a tunable free parameter, $\eta \ge 0$ and a means to ignore marginal value by requiring curious exploration to stop once $E \le \eta$. 
 
 
-\subsubsection*{A note on exploration quality}
+\subsubsection*{Exploration quality}
 Having a policy $\pi_E^*$ that optomally maximizes $\hat E$ does not necessarily ensure that exploration is of good quality. We think it is reasonable to call an exploration good if it meets the criteria below. 
 
 \begin{enumerate}
@@ -173,7 +182,7 @@ In Theorems~\ref{theorem:Z} and~\ref{theorem:convergence} we prove that our Bell
 \end{theorem}
 
 
-\subsection*{Two key conjectures}
+\subsubsection*{Key conjectures}
  Searching in an open-ended way for information must be less efficient than a direct search for reward? In answer to this question, we make two conjectures.
 
 \begin{conjecture}[A hypothesis of equal importance]
@@ -190,7 +199,7 @@ If both reward and information are equally important, then time is not wasted in
 
 It's worth noting here that curiosity, as an algorithm in machine learning, is highly effective at solving broad kinds of optimization problems \cite{Schmidhuber1991,Stanton2018,Lehman2010,Mouret2011,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Laversanne-Finot2018}. 
 
-\subsection*{A win-stay, lose-switch solution}
+\subsubsection*{What's a solution look like?}
 If reward and information are equally important, and curiosity is sufficient, how can an animal go about balancing them? If you accept our conjectures, then answering this question optimally is the same as solving the dilemma. To solve this dual value learning problem we’ve posed–-information and reward maximization–-we need an algorithm that can maximize the value of a mixed sequence, $V_{\hat{E}R}$. For example,
 
 \begin{equation}
@@ -198,7 +207,8 @@ If reward and information are equally important, and curiosity is sufficient, ho
 	V^*_{\hat{E}R}(\mathbf{S}) = \argmax_{\mathbf{A} \in \mathbb{A}} \Big [\sum_{k=0}^{T} \hat{E}_t + \hat{E}_{t+1} + R_{t+2} + \hat{E}_{t+3} + R_{t+4} + \ldots  \ \Big ]
 \end{equation}
 
-A similar dual value optimization problem was posed, solved, with its regret bounded, by Robbins \cite{Robbins1952} in his derivation of the win-stay lose-swtich rule. This WLSL approach has since proven uesful in decision making and reinforcement learning \cite{Estes1994TowardAS,Worthy2014}, Bayesian sampling \cite{Bonawitz2014}, and especially in game theory \cite{Nowak1993}. We also put it to use here. 
+\subsubsection*{A win-stay, lose-switch solution}
+A similar dual value optimization problem to Eq.~\ref{eq:bellman_seq_ER} was posed, solved, with its regret bounded, by Robbins \cite{Robbins1952} in his derivation of the win-stay lose-swtich rule. This WLSL approach has since proven uesful in decision making and reinforcement learning \cite{Estes1994TowardAS,Worthy2014}, Bayesian sampling \cite{Bonawitz2014}, and especially in game theory \cite{Nowak1993}. We also put it to use here. 
 
 We have come to think about our two optimal value policies $\pi_R$ and $\pi_{\hat E}$ as two ``players'', who are competing for behavioral control of an animals moment-by-moment actions \cite{Estes1994TowardAS}. We a express simple solution to this game as a set of inequalities, that implement a WSLS rule, and which we term $\Pi_\pi$.
 
@@ -242,8 +252,8 @@ In each of theses Theoreums we assume our definitions for $\mathbf{X}$, $\mathbf
 
 In Eq.~\ref{eq:pipi} we compare reward $R$ and information value $\hat E$ but have not ensured they have same ``units'', or are comparible valuables. We sidestep this isssue by limiting the probability of having zero reward to be, itself, non-zero. That is, $p(R_t=0) > 0$. We also limit $E_0$, the first set of values, to be positive and non-zero when used with boredom, $(E_0 - \eta) \geq 0$. These constraints ensure complete ``good'' exploration (defined above) which in turn ensures optimal reward learning is possible.
 
-\subsubsection*{A note about subjective reward value}
-We have been reward value is fixed. That is, where environment reward value $R$ is always equal to it subjective value to the animal $\hat R$. In natural behavior though the motivational value of reward often declines as the animal reaches satiety \citep{Keramati2014,Juechems2019,Munch2020}. Fortunately, it has already been shown a reward collection policy designed for one style will work for the other \citep{Keramati2014}. However to use a form similiar to Eq. \ref{eq:pipi} for subjective, or homeostatic, reward value we need to make one modification, shown in Eq.~\ref{eq:pipi_h}. Under homeostasis ties between values in Eq. \ref{eq:pipi} should be broken in favor of exploration, because if this is not so and exploitation remains the defult and so homeostasis is not possible. 
+\subsubsection*{Homeostasic adjustments}
+We have been studying cases where reward value is fixed. That is, where environment reward $R$ is equal to its subjective value to the animal, $\hat R$. In natural behavior though the motivational value of reward often declines as the animal reaches satiety \citep{Keramati2014,Juechems2019,Munch2020}. This is called reward homeostatsis. Fortunately, it has been shown a reward collection policy designed for one style will work for the other \citep{Keramati2014}. However to use a form similiar to Eq. \ref{eq:pipi} for the dilemmaa under homeostatic reward value, we need to make one modification. This is shown in Eq.~\ref{eq:pipi_h}. 
 
 \begin{equation} 
     \label{eq:pipi_h}
@@ -256,7 +266,13 @@ We have been reward value is fixed. That is, where environment reward value $R$ 
     \end{split}
 \end{equation}
 
-\subsection*{Information collection in practice}
+Under homeostasis ties between values in Eq. \ref{eq:pipi} should be broken in favor of exploration, because if exploitation remains the defualt, reward homeostasis is not possible. 
+
+% ----------------------------------------------------------------------
+\subsection*{Simulated experiments}
+The remainder of this paper is deveoted to studying our approacher performance in bandit tasks. Each task was designed to either test exploration performance in a way that matches recent experimental studies, or to test the limits of curiosity. 
+
+\subsubsection*{Information collection}
 The work so far has built up the idea that the most valuable, and most efficient, curious search will come from a deterministic algorithm. That is, every step strictly maximizes $\hat E$. It is this determinism which will let us resolve the dilemma, later on. A deterministic view of exploration seems at odds with how the problem is generally viewed today, which involves searching with some amount of randomness. Whereas if our analysis is correct, randomness is not needed or desirable, as it must lead to less value and a longer search. 
 
 We confirm and illustrate this result using an example of a simple information foraging task (Task 1; Fig.\label{fig:task_outline1}). This variation of the bandit task \citep{Sutton2018} replaces rewards with information, in this case colors. On each selection, the agent sees one of two colors according to a specific probability shown in Fig. ~\ref{fig:payout}a. When the relative color probabilities are more similar that arm has more entropy and so more to learn and more information value. Arms that are certain to present only one color lose their informative value quickly.
@@ -287,10 +303,10 @@ The results of this simple information seeking task are shown in Figure~\ref{fig
 \end{figure}
 
 
-\subsection*{Reward collection in practice} 
+\subsection*{Reward collection} 
 Our approach does not mathematically ensure a dual value solution to the dilemma maximizes reward value comparerd with other well-established methods. To findout we meaasured total reward collected over 7 tasks and 10 agents, including ours. Each agent's parameters were independently optimized for each task. For a brief description of each agent, see Table~\ref{tab:agents}. They all have in common that their central goal is to maximize total reward value, though this is often supplemented by some other goal, an intrinic reward or bonus \cite{Ng1999,Sutton1998}. 
 
-The general form of the 7 tasks are depicted in Fig~\ref{fig:task_outline2}. As with our first task (Fig. ~\ref{fig:task_outline1}) they are all variations of the classic multi-armed bandit \citep{Sutton2018}. The payouts for each of the tasks are shown separately in Fig.~\ref{fig:payout}. Each task was designed to either test exploration performance in a way that matches recent experimental studies, or to test the limits of curiosity. Every trial has a set of $n$ choices. Each choice returns a “payout”, according to a predetermined probability. Payouts are information, a reward, or both. Note that, as in Task 1, information was symbolic, denoted by a color code, “yellow” and “blue” and as is custom reward was a positive real number. 
+The general form of the 7 tasks are depicted in Fig~\ref{fig:task_outline2}. As with our first task (Fig. ~\ref{fig:task_outline1}) they are all variations of the classic multi-armed bandit \citep{Sutton2018}. The payouts for each of the tasks are shown separately in Fig.~\ref{fig:payout}. Every trial has a set of $n$ choices. Each choice returns a “payout”, according to a predetermined probability. Payouts are information, a reward, or both. Note that, as in Task 1, information was symbolic, denoted by a color code, “yellow” and “blue” and as is custom reward was a positive real number. 
 
 The results in full for all tasks and exploration strategies are shown in Fig.~\ref{fig:summary}. All agents, including ours, used the same exploitation policy based on the temporal difference learning rule \citep{Sutton2018} (Methods).
 
@@ -371,7 +387,7 @@ The results for Task 1 were discussed above. As for Task 2, we expected all the 
 
 In Task 6 deterministic curiosity performed well, securing a second place finish. We note the Bayesian strategy  outperformed our approach. However, under the sudden non-stationarity in reward when switching tasks, the top Bayesian model became the worst on Task 7, and deterministic curiosity took the top spot. Compare Fig.~\ref{fig:summary}\textbf{e} to \textbf{f}. This is the robustness that we'd expect for any curiosity algorithm, whose main goal is to learn everything unbiased by other objectives. The environment and the objectives do change in real life, and so we must be prepared for this. Note how the other less-biased-toward-reward-value exploration models (count-based, novelty, and entropy models) also saw gains, to a lesser degree.
 
-\subsection*{Robustness}
+\subsubsection*{Robustness}
 A good choice of boredom $eta$ is critical for our definition of curiosity, and was optimized carefully. We show an example of this importance in Fig.~\ref{fig:boredom2}. On the left hand side we did a random search over 10000 possible parameters to find a value for $\eta$ that produced excellent results. (This was the same kind of search we did to achieve the results shown in Fig. ~\ref{fig:summary}. On the right hand side we choose a value for boredom we knew would lead to a poor relative result. We then ran the 100 different randomly generated simulations which gives us the results seen in Fig.~\ref{fig:boredom2}). 
 
 Carefully optimized boredom converged far more quickly (Fig.~\ref{fig:boredom2}a-b), generating more reward over time (Fig.~\ref{fig:boredom2}c-d), and showed far more in consistency during exploration (Fig.~\ref{fig:boredom2}e-f). 
