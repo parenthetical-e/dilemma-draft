@@ -142,21 +142,20 @@ In practice here we will not work with the gradient, but will use a discrete tim
 \end{figure}
 
 \subsubsection*{Bellman optimal information collection}
-The common way to arrive at Bellman solution is to assume a Markov decision space. This is problem for our defition of memory, which we assume has a natural long-term path dependence. This breaks the Markov assumption, and its neeeded claim of optimal substructure. To get around this we proved that exact forgetting of the last observation is another way to achieve optimal substructure, and so to derive a Bellman solution.
+The common way to arrive at Bellman solution is to assume a Markov decision space. This is problem for our defition of memory, which we assume has a natural long-term path dependence. This breaks the Markov assumption, and its neeeded claim of optimal substructure. To get around this we proved that exact forgetting of the last observation is another way to achieve optimal substructure, and so to derive a Bellman solution. In the theorem below which shows the optimal substructure of $\mathbf{M}$ we implicitly assume that $\mathbf(X}=\mathbf{S}$, $\mathbf{A}$, $f$, and $\Lambda$ are given, and that $\Lambda$ is deterministic, 
 
- % TODO - SUBSTRUCT THEOREM HERE
+\begin{definition}[Optimal substructure] \label{theorem:opt_sub} 
+   If $V^*_{\pi_{\hat E}}$ is the optimal information value given by policy $\pi_{\hat E}$, a memory $\mathbf{M}_t$ has optimal substructure if the last observation $X$ can be removed from $\mathbf{M}$, by $\mathbf{M-1}_{t} = f^{-1}(\mathbf{X}, \mathbf{M}_t)$ such that the resulting value $V^*_{t-1} = V^*_{t} - E_{t}$ is also optimal. 
+\end{definition}
 
-Given an arbitrary starting value $E_0 > 0$, the best solution to maximizing $\hat E$ is given by Eq.~\ref{eq:V_E_bellman}. A full derivation for this fact is provided in the Appendix. 
+Given an arbitrary starting value $E_0 > 0$, the best solution to maximizing $\hat E$ is can be given by a Bellman equation (Eq.~\ref{eq:bellman_iter_E}).
 
-% TODO - need the full expansion....
-% DO it in Grad form....
-
-\begin{equation}
-	\label{eq:V_E_bellman} 
-	V_E^{*}(\mathbf{X}) = \argmax_{\mathbf{A}} \Big [ E_0 + V_E(\mathbf{X}_1) \Big ]
+\begin{equation} 
+	\label{eq:bellman_iter_E}
+	V^*_{\hat E}(\mathbf{S}) = \argmax_{\mathbf{A} \in \mathbb{A}} \Big [ \hat E_{t}  + V^*_{\hat E}(\Lambda(\mathbf{S},\mathbf{A})) \Big ]
 \end{equation}
 
-As long learning about the different observations $\mathbf{X}$ is independent, and as long as learning continues until steady-state, defined as $E_t < \eta$, there are many equally good solutions. Under these conditions we can simplify Eq. \ref{eq:V_E_bellman} further, giving Eq. \ref{eq:EE}. 
+As long learning about the different observations $\mathbf{X}$ is independent, and as long as learning continues until steady-state, defined as $E_t < \eta$, there are many equally good solutions to the information collection problem above. Under these conditions we can therefore simplify Eq. \ref{eq:bellman_iter_E} further, giving Eq. \ref{eq:EE}. 
 
 \begin{equation}
 	\label{eq:EE} 
@@ -168,6 +167,8 @@ The central failure mode of curiosity is what we'll call minutia, defined as tho
 
 To limit curiosity we introduction a penalty term, $\eta$ which we treat as synomoous with boredom. We consider boredom an adaptive trait, in other words. Others have considered boredom arguing it is a useful way to motivate aversive tasks \citep{Bench2013}, or curiosity \cite{Loewenstein1994}. We take a slightly different view. We treat boredom as a tunable free parameter, $\eta \ge 0$ and a means to ignore marginal value by requiring curious exploration to stop once $E \le \eta$. 
 
+% TODO - talk about explore and V estimates as central challenges...
+% TODO - talk about pi_R assumptions - deterministic... MCTS is ok... probably. Smooth degradation of optimality in practice.
 
 \subsubsection*{Optimal exploration}
 Having a policy $\pi_E^*$ that optomally maximizes $\hat E$ does not necessarily ensure that exploration is of good quality. We think it is reasonable to call an exploration good if it meets the criteria below. 
@@ -219,7 +220,7 @@ If reward and information are equally important, and curiosity is sufficient, ho
 \subsubsection*{A win-stay, lose-switch solution}
 A similar dual value optimization problem to Eq.~\ref{eq:bellman_seq_ER} was posed, solved, with its regret bounded, by Robbins \cite{Robbins1952} in his derivation of the win-stay lose-swtich rule. This WLSL approach has since proven uesful in decision making and reinforcement learning \cite{Estes1994TowardAS,Worthy2014}, Bayesian sampling \cite{Bonawitz2014}, and especially in game theory \cite{Nowak1993}. We also put it to use here. 
 
-We have come to think about our two optimal value policies $\pi_R$ and $\pi_{\hat E}$ as two ``players'' in game for behavioral control of an animal's moment-by-moment actions \cite{Estes1994TowardAS}. The simplest solution to this game, in terms computational complexity, is a WSLS rule. We denote this rule as $\Pi_\pi$, and define it here by a set of inequalities,
+We have come to think about our two optimal value policies $\pi_R$ and $\pi_{\hat E}$ as two ``players'' in game for behavioral control of an animal's moment-by-moment actions \cite{Estes1994TowardAS}. The simplest solution to this game, in terms computational complexity, is a WSLS rule. We denote this rule as $\Pi_\pi$, and define it here by the inequalities below. 
 
 \begin{equation} 
     \label{eq:pipi}
@@ -232,7 +233,9 @@ We have come to think about our two optimal value policies $\pi_R$ and $\pi_{\ha
     \end{split}
 \end{equation}
 
-Here $eta$ is the boredom tern we defined earlier. We also introduce the reward bias term $\rho$, where $\rho > \eta$. This bias ensures no ties can occur, and that as $\hat E$ decreases to 0, as it must, the default policy is reward collection. That is, by $\pi_R$.
+We assume no matter which policy is in control in Eq.~\ref{eq:pipi}, each policy can learn from (be updated using) the other policies actions, and observations. That is, while the two policies compete for control, they learn from each other in a cooperative fashion.
+
+Here $\eta$ is the boredom tern we defined earlier. We also introduce the reward bias term $\rho$, where $\rho > \eta$. This bias ensures no ties can occur, and that as $\hat E$ decreases to 0, as it must, the default policy is reward collection. That is, by $\pi_R$.
 
 In Eq.~\ref{eq:pipi} we compare reward $R$ and information value $\hat E$ but have not made sure they have same ``units'', or are otherwise comparible. We sidestep this isssue by limiting the probability of having zero reward to be, itself, non-zero. That is, $p(R_t=0) > 0$. We also limit $E_0$, the first set of values, to be positive and non-zero when used with boredom, $(E_0 - \eta) > 0$. These constraints ensure complete ``good'' exploration (defined above),which in turn ensures optimal reward learning is possible irrespitive of the reltative scales of $R$ and $\hat E$.
 
@@ -257,9 +260,10 @@ The WSLS rule in Eq~\ref{eq:pipi} when applied to exploration-exploitation probl
 	When either $\pi_{\hat E}$ or $\pi_R$ is in control under $\Pi_{\pi}$, all actions are zero regret in terms of $V_{\hat{E}R}$. That is, $\sum_{k=0}^{T} G = 0$.
 \end{theorem}
 
-In each of theses Theoreums we assume our definitions for $\mathbf{X}$, $\mathbf{A}$, $\mathbf{M}$, $f$, $\Lambda$, and $\Pi_{\pi}$ are implicitly given, and a finite horizon $T$. Proofs for Theorems~\ref{th:no_regret_E} and~\ref{th:no_regret_E} follow from both reinforcement learning and our definition of information optimization having a Bellman optimality. The proof for the optimality of $V_{\hat{E}R}$ (Th~\ref{th:no_regret_ER}) in provided in the Appendix. The intuition for this proof is simple that a greedy algorithm made over two Bellman solutions is itself a Bellman solution.
+In each of theses Theorems we assume our definitions for $\mathbf{X}$, $\mathbf{A}$, $\mathbf{M}$, $f$, $\Lambda$, and $\Pi_{\pi}$ are implicitly given, and a finite horizon $T$. Proofs for Theorems~\ref{th:no_regret_E} and~\ref{th:no_regret_E} follow from both reinforcement learning and our definition of information optimization having a Bellman optimality. The proof for the optimality of $V_{\hat{E}R}$ (Th~\ref{th:no_regret_ER}) in provided in the Appendix. The intuition for this proof is simple that a greedy algorithm made over two Bellman solutions is itself a Bellman solution.
 
 In Eq.~\ref{eq:pipi} we compare reward $R$ and information value $\hat E$ but have not ensured they have same ``units'', or are comparible valuables. We sidestep this isssue by limiting the probability of having zero reward to be, itself, non-zero. That is, $p(R_t=0) > 0$. We also limit $E_0$, the first set of values, to be positive and non-zero when used with boredom, $(E_0 - \eta) \geq 0$. These constraints ensure complete ``good'' exploration (defined above) which in turn ensures optimal reward learning is possible.
+
 
 \subsubsection*{Homeostasic adjustments}
 We have been studying cases where reward value is fixed. That is, where environment reward $R$ is equal to its subjective value to the animal, $\hat R$. In natural behavior though the motivational value of reward often declines as the animal reaches satiety \citep{Keramati2014,Juechems2019,Munch2020}. This is called reward homeostatsis. Fortunately, it has been shown a reward collection policy designed for one style will work for the other \citep{Keramati2014}. However to use a form similiar to Eq. \ref{eq:pipi} for the dilemmaa under homeostatic reward value, we need to make one modification. This is shown in Eq.~\ref{eq:pipi_h}. 
