@@ -9,10 +9,16 @@ copy_bib:
 # Compile the paper into pdf
 # or clean up a compilations
 tex:
-	pdflatex -interaction=nonstopmode $(DOCNAME).tex
+	pdflatex $(DOCNAME).tex
 	bibtex $(DOCNAME).aux
-	pdflatex -interaction=nonstopmode $(DOCNAME).tex
-	pdflatex -interaction=nonstopmode $(DOCNAME).tex
+	pdflatex $(DOCNAME).tex
+	pdflatex $(DOCNAME).tex
+
+# tex:
+# 	pdflatex -interaction=nonstopmode $(DOCNAME).tex
+# 	bibtex $(DOCNAME).aux
+# 	pdflatex -interaction=nonstopmode $(DOCNAME).tex
+# 	pdflatex -interaction=nonstopmode $(DOCNAME).tex
 	
 tex2:
 	latexmk -interaction=nonstopmode $(DOCNAME).tex

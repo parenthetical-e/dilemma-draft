@@ -16,13 +16,13 @@ This opaque term of optimal substructure can be intuitivily understood by lookin
 
 In Markov spaces there are a set of states $(S_0, S_1, \ldots)$, where the transition to the next $S_t$ depends only on the previous state $S_{t-1}$. This limit means that if we were to optimize over these states, as in reinforcement learning, we know that we can treat each transition as its own ``subproblem'', and ignore the history's $(S_0, S_1, \ldots)$ effect on value, and therefore the overall situation has ``optimal substructure''.
 
-The problem for our defintion of information value is it relies on memory which is necessarily composed of many past observations, in many orders, and so it cannot be a Markov space. So if we wish to use the Bellman equation, we need to find another way to establish optimal substructure. This is the focus of Theorem~\ref{theorem:opt_sub}. In this theorem we implicitly assume that $\mathbf(X}=\mathbf{S}$, $\mathbf{A}$, $\mathbf{M}$, $f$, and $\Lambda$ are given, and that $\Lambda$ is deterministic, 
+The problem for our defintion of information value is it relies on memory which is necessarily composed of many past observations, in many orders, and so it cannot be a Markov space. So if we wish to use the Bellman equation, we need to find another way to establish optimal substructure. This is the focus of Theorem~\ref{theorem:opt_sub}. In this theorem we implicitly assume that $\mathbf{X} = \mathbf{S}$, $\mathbf{A}$, $\mathbf{M}$, $f$, and $\Lambda$ are given, and that $\Lambda$ is deterministic, 
 
-\begin{definition}[Optimal substructure] \label{theorem:opt_sub} 
+\begin{theorem}[Optimal substructure] \label{theorem:opt_sub} 
    If $V^*_{\pi_{\hat E}}$ is the optimal information value given by policy $\pi_{\hat E}$, a memory $\mathbf{M}_t$ has optimal substructure if the last observation $X$ can be removed from $\mathbf{M}$, by $\mathbf{M-1}_{t} = f^{-1}(\mathbf{X}, \mathbf{M}_t)$ such that the resulting value $V^*_{t-1} = V^*_{t} - E_{t}$ is also optimal. 
-\end{definition}
+\end{theorem}
 \begin{proof}
-	Given a known optimal value $V^*$ given by $\pi_{\hat E}$ we assume for the sake of contradiction there also exists an alternative policy $\hat \pi_{\hat E} \neq \pi_{\hat E}$ that gives a memory $\hat \mathbf{M}_{t-1} \neq \mathbf{M}_{t-1}$ and for which $\hat V^*_{t-1} > V^*_{t-1}$. 
+	Given a known optimal value $V^*$ given by $\pi_{\hat E}$ we assume for the sake of contradiction there also exists an alternative policy $\hat \pi_{\hat E} \neq \pi_{\hat E}$ that gives a memory $\hat{\mathbf{M}}_{t-1} \neq \mathbf{M}_{t-1}$ and for which $\hat V^*_{t-1} > V^*_{t-1}$. 
 	
 	To recover the known optimal memory $\mathbf{M}_t$ we lift $\hat{\mathbf{M}}_{t-1}$ to $\mathbf{M}_t = f(\hat{\mathbf{M}}_{t-1}, \mathbf{X}_t)$. This implies $\hat V^* > V^*$ which in turn contradicts the purported original optimality of $V^*$ and therefore $\hat \pi_{\hat E}$.
 \end{proof}
@@ -40,7 +40,7 @@ We aim to find a series of actions $(\mathbf{A}_1, \mathbf{A}_2, ..\mathbf{A}_T)
     An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. \cite{Bellmann1954}
 \end{quote}
 
-Mathematically Bellman's principle allows us to translate the full problem, $V^* = \argmaX_{\pi} \sum_T r_1, r_2, ..., r_{T}$ to a recursive one. Having already proven the optimal substructure of $\mathbf{M}$, and given an arbitrary starting value $E_0$, the Bellman solution to curiosity optimization of $\hat E$ is therefore given by,
+Mathematically Bellman's principle allows us to translate the full problem, $V^* = \argmax_{\pi} \sum_T \hat E_1, \hat E_2, ..., \hat E_{T}$ to a recursive one. Having already proven the optimal substructure of $\mathbf{M}$, and given an arbitrary starting value $E_0$, the Bellman solution to curiosity optimization of $\hat E$ is therefore given by,
 
 \begin{equation} 
 	\label{eq:bellman_iter_E_app}

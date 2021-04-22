@@ -139,11 +139,11 @@ In practice here we will not work with the gradient, but will use a discrete tim
 \subsubsection*{Bellman optimal information collection}
 The common way to arrive at Bellman solution is to assume a Markov decision space. This is a problem for our definition of memory, which we assume has a natural long-term path dependence. This breaks the Markov assumption, and it's needed claim of optimal substructure. To get around this we proved that exact forgetting of the last observation is another way to achieve optimal substructure, and so to derive a Bellman solution.
 
-In the theorem below which shows the optimal substructure of $\mathbf{M}$ we implicitly assume that $\mathbf(X}=\mathbf{S}$, $\mathbf{A}$, $f$, and $\Lambda$ are given, and that $\Lambda$ is deterministic, 
+In the theorem below which shows the optimal substructure of $\mathbf{M}$ we implicitly assume that $\mathbf{X} = \mathbf{S}$, $\mathbf{A}$, $f$, and $\Lambda$ are given, and that $\Lambda$ is deterministic, 
 
-\begin{definition}[Optimal substructure] \label{theorem:opt_sub} 
+\begin{theorem}[Optimal substructure] \label{theorem:opt_sub} 
    If $V^*_{\pi_{\hat E}}$ is the optimal information value given by policy $\pi_{\hat E}$, a memory $\mathbf{M}_t$ has optimal substructure if the last observation $X$ can be removed from $\mathbf{M}$, by $\mathbf{M-1}_{t} = f^{-1}(\mathbf{X}, \mathbf{M}_t)$ such that the resulting value $V^*_{t-1} = V^*_{t} - E_{t}$ is also optimal. 
-\end{definition}
+\end{theorem}
 
 Given an arbitrary starting value $E_0 > 0$, the best solution to maximizing $\hat E$ is can be given by a Bellman equation (Eq.~\ref{eq:bellman_iter_E}).
 
@@ -288,15 +288,13 @@ We confirm and illustrate this result using an example of a simple information f
 The results of this simple information seeking task are shown in Figure~\ref{fig:curiosity1}. Deterministic curiosity in this task generated more information value, in less time, and with zero regret when compared against a stochastic agent using more directed random search. As our work here predicts, noise only made the search happen slower and lead to regret. Besides offering a concrete example, performance in Task 1 is a first step in showing that even though $\pi_E$'s optimality is proven for a deterministic environment, it can perform well in other settings.
 
 \begin{figure}
-	\begin{fullwidth}
+
 	\includegraphics[width=0.7\linewidth]{img/task_outline1.pdf} 
 	\caption{A simple four choice information foraging task. The information in this task is a yellow or blue stimulus, which can change from trial to trial. A good learner in this task is one who tries to learn the probabilities of all the symbols in each of the four choices. The more random the stimuli are in a choice, the more potential information/entropy there is to learn. \textit{Note}: the information payout structure is shown below (Fig.~\ref{fig:payout}a}).
 	\label{fig:task_outline1} 
-	\end{fullwidth}
 \end{figure}
 
 \begin{figure}
-	\begin{fullwidth}
 	\includegraphics[width=1.0\linewidth]{img/curiosity1.pdf} 
 	\caption{Comparing deterministic versus stochastic variations of the same curiosity algorithm, in a simple information foraging task (Task 1). Deterministic results are shown in the left column, and stochastic are shown in the right. The hyperparameters for both models were found by random search, which is described in the Methods.
 	\textbf{a-b}. Examples of choice behavior.
@@ -307,7 +305,6 @@ The results of this simple information seeking task are shown in Figure~\ref{fig
 	\textbf{g}. Number of steps it took to reach the boredom threshold $eta$. Smaller values imply a faster search.
 	}
 	\label{fig:curiosity1} 
-	\end{fullwidth}
 \end{figure}
 
 
@@ -319,11 +316,9 @@ The general form of the 7 tasks are depicted in Fig~\ref{fig:task_outline2}. As 
 The results in full for all tasks and exploration strategies are shown in Fig.~\ref{fig:summary}. All agents, including ours, used the same exploitation policy based on the temporal difference learning rule \cite{Sutton2018} (Methods).
 
 \begin{figure}
-	\begin{fullwidth}
 	\includegraphics[width=0.7\linewidth]{img/task_outline2.pdf} 
 	\caption{A 4 choice reward collection task. The reward is numerical value, here a 1 or 0. A good learner in this task is one who collects the most rewards. The task depicted here matches that in Fig~\ref{fig:payout}b. Every other reward collection task we study has the same basic form, only the number of choices increases and the reward spaces are more complex.}
 	\label{fig:task_outline2} 
-	\end{fullwidth}
 \end{figure}
 
 \begin{SCfigure*}[\sidecaptionrelwidth][t]
@@ -382,7 +377,7 @@ The results in full for all tasks and exploration strategies are shown in Fig.~\
 
 \begin{SCfigure*}[\sidecaptionrelwidth][t]
     \label{fig:exploration} 
-	\includegraphics[width=11.4cm]{img/exploration1.pdf}}
+	\includegraphics[width=11.4cm]{img/exploration1.pdf}
 	\caption{Examples of exploration strategies (Task 1). Here we simulated different sets of randomly chosen hyper-parameters on the same task, for all agents. We take the view here that each parameter choice acts akins to a unique ``animal'' \cite{Prescott2006}. So this figure estimates, to some degree, the degree and kind of variability we might expect in a natural experiment. 
   	}
 \end{SCfigure*}
