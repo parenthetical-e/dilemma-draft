@@ -344,19 +344,19 @@ The results in full for all tasks and exploration strategies are shown in Fig.~\
 \begin{table}[]
 	\caption{Exploration strategies.}
 	\label{tab:agents}
-	\begin{tabular}{|l|l|l|}
+	\begin{tabular}{|p{2cm}|p{2cm}|p{3cm}|}
 	\hline
 	\textbf{Name} & \textbf{Class} & \textbf{Exploration strategy} \\ \hline
 	Curiosity & Deterministic & Maximize information value \\ \hline
-	Random/Greedy & Random & \begin{tabular}[c]{@{}l@{}}Alternates between random exploration \\ and greedy with probability $\epsilon$.\end{tabular} \\ \hline
-	Decay/Greedy & Random & \begin{tabular}[c]{@{}l@{}}The $\epsilon$ parameter \\ decays with a half-life $\tau$\end{tabular} \\ \hline
+	Random/Greedy & Random & Alternates between random exploration and greedy with probability $\epsilon$. \\ \hline
+	Decay/Greedy & Random & The $\epsilon$ parameter decays with a half-life \\ \hline
 	Random & Random & Pure random exploration \\ \hline
-	Reward & Extrinsic & Softmax sampling of reward value \\ \hline
-	Bayesian & Extrinsic + Intrinsic & Sampling of reward value + information value \\ \hline
-	Novelty & Extrinsic + Intrinsic & Sampling of reward value + novelty signal \\ \hline
-	Entropy & Extrinsic + Intrinsic & Sampling of reward value + action entropy \\ \hline
-	Count (EB) & Extrinsic + Intrinsic & Sampling of reward value + visit counts \\ \hline
-	Count (UCB) & Extrinsic + Intrinsic & Sampling of reward value + visit counts \\ \hline
+	Reward & Directed & Softmax sampling of reward value \\ \hline
+	Bayesian & Directed & Softmax sampling of reward value + information value \\ \hline
+	Novelty & Directed & Softmax sampling of reward value + novelty signal \\ \hline
+	Entropy & Directed & Softmax sampling of reward value + action entropy \\ \hline
+	Count (EB) & Directed & Softmax sampling of reward value + visit counts \\ \hline
+	Count (UCB) & Directed & Softmax sampling of reward value + visit counts \\ \hline
 	\end{tabular}
 \end{table}
 
