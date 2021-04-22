@@ -14,14 +14,14 @@ tex:
 	pdflatex $(DOCNAME).tex
 	pdflatex $(DOCNAME).tex
 
-# tex:
-# 	pdflatex -interaction=nonstopmode $(DOCNAME).tex
-# 	bibtex $(DOCNAME).aux
-# 	pdflatex -interaction=nonstopmode $(DOCNAME).tex
-# 	pdflatex -interaction=nonstopmode $(DOCNAME).tex
+tex_nonstopmode:
+	pdflatex -interaction=nonstopmode $(DOCNAME).tex
+	bibtex $(DOCNAME).aux
+	pdflatex -interaction=nonstopmode $(DOCNAME).tex
+	pdflatex -interaction=nonstopmode $(DOCNAME).tex
 	
 tex2:
-	latexmk -interaction=nonstopmode $(DOCNAME).tex
+	latexmk $(DOCNAME).tex
 
 clean_tex:
 	# Spare the generate pdf...
