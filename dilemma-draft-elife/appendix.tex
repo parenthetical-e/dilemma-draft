@@ -9,86 +9,50 @@
 \setcounter{theorem}{0}
 
 % --------------------------------------------------------------------------
-\begin{featurebox}
-	\caption{Norms.}
-	\label{box:norm}
-	A \textbf{norm} is a mathematical way to measure the overall size or extent of an ``object'' in a space. The object we are concerned with is a mathematical object with a form given by, $\Delta \mathbf{M} = f_{\mathbf{M}}(x) - \mathbf{M}$. But to define the norm let us as the first step consider a generic vector $v$. Keeping with convention will have its norm denoted by $||v||$, and defined by three properties:
-	
-	\begin{enumerate}
-	  \item $||v|| > 0$ when $v \neq 0$ and $||v|| = 0$ only if $v=0$ (point separating)
-	  \item $||k v|| = ||k||\ ||v||$ (absolute scalability)
-	  \item $||v + w|| \leq ||v|| + ||w||$ (the triangle inequality)
-	\end{enumerate}
-	
-	What does this mean for $\Delta \mathbf{M}$? A norm over a changing memory provides most the properties we require for our definition of $\hat E$. It depends only on learning (and forgetting), that dependence must be monotonic, a norm is zero only when nothing in the space/memory changes and is positive definite. These satisfy the first four properties. For the fifth, see Box \ref{box:laplacian}.
-	\medskip
-	\end{featurebox}
-	
-	\begin{featurebox}
-		\caption{The Laplacian.}
-		\label{box:laplacian}
-		Here we use $\nabla^2$ to represent the \textbf{Laplacian}, which provides the second derivative of vector valued functions, giving us the remaining property we need. (See Box \ref{box:norm} for the others). To explain why, suppose we are working with a 1- dimensional memory. In this case the Laplacian reduces to the second derivative on our memory, $\frac{d^2\mathbf{M}}{dx^2} < 0$. A negative second derivative will force the changes in memory to be decelerating, by definition. In higher dimensions of memory then, a reader can think of the Laplacian as the ``second derivative'' of vector-valued functions like $f$. That is, negative Laplacian imply decelerating by definition.
-		\medskip
-	\end{featurebox}
-	% --------------------------------------------------------------------------
+% SUB
+\subsection*{Optimal substructure in memory}
+To find an optimal value solution for $\hat E$ using the Bellman equation we must prove our memory $\mathbf{M}$ has optimal substructure. This is because the normal route, which assumes the problem rests in a Markov Space, is closed to us. By optimal substructure we mean that the process of learning in $\mathbf{M}$, and therefore maximization of $\hat E$ can be partitioned into a collection, or series of memories, each of which is itself an max value solution.
 
-	
-% TODO - use F, find a way to state E?  It is time to face the Bellmans in full
-% TODO - us E(s) valid? What to write there.
-% TODO - step by step notation check. On paper?
+This opaque term of optimal substructure can be intuitivily understood by looking in turn at another theoretical construct, Markov spaces. 
 
-\subsection*{Information value as a dynamic programming problem} To find a dynamic programming solution based on the Bellman equation (Eq~\ref{eq:}) we must prove our memory $\mathbf{M}$ has optimal substructure. This is because the normal route, which assumes the problem rests in a Markov Space, is closed to us. By optimal substructure we mean that the process of learning in $\mathbf{M}$ can be partitioned into a collection, or series of memories, each of which is itself a solution. That is, it lets us find a kind of recursive structure in memory learning, which is what we need to apply the Bellman. Proving optimal substructure also allows for simple proof by induction \citep{Roughgarden2019}, a property we will take advantage of. 
+In Markov spaces there are a set of states or observations $(x_0, x_1, ..., x_{T})$, where the transition to the next $x_t$ depends only on the previous state $x_{t-1}$. This limit means that if we were to optimize over these states, as we do in reinforcement learning, we know that we can treat each transition as its own ``subproblem'' and therefore the overall situation has ``optimal substructure''.
 
--------------------------------------------------------------------------
-\begin{featurebox}
-	\caption{Optimal substructure}
-	\label{box:substructure}
-	To use Bellman's principle of optimality (Box~\ref{box:bellman}) the problem we want to solve needs to have \textbf{optimal substructure}. This opaque term can be understood by looking in turn at another theoretical construct, Markov spaces. 
-	\\
-	In Markov spaces there are a set of states or observations $(x_0, x_1, ..., x_{T})$, where the transition to the next $x_t$ depends only on the previous state $x_{t-1}$. This limit means that if we were to optimize over these states, as we do in reinforcement learning, we know that we can treat each transition as its own ``subproblem'' and therefore the overall situation has ``optimal substructure''.
-	\\
-	In reinforcement learning the problem of reward collection is defined by fiat as happening in a Markov space \citep{Sutton2018}. The problem for curiosity is it relies on memory which is necessarily composed of many past observations, in many orders, and so it cannot be a Markov space. So if we wish to use dynamic programming to maximize $\hat E$, we need to find another way to establish optimal substructure. This is the focus of Theorem~\ref{theorem:opt_sub}.
-	\medskip
-\end{featurebox}
--------------------------------------------------------------------------
+In reinforcement learning, the problem of reward collection is defined by fiat as happening in a Markov space \citep{Sutton2018}. The problem for curiosity is it relies on memory which is necessarily composed of many past observations, in many orders, and so it cannot be a Markov space. So if we wish to use dynamic programming to maximize $\hat E$, we need to find another way to establish optimal substructure. This is the focus of Theorem~\ref{theorem:opt_sub}.
 
 \begin{theorem}[Optimal substructure] \label{theorem:opt_sub} 
-    Let $X$, $A$, $\mathbf{M}$, $f_{\mathbf{M}}$, (Def. 1), $\pi_E$ and $\delta$ be given. Assuming transition function $\delta$ is deterministic, if $V^*_{\pi_E}$ is the optimal information value given by policy $\pi_E$, a memory $\mathbf{M}_{t+1}$ has optimal substructure if the the last observation $x_t$ can be removed from $\mathbf{M}_t$, by $\mathbf{M}_{t} = f^{-1}(\mathbf{M}_{t+1}, x_t)$ such that the resulting value $V^*_{t-1} = V^*_{t} - E_{t}$ is also optimal. 
+    Let $X$, $A$, $\mathbf{M}$, $f_{\mathbf{M}}$, (Def. 1), $\pi_{\hat E}$ and $\delta$ be given. Assuming transition function $\delta$ is deterministic, if $V^*_{\pi_{\hat E}}$ is the optimal information value given by policy $\pi_{\hat E}$, a memory $\mathbf{M}_{t+1}$ has optimal substructure if the the last observation $x_t$ can be removed from $\mathbf{M}_t$, by $\mathbf{M}_{t} = f^{-1}(\mathbf{M}_{t+1}, x_t)$ such that the resulting value $V^*_{t-1} = V^*_{t} - E_{t}$ is also optimal. 
 \end{theorem}
 \begin{proof}
-	Given a known optimal value $V^*$ given by $\pi_E$ we assume for the sake of contradiction there also exists an alternative policy $\hat \pi_E \neq \pi_E$ that gives a memory $\hat M_{t-1} \neq M_{t-1}$ and for which $\hat V^*_{t-1} > V^*_{t-1}$. 
+	Given a known optimal value $V^*$ given by $\pi_{\hat E}$ we assume for the sake of contradiction there also exists an alternative policy $\hat \pi_{\hat E} \neq \pi_{\hat E}$ that gives a memory $\hat M_{t-1} \neq M_{t-1}$ and for which $\hat V^*_{t-1} > V^*_{t-1}$. 
 	
-	To recover the known optimal memory $M_t$ we lift $\hat M_{t-1}$ to $M_t = f(\hat M_{t-1}, x_t)$. This implies $\hat V^* > V^*$ which in turn contradicts the purported original optimality of $V^*$ and therefore $\hat \pi_E$.
+	To recover the known optimal memory $M_t$ we lift $\hat M_{t-1}$ to $M_t = f(\hat M_{t-1}, x_t)$. This implies $\hat V^* > V^*$ which in turn contradicts the purported original optimality of $V^*$ and therefore $\hat \pi_{\hat E}$.
 \end{proof}
 
-This proof required two things. First, it was required we extend the idea of memory. We need to introduce a mechanism for forgetting of a very particular kind. We must assume that any last learning step $f(x, \theta) \rightarrow \theta'$ can be undone by a new vector valued function $f^{-1}$, such that $f(x, \theta') \rightarrow \theta$. In other words we must assume what was last remembered, can always be forgotten. 
+This proof required two things. First, we need to a mechanism of forgetting, of a very particular kind. We assume that the last learning step $f(\mathbf{X}, \mathbf{M}) \rightarrow \mathbf{M}'$ can be undone by a new vector valued function $f^{-1}$, such that $f(\mathbf{X}, \mathbf{M'}) \rightarrow \mathbf{M}$. In other words we must assume what was last remembered, can always be exactly forgotten. Second we must also assume the environment $\Lambda$ is deterministic. 
 
-Second we must also assume the environment $\delta$ is deterministic. Determinism is consistent with the natural world, which does evolve in a deterministic way, at the scales we concerned with. This assumption is however at odds with much of reinforcement learning theory \citep{needed} and past experimental work \citep{needed}. Both tend to study stochastic environments. We'll address this discrepancy later on using numerical simulations.
+Determinism is consistent with the natural world, which does evolve in a deterministic way, at the scales we concerned with. This assumption is however at odds with much of reinforcement learning theory \citep{Sutton2018} and past experimental work. For example, \citep{Gershman2018}. Both tend to study stochastic environments. We'll addressed this discrepancy in the main text, using numerical simulations.
 
-\begin{featurebox}
-	\caption{Dynamic programming and Bellman optimality.}
-	\label{box:bellman}
-	The goal of dynamic programming is to find a series of actions $(a_1, a_2, ..a_T)$, drawn from a set $A$, that maximize each payout $(r_1, r_2, ..., r_{T})$ so the total payout received is as large as possible. If there is a policy $a = \pi(x)$ to take actions, based on a series of observations $(x_0, x_1, ..x_{T}),$, then an optimal policy $\pi^*$ will always find the maximum total value $V^* = \argmax_{A} \sum_T r_t $. The question that Bellman and dynamic programming solve then is how to make the search for finding $\pi*$ tractable. In the form above one would need to reconsider the entire sequence of actions for any one change to that sequence, leading to a combinatorial explosion. 
+
+% ------------------------------------------------------------------------
+\subsection*{Bellman optimal information collection}
+The goal of dynamic programming is to find a series of actions $(a_1, a_2, ..a_T)$, drawn from a set $A$, that maximize each payout $(r_1, r_2, ..., r_{T})$ so the total payout received is as large as possible. If there is a policy $a = \pi(x)$ to take actions, based on a series of observations $(x_0, x_1, ..x_{T}),$, then an optimal policy $\pi^*$ will always find the maximum total value $V^* = \argmax_{A} \sum_T r_t $. The question that Bellman and dynamic programming solve then is how to make the search for finding $\pi*$ tractable. In the form above one would need to reconsider the entire sequence of actions for any one change to that sequence, leading to a combinatorial explosion. 
 	
-	Bellman's insight was a way to make the problem simpler, and break it down into a small set of problems that we can solve in a tractable way without an explosion in complexity. This is his principle of optimality, which reads:
+Bellman's insight was a way to make the problem simpler, and break it down into a small set of problems that we can solve in a tractable way without an explosion in complexity. This is his principle of optimality, which reads:
 
-	\begin{quote}
-		An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. \citep{Bellmann1954}
-	\end{quote}
+\begin{quote}
+    An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. \citep{Bellmann1954}
+\end{quote}
 
-	Mathematically this allows us to translate the full problem, $V^* = \argmax_{\pi} \sum_T r_1, r_2, ..., r_{T}$ to a recursive one, which is given below. 
+Mathematically this allows us to translate the full problem, $V^* = \argmax_{\pi} \sum_T r_1, r_2, ..., r_{T}$ to a recursive one, which is given below. 
 
-	\begin{equation}
-		V^* = \argmax_{\pi} \ \Big [ r_0 + V(x_1) \ \Big ]
-	\end{equation}
-	
-	Using this new form we can find an optimal solution by moving though the sequence of action iteratively, and solving each step independently. The question which remains though is how can we ensure our problem can be broken down this way? This is addressed in Box~\ref{box:substructure}.
-	\medskip
-\end{featurebox}
-% -------------------------------------------------------------------------
+\begin{equation}
+    V^* = \argmax_{\pi} \ \Big [ r_0 + V(x_1) \ \Big ]
+\end{equation}
 
+Using this new form we can find an optimal solution by moving though the sequence of action iteratively, and solving each step independently. The question which remains though is how can we ensure our problem can be broken down this way? This is addressed in Box~\ref{box:substructure}.
 
-\subsection*{Bellman solution} Knowing the optimal substructure of $\mathbf{M}$ and given an arbitrary starting value $E_0$, the Bellman solution to curiosity optimization of $\hat E$ is given by,
+% TODO - HERE - redo and fix defs
+Knowing the optimal substructure of $\mathbf{M}$ and given an arbitrary starting value $E_0$, the Bellman solution to curiosity optimization of $\hat E$ is given by,
 
 \begin{equation}
 	\label{eq:V_E} 
@@ -135,19 +99,21 @@ In our objective the best possible value is not found by temporal summation as i
 	\end{split}
 \end{equation}
 
-\subsection*{Good exploration by curiosity optimization} 
+
+% ------------------------------------------------------------------------
+\subsection*{Optimal exploration} 
 
 Recall from the main text we consider that a good exploration should,
 
 \begin{enumerate}
-  \item Visit all available states of the environment at least once. 
-  \item Should cease only once learning about the environment has plateaued. 
-  \item Should take as few steps as possible to achieve criterion 1 and 2.
+	\item Exploration should visit all available states of the environment at least once.
+	\item Exploration should cease when learning has plateaued.
+	\item Exploration should take as few steps as possible to achieve 1 and 2.
 \end{enumerate}
 
-Limiting $\pi_E$ to a deterministic policy makes proving these three properties amounts to solving sorting problems on $\hat E$. If a state is visited by our algorithm it must have the highest value. So if every state must be visited under a deterministic greedy policy every state must, at one time or another, generate maximum value. This certain if we know that all values will begin contracting towards zero. \textit{Violations of this assumption are catastrophic}. We discuss this limit in the Discussion but note that things are not as dire as they may seem.
+Limiting $\pi_{\hat E}$ to a deterministic policy makes proving these three properties amounts to solving sorting problems on $\hat E$. That is, if a state is visited by our algorithm it must have the highest value, by definition. So if every state must be visited every state must, at one time or another, give the maximum value. This is certain to happend if we know that all values will begin contracting towards zero, in finite time. 
 
-\textbf{Definitions.} Let $Z$ be the set of all visited states, where $Z_0$ is the empty set $\{\}$ and $Z$ is built iteratively over a path $P$, such that $Z \rightarrow \{x | x \in X\ \text{and}\ x \not\in Z\}$. 
+\textbf{Definitions.} Let $\mathbb{Z}$ be the set of all visited states, where $\mathbb{Z}_0$ is the empty set $\{\}$ and $\mathbb{Z}$ is built iteratively over a path $P$, such that $\mathbb{Z} \rightarrow \{\mathbf{S} | \mathbf{S} \in \mathbb{S}\ \text{and}\ x \not\in \mathbf{Z}\}$. 
 
 To formalize the idea of ranking we take an algebraic approach. Give any three real numbers $(a,b,c)$,
 
@@ -156,8 +122,8 @@ To formalize the idea of ranking we take an algebraic approach. Give any three r
 	a > b \Leftrightarrow (a \neq b) \wedge (b \leq a) 
 \end{align}
 
-\begin{theorem}[State search: breadth] \label{theorem:Z} 
-	Given some arbitrary value $E_0$, an exploration policy governed by $\pi^*_E$ will visit all states $x \in X$ in finite number of steps $T$.
+\begin{theorem}[Complete exploration] \label{theorem:Z} 
+	Given some arbitrary value $E_0$, an exploration policy governed by $\pi^*_{\hat E}$ will visit all states $\mathbf{S} \in \mathbb{S}$ in finite number of steps $T$.
 \end{theorem}
 \begin{proof}
 	Let $\mathbf{E} = (E_1, E_2, ...)$ be ranked series of $\hat E$ values for all states $X$, such that $(E_1 \geq E_2, \geq ...)$. To swap any pair of values ($E_i \geq E_j$) so ($E_i \leq E_j$) by Eq.~\ref{eq:ineq} $E_i - c = E_j$. 
@@ -168,10 +134,11 @@ To formalize the idea of ranking we take an algebraic approach. Give any three r
 	
 	However if we wished to instead swap ($E_i \leq E_j$) so ($E_i \geq E_j$) by definition $\not \exists c; E_i + c = E_j$, as $\not \exists \int \delta \rightarrow c$. 
 	
-	To complete the proof, assume that some policy $\hat \pi_E \neq \pi^*_E$. By definition policy $\hat \pi_E$ can be any action but the maximum, leaving $k-1$ options. Eventually as $t \rightarrow T$ the only possible swap is between the max option and the $kth$, but as we have already proven this is impossible as long as Axiom 2 holds. Therefore, the policy $\hat \pi_E$ will leave at least 1 option unexplored and $S \neq Z$. 
+	To complete the proof, assume that some policy $\hat \pi_{\hat E} \neq \pi^*_E$. By definition policy $\hat \pi_{\hat E}$ can be any action but the maximum, leaving $k-1$ options. Eventually as $t \rightarrow T$ the only possible swap is between the max option and the $kth$, but as we have already proven this is impossible as long as Axiom 2 holds. Therefore, the policy $\hat \pi_{\hat E}$ will leave at least 1 option unexplored and $S \neq Z$. 
 \end{proof}
-\begin{theorem}[State search: depth] \label{theorem:convergence} 
-	An exploration policy governed by $\pi^*_E$ will only revisit states for where learning is possible.
+
+\begin{theorem}[[Efficient exploration] \label{theorem:convergence} 
+	An exploration policy governed by $\pi^*_{\hat E}$ will only revisit states for where information value is marginally useful, defined by $\hat E > \eta$.  
 \end{theorem}
 \begin{proof}
 	\textit{Recall}: Axiom 2. Each time $\pi^*_E$ visits a state $s$, so $\mathbf{M} \rightarrow \mathbf{M}'$, $F(\mathbf{M}', a_{t+dt}) < F(\mathbf{M}, a_t)$
@@ -181,9 +148,9 @@ To formalize the idea of ranking we take an algebraic approach. Give any three r
 	By induction, if $\pi^*E$ will visit all $x \in X$ in $T$ trials, it will revisit them at most $2T$, therefore as $T \rightarrow \infty$, $E \rightarrow \eta$. 
 \end{proof}
 
-We assume in the above the action policy $\pi_E$ can visit all possible states in $X$. If for some reason $\pi_E$ can only visit a subset of $X$ then proofs above apply only to that subset. 
+We assume in the above the action policy $\pi_{\hat E}$ can visit all possible states in $X$. If for some reason $\pi_{\hat E}$ can only visit a subset of $X$ then proofs above apply only to that subset. 
 
-These proofs come with some fine print. $E_0$ can be any positive and finite real number, $E_0 > 0$. Different choices for $E_0$ will not change the proofs, especially their convergence. So in that sense one can chosen it in an arbitrary way. Different choices for $E_0$ can however change individual choices, and their order. This can be quite important in practice, especially when trying to describe some real data.  This choice will not change the algorithm's long-term behavior \textit{but} different choices for $E_0$ will strongly change the algorithm's short-term behavior. This can be quite important in practice. 
+These proofs come with some fine print, for practical work. $E_0$ can be any positive and finite real number, $E_0 > 0$. Different choices for $E_0$ will not change the proofs, especially their convergence. So in that sense one can chosen it in an arbitrary way. Different choices for $E_0$ can however change individual choices, and their order. This can be quite important in practice, especially when trying to describe some real data.  
 
 \subsection*{Optimality of $\pi_{\pi}$} \label{sec:opt_pipi} 
 Recall that in the main text we introduce the equation below as a candidate with zero regret solution to the exploration-exploitation dilemma.
@@ -209,24 +176,30 @@ In the following section we prove two things about the optimality of $\pi_\pi$. 
 
 In proving this optimality of $\pi_{\pi}$ we limit the probability of a positive reward to less than one, denoted by $p(R_t = 1) < 1$. Without this constraint the reward policy $\pi_R$ would always dominate $\pi_{\pi}$ when rewards are certain. While this might be useful in some circumstances, from the point of view $\pi_E$ it is extremely suboptimal. The model would never explore. Limiting $p(R_t = 1) < 1$ is a reasonable constraint, as rewards in the real world are rarely certain. A more naturalistic way to handle this edge case is to introduce reward satiety, or a model physiological homeostasis \citep{Keramati2014,Juechems2019}.
 
-\subsubsection*{Optimal scheduling for dual value learning problems}
 In classic scheduling problems the value of any job is known ahead of time \citep{Bellmann1954,Roughgarden2019}. In our setting, this is not true. Reward value is generated by the environment, \textit{after} taking an action. In a similar vein, information value can only be calculated \textit{after} observing a new state. Yet Eq.~\ref{eq:pipi} must make decisions \textit{before} taking an action. If we had a perfect model of the environment, then we could predict these future values accurately with model-based control. In the general case though we don't know what environment to expect, let alone having a perfect model of it. As a result, we make a worst-case assumption: the environment can arbitrarily change--bifurcate--at any time. This is a highly nonlinear dynamical system \citep{Strogatz1994}. In such systems, myopic control--using only the most recent value to predict the next value-- is known to be an robust and efficient form of control \citep{Hocker2019}. We therefore assume that last value is the best predictor of the next value, and use this assumption along with Theorem~\ref{theorem:meta} to complete a trivial proof that Eq.~\ref{eq:pipi} maximizes total value.
 
-\subsubsection*{Optimal total value}
+\subsubsection*{A win-stay, lose-switch solution}
 If we prove $\pi_{\pi}$ has optimal substructure, then using the same replacement argument \citep{Roughgarden2019} as in Theorem~\ref{theorem:meta}, a greedy policy for $\pi_\pi$ will maximize total value.
 
-\begin{theorem}[Total value maximization of $\pi_{\pi}$] \label{theorem:meta_total} 
-    \label{theorem:meta} 
-	 Let any $S$, $A$, $\mathbf{M}$, $\pi_R$, and $\delta$ be given. If $\pi_R$ is defined on a Markov Decisions, then $\pi_\pi$ is Bellman optimal and will maximize total value. 
+\begin{theorem}[No regret - mixed values]
+	\label{th:no_regret_ER}
+	When either $\pi_{\hat E}$ or $\pi_R$ is in control under $\Pi_{\pi}$, all actions are zero regret in terms of $V_{\hat{E}R}$. That is, $\sum_{k=0}^{T} G = 0$.
 \end{theorem}
-\begin{proof}
-    We assume Reinforcement learning algorithms are embedded in Markov Decisions space, which by definition has the same decomposition properties as that found in optimal substructure.
+
+% HERE- TODO - this should be a simple substitution proof.
+
+% \begin{theorem}[Total value maximization of $\pi_{\pi}$] \label{theorem:meta_total} 
+%     \label{theorem:meta} 
+% 	 Let any $S$, $A$, $\mathbf{M}$, $\pi_R$, and $\delta$ be given. If $\pi_R$ is defined on a Markov Decisions, then $\pi_\pi$ is Bellman optimal and will maximize total value. 
+% \end{theorem}
+% \begin{proof}
+%     We assume Reinforcement learning algorithms are embedded in Markov Decisions space, which by definition has the same decomposition properties as that found in optimal substructure.
     
-    \textit{Recall}: The memory $\mathbf{M}$ has optimal substructure (Theorem~\ref{theorem:opt_sub}.
+%     \textit{Recall}: The memory $\mathbf{M}$ has optimal substructure (Theorem~\ref{theorem:opt_sub}.
     
-	\textit{Recall}: The asymptotic behavior of $\pi_R$ and $\pi_E$ are independent under $\pi_\pi$ (Theorem~\ref{theorem:meta}
+% 	\textit{Recall}: The asymptotic behavior of $\pi_R$ and $\pi_E$ are independent under $\pi_\pi$ (Theorem~\ref{theorem:meta}
 	
-	\textit{Recall}: The controller $\pi_\pi$ is deterministic and greedy.
+% 	\textit{Recall}: The controller $\Pi_\pi$ is deterministic.
 	
-	If both $\pi_R$ and $\pi_E$ have optimal substructure and are independent, then $\pi_\pi$ must also have optimal substructure. If $\pi_\pi$ has optimal substructure, and is greedy-deterministic then it is Bellman optimal.
-\end{proof}
+% 	If both $\pi_R$ and $\pi_E$ have optimal substructure independently, and are independent under $\Pi_\pi$, then $\Pi_\pi$ must also have optimal substructure. If $\pi_\pi$ has optimal substructure, then it is Bellman optimal.
+% \end{proof}
