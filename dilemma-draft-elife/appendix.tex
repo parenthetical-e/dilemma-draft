@@ -27,75 +27,24 @@ The problem for our defintion of information value is it relies on memory which 
 	To recover the known optimal memory $\mathbf{M}_t$ we lift $\hat{\mathbf{M}}_{t-1}$ to $\mathbf{M}_t = f(\hat{\mathbf{M}}_{t-1}, \mathbf{X}_t)$. This implies $\hat V^* > V^*$ which in turn contradicts the purported original optimality of $V^*$ and therefore $\hat \pi_{\hat E}$.
 \end{proof}
 
-This proof required two things. First, we need to a mechanism of forgetting, of a very particular kind. We assume that the last learning step $f(\mathbf{X}, \mathbf{M}) \rightarrow \mathbf{M}'$ can be undone by a new vector valued function $f^{-1}$, such that $f(\mathbf{X}, \mathbf{M'}) \rightarrow \mathbf{M}$. In other words we must assume what was last remembered, can always be exactly forgotten. Second we must also assume the environment $\Lambda$ is deterministic. 
+This proof requires two things. First, we need to a mechanism of forgetting, of a very particular kind. We assume that the last learning step $f(\mathbf{X}, \mathbf{M}) \rightarrow \mathbf{M}'$ can be undone by a new vector valued function $f^{-1}$, such that $f(\mathbf{X}, \mathbf{M'}) \rightarrow \mathbf{M}$. In other words we must assume what was last remembered, can always be exactly forgotten. Second, we assume the environmental dynamics, given by the transition function $\Lambda$, are deterministic. 
 
-Determinism is consistent with the natural world, which does evolve in a deterministic way, at the scales we concerned with. This assumption is however at odds with much of reinforcement learning theory \citep{Sutton2018} and past experimental work. For example, \citep{Gershman2018}. Both tend to study stochastic environments. We'll addressed this discrepancy in the main text, using numerical simulations.
+Determinism is consistent with the natural world which does evolve in a deterministic way, at the scale of animal behavoir that we concerned with at least. This assumption is however at odds with much of reinforcement learning theory \citep{Sutton2018} and past experimental work. For example, \citep{Gershman2018}. Both tend to study stochastic environments. We addressed this discrepancy in the main text, using numerical simulations.
 
 
 % ------------------------------------------------------------------------
 \subsection*{Bellman optimal information collection}
-The goal of dynamic programming is to find a series of actions $(a_1, a_2, ..a_T)$, drawn from a set $A$, that maximize each payout $(r_1, r_2, ..., r_{T})$ so the total payout received is as large as possible. If there is a policy $a = \pi(x)$ to take actions, based on a series of observations $(X_0, X_1, ..X_{T}),$, then an optimal policy $\pi^*$ will always find the maximum total value $V^* = \argmaX_{A} \sum_T r_t $. The question that Bellman and dynamic programming solve then is how to make the search for finding $\pi*$ tractable. In the form above one would need to reconsider the entire sequence of actions for any one change to that sequence, leading to a combinatorial explosion. 
-	
-Bellman's insight was a way to make the problem simpler, and break it down into a small set of problems that we can solve in a tractable way without an explosion in complexity. This is his principle of optimality, which reads:
+We aim to find a series of actions $(\mathbf{A}_1, \mathbf{A}_2, ..\mathbf{A}_T)$, drawn from a set $\mathbb{A}$, that maximize each payout $(\hat E_0, \hat E_1, \ldots, \hat E_{T})$ so the total payout received is as large as possible. If there is a policy $\mathbf{A} = \pi(\mathbf{X})$ to take actions, based on a series of observations $(X_0, X_1, ..X_{T}),$, given by $\Lambda$, then an optimal policy $\pi^*$ will always find the maximum total value $V^* = \argmax_{\mathbf{A} \in \mathbb{A}} \sum_T \hat E_t $. In the form above one would need to reconsider the entire sequence of actions for any one change to that sequence, leading to a combinatorial explosion. Bellman's insight was a way to make this last problem simpler by breaking it down into a small set of subproblems that we can solve in a tractable way without an explosion in complexity. This is his principle of optimality, which reads:
 
 \begin{quote}
     An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. \citep{Bellmann1954}
 \end{quote}
 
-Mathematically this allows us to translate the full problem, $V^* = \argmaX_{\pi} \sum_T r_1, r_2, ..., r_{T}$ to a recursive one, which is given below. 
+Mathematically Bellman's principle allows us to translate the full problem, $V^* = \argmaX_{\pi} \sum_T r_1, r_2, ..., r_{T}$ to a recursive one. Having already proven the optimal substructure of $\mathbf{M}$, and given an arbitrary starting value $E_0$, the Bellman solution to curiosity optimization of $\hat E$ is therefore given by,
 
-\begin{equation}
-    V^* = \argmaX_{\pi} \ \Big [ r_0 + V(X_1) \ \Big ]
-\end{equation}
-
-Using this new form we can find an optimal solution by moving though the sequence of action iteratively, and solving each step independently. The question which remains though is how can we ensure our problem can be broken down this way? This is addressed in Box~\ref{box:substructure}.
-
-% TODO - HERE - redo and fix defs
-Knowing the optimal substructure of $\mathbf{M}$ and given an arbitrary starting value $E_0$, the Bellman solution to curiosity optimization of $\hat E$ is given by,
-
-\begin{equation}
-	\label{eq:V_E} 
-	V_E(x) = E_0 + \argmaX_a \ \Big [ E_t \Big ] \\
-\end{equation}
-
-To explain this derivation we'll begin simply with the definition of a value function and work from there. A value function $V(x)$ is defined as the best possible value of the objective for $x$. Finding a Bellman solution is discovering what actions $a$ to take to arrive at $V(x)$. Bellman's insight was to break the problem down into a series of smaller problems, leading a recursive solution. Problems that can be broken down this way have optimal substructure. The value function for a finite time horizon $T$ and some payout function $F$ is given by Eq~\ref{eq:V_F1}. It's Bellman form is given by Eq.~\ref{eq:V_F2}
-
-\begin{equation}
-	\label{eq:V_F1}
-	V(x) = \argmaX_a \Big [ \sum_T F(x, a) \Big ]
-\end{equation}
-
-\begin{equation}
-	\label{eq:V_F2}
-	V(x) = \argmaX_a \Big [ F(X_0, a_0) + V(X_1) \Big ]
-\end{equation}
-
-In reinforcement learning the value function is based on the sum of future rewards giving Eq.~\ref{eq:V_R1}-\ref{eq:V_R2},
-
-\begin{equation}
-	\label{eq:V_R1}
-	V_R(x) = \argmaX_a \Big [ \sum_T R_t \Big ]
-\end{equation}
-
-\begin{equation}
-	\label{eq:V_R2}
-	V_R(x) = \argmaX_a \Big [ R_0 + V(X_1) \Big ] \\
-\end{equation}
-
-% TODO clean this up
-In our objective the best possible value is not found by temporal summation as it is during reinforcement learning. $\hat E$ is necessarily a temporally unstable function. We expect it to vary substantially before contracting to approach 0. It's best possible value is well approximated then by only looking at the maximum value for the last time step, making our optimization myopic, that is based on only last values encountered \citep{Hocker2019}.
-
-\begin{equation}
-	\label{eq:V_E1} 
-	V_E(x) = \argmaX_a \ \Big [ E_t \Big ]
-\end{equation}
-
-\begin{equation}
-	\label{eq:V_E2} 
-	\begin{split}
-	V_E(x) &= \argmaX_a \Big [ E_0 + V(X_1) \Big ] \\
-		   &= E_0 + \argmaX_a \ \Big [ E_t \Big ] \\
-	\end{split}
+\begin{equation} 
+	\label{eq:bellman_iter_E_app}
+	V^*_{\hat E}(\mathbf{S}) = \argmax_{\mathbf{A} \in \mathbb{A}} \Big [ \hat E_{t}  + V^*_{\hat E}(\Lambda(\mathbf{S},\mathbf{A})) \Big ]
 \end{equation}
 
 
@@ -110,7 +59,7 @@ Recall from the main text we consider that a good exploration should,
 	\item Exploration should take as few steps as possible to achieve 1 and 2.
 \end{enumerate}
 
-Limiting $\pi_{\hat E}$ to a deterministic policy makes proving these three properties amounts to solving sorting problems on $\hat E$. That is, if a state is visited by our algorithm it must have the highest value, by definition. So if every state must be visited every state must, at one time or another, give the maximum value. This is certain to happend if we know that all values will begin contracting towards zero, in finite time. 
+If $\pi_{\hat E}$ to a deterministic policy this makes proving these three properties amounts to solving sorting problems on $\hat E$, and assuming $\mathbf{X} = \mathbf{S}$. That is, if a state is visited by our algorithm it must have the highest value, by definition. So if every state must be visited every state must, at one time or another, give the maximum value. This is certain to happend if we know that all values will begin contracting towards zero, in finite time. 
 
 \textbf{Definitions.} Let $\mathbb{Z}$ be the set of all visited states, where $\mathbb{Z}_0$ is the empty set $\{\}$ and $\mathbb{Z}$ is built iteratively over a path $P$, such that $\mathbb{Z} \rightarrow \{\mathbf{S} | \mathbf{S} \in \mathbb{S}\ \text{and}\ x \not\in \mathbf{Z}\}$. 
 
@@ -122,52 +71,52 @@ To formalize the idea of ranking we take an algebraic approach. Give any three r
 \end{align}
 
 \begin{theorem}[Complete exploration] \label{theorem:Z} 
-	Given some arbitrary value $E_0$, an exploration policy governed by $\pi^*_{\hat E}$ will visit all states $\mathbf{S} \in \mathbb{S}$ in finite number of steps $T$.
+	Given some arbitrary value $\hat E_0$, an exploration policy governed by $\pi_{\hat E}$ will visit all states $\mathbf{S} \in \mathbb{S}$ in finite number of steps $T$.
 \end{theorem}
 \begin{proof}
-	Let $\mathbf{E} = (E_1, E_2, ...)$ be ranked series of $\hat E$ values for all states $X$, such that $(E_1 \geq E_2, \geq ...)$. To swap any pair of values ($E_i \geq E_j$) so ($E_i \leq E_j$) by Eq.~\ref{eq:ineq} $E_i - c = E_j$. 
+	Let $\mathbf{E} = (\hat E_1, \hat E_2, ...)$ be ranked series of $\hat E$ values for all states $\mathbf{S}$, such that $(\hat E_1 \geq \hat E_2, \geq ...)$. To swap any pair of values ($\hat E_i \geq \hat E_j$) so ($\hat E_i \leq \hat E_j$) by Eq.~\ref{eq:ineq} $\hat E_i - c = \hat E_j$. 
 	
-	Therefore, again by Eq.~\ref{eq:ineq}, $\exists \int \delta E(s) \rightarrow -c$. 
+	Therefore, again by Eq.~\ref{eq:ineq}, $\exists \int \delta \hat E \rightarrow -c$. 
 	
-	\textit{Recall}: $\nabla^2 f_{\mathbf{M}}(x) < 0$ after a finite time $T$.
+	\textit{Recall}: Axiom 5 - $\nabla^2 \mathbf{M} < 0$ after a finite time $T^*$.
 	
-	However if we wished to instead swap ($E_i \leq E_j$) so ($E_i \geq E_j$) by definition $\not \exists c; E_i + c = E_j$, as $\not \exists \int \delta \rightarrow c$. 
+	However if we wished to instead swap ($\hat E_i \leq \hat E_j$) so ($\hat E_i \geq \hat E_j$) by definition $\not \exists c; \hat E_i + c = \hat E_j$, as $\not \exists \int \delta \hat E \rightarrow c$. 
 	
-	To complete the proof, assume that some policy $\hat \pi_{\hat E} \neq \pi^*_E$. By definition policy $\hat \pi_{\hat E}$ can be any action but the maximum, leaving $k-1$ options. Eventually as $t \rightarrow T$ the only possible swap is between the max option and the $kth$, but as we have already proven this is impossible as long as Axiom 2 holds. Therefore, the policy $\hat \pi_{\hat E}$ will leave at least 1 option unexplored and $S \neq Z$. 
+	To complete the proof, assume that some policy $\hat \pi_{\hat E} \neq \pi^*_E$. By definition policy $\hat \pi_{\hat E}$ can be any action but the maximum, leaving $k-1$ options. Eventually as $t \rightarrow T*$ the only possible swap is between the max option and the $kth$, but as we have already proven this is impossible as long as Axiom 5 holds. Therefore, the policy $\hat \pi_{\hat E}$ will leave at least 1 option unexplored and $S \neq Z$. 
 \end{proof}
 
 \begin{theorem}[[Efficient exploration] \label{theorem:convergence} 
-	An exploration policy governed by $\pi^*_{\hat E}$ will only revisit states for where information value is marginally useful, defined by $\hat E > \eta$.  
+	An exploration policy governed by $\pi^*_{\hat E}$ will revisit all states in exact proption to their information value.
 \end{theorem}
 \begin{proof}
-	\textit{Recall}: Axiom 2. Each time $\pi^*_E$ visits a state $s$, so $\mathbf{M} \rightarrow \mathbf{M}'$, $F(\mathbf{M}', a_{t+dt}) < F(\mathbf{M}, a_t)$
+    \textit{Recall}: Theorem~\ref{theorem:Z}.
+    \textit{Recall}: $\pi^*_E$ is a maximum value deterministic algorithm.
+	\textit{Recall}: Axiom 2. Each time $\pi^*_E$ visits a state $\mathbf{S}$, so $\mathbf{M} \rightarrow \mathbf{M}'$, and after $T^*$ it is axiomatically true $\hat{E}' < \hat E$
 	
-	In Theorem~\ref{theorem:Z} we proved only a deterministic greedy policy will visit each state in $X$ in $T$ trials.
-	
-	By induction, if $\pi^*E$ will visit all $x \in X$ in $T$ trials, it will revisit them at most $2T$, therefore as $T \rightarrow \infty$, $E \rightarrow \eta$. 
+	By induction then, if $\pi^*E$ will visit all $\mathbf{S} \in \mathbb{S}$ in $T^*$ trials, it will revisit them at most $2T^*$, therefore as $t \rightarrow \infty$, $E \rightarrow \eta$, where $eta > 0$. 
 \end{proof}
 
-We assume in the above the action policy $\pi_{\hat E}$ can visit all possible states in $X$. If for some reason $\pi_{\hat E}$ can only visit a subset of $X$ then proofs above apply only to that subset. 
+These exploration proofs come with some fine print, for practical work. $E_0$ can be any positive and finite real number, $E_0 > 0$. Different choices for $E_0$ will not change the proofs, especially their convergence. So in that sense one can chosen it in an arbitrary way. Different choices for $E_0$ can however change individual choices, and their order. This can be quite important in practice, especially when trying to describe some real data.  
 
-These proofs come with some fine print, for practical work. $E_0$ can be any positive and finite real number, $E_0 > 0$. Different choices for $E_0$ will not change the proofs, especially their convergence. So in that sense one can chosen it in an arbitrary way. Different choices for $E_0$ can however change individual choices, and their order. This can be quite important in practice, especially when trying to describe some real data.  
+% ---------------------------------------------------------------------------------
+\subsection*{Optimality of $\Pi_{\pi}$} 
+Recall that in the main text we introduce the equation below as a candidate with zero regret solution to exploration-exploitation problems, set in terms the mixed value sequence $V_{\hat{E}R}$.
 
-\subsection*{Optimality of $\pi_{\pi}$} \label{sec:opt_pipi} 
-Recall that in the main text we introduce the equation below as a candidate with zero regret solution to the exploration-exploitation dilemma.
-
-\begin{equation}
-\label{eq:pipi} 
-\pi^{\pi} = \ \Big [ \pi_E,\ \pi_R \Big ]
-\end{equation}
-
-\begin{equation}
-\label{eq:meta_greedy2} 
-	\argmaX_{\pi^{\pi}} \ \Big [ E_{t-1} - \eta,\ R_{t-1} \Big ]_{\textbf{(2, 1)}}
+\begin{equation} 
+    \label{eq:pipi_app}
+    \begin{split}
+        \Pi_{\pi} = 
+        \begin{cases}
+            \pi^*_{\hat{E}} & : \hat{E} - \eta > R + \rho \\
+            \pi_R 	& : \hat{E} - \eta < R + \rho \\
+        \end{cases}
+    \end{split}
 \end{equation}
 
 In the following section we prove two things about the optimality of $\pi_\pi$. First, if $\pi_R$ had any optimal asymptotic property for value learning before their inclusion into our scheduler, they retain that optimal property under $\pi_\pi$ when $\eta = 0$, or is otherwise sufficiently small. Second, show that if both $\pi_R$ and $\pi_E$ are greedy, and $\pi_\pi$ is greedy in its definition, then Eq~\ref{eq:pipi} is certain to maximize total value. The total value of $R$ and $\hat E$ is the exact quantity to maximize if information seeking and reward seeking are equally important, overall. This is, as the reader may recall, one of our key assumptions. Proving this optimality is analogous to the classic activity selection problem from the job scheduling literature \citep{BellmanBook,Roughgarden2019}.
 
 \begin{theorem}[$\pi_{\pi}$ is unbiased] \label{theorem:meta} 
-	 Let any $S$, $A$, $\mathbf{M}$, $\pi_R$, $\pi_E$, and $\delta$ be given. Assuming an infinite time horizon, if $\pi_E$ is optimal and $\pi_R$ is optimal, then $\pi_{\pi}$ is also optimal in the same sense as $\pi_E$ and $\pi_R$. 
+	 Let any $S$, $\mathbf{A}$, $\mathbf{M}$, $\pi_R$, $\pi_E$, and $\delta$ be given. Assuming an infinite time horizon, if $\pi_E$ is optimal and $\pi_R$ is optimal, then $\pi_{\pi}$ is also optimal in the same sense as $\pi_E$ and $\pi_R$. 
 \end{theorem}
 \begin{proof}
 	The optimality of $\pi_{\pi}$ can be seen by direct inspection. If $p(R = 0) > 0$ we are given an infinite horizon, then $\pi_E$ will have a unbounded number of trials meaning the optimally of $P^*$ holds. Likewise, $\sum E < \eta$ as $T \rightarrow \infty$, ensuring $pi_R$ will dominate $\pi_{\pi}$ therefore $\pi_R$ will asymptotically converge to optimal behavior. 
@@ -187,7 +136,7 @@ If we prove $\pi_{\pi}$ has optimal substructure, then using the same replacemen
 
 % HERE- TODO - this should be a simple substitution proof.
 
-% \begin{theorem}[Total value maximization of $\pi_{\pi}$] \label{theorem:meta_total} 
+% \begin{theorem}[Total value maximization of $\pi_{\pi}$] \label{theorem:metA_total} 
 %     \label{theorem:meta} 
 % 	 Let any $S$, $A$, $\mathbf{M}$, $\pi_R$, and $\delta$ be given. If $\pi_R$ is defined on a Markov Decisions, then $\pi_\pi$ is Bellman optimal and will maximize total value. 
 % \end{theorem}
