@@ -9,23 +9,22 @@
 \setcounter{theorem}{0}
 
 % --------------------------------------------------------------------------
-% SUB
 \subsection*{Optimal substructure in memory}
 To find an optimal value solution for $\hat E$ using the Bellman equation we must prove our memory $\mathbf{M}$ has optimal substructure. This is because the normal route, which assumes the problem rests in a Markov Space, is closed to us. By optimal substructure we mean that the process of learning in $\mathbf{M}$, and therefore maximization of $\hat E$ can be partitioned into a collection, or series of memories, each of which is itself an max value solution.
 
 This opaque term of optimal substructure can be intuitivily understood by looking in turn at another theoretical construct, Markov spaces. 
 
-In Markov spaces there are a set of states or observations $(x_0, x_1, ..., x_{T})$, where the transition to the next $x_t$ depends only on the previous state $x_{t-1}$. This limit means that if we were to optimize over these states, as we do in reinforcement learning, we know that we can treat each transition as its own ``subproblem'' and therefore the overall situation has ``optimal substructure''.
+In Markov spaces there are a set of states $(S_0, S_1, \ldots)$, where the transition to the next $S_t$ depends only on the previous state $S_{t-1}$. This limit means that if we were to optimize over these states, as in reinforcement learning, we know that we can treat each transition as its own ``subproblem'', and ignore the history's $(S_0, S_1, \ldots)$ effect on value, and therefore the overall situation has ``optimal substructure''.
 
-In reinforcement learning, the problem of reward collection is defined by fiat as happening in a Markov space \citep{Sutton2018}. The problem for curiosity is it relies on memory which is necessarily composed of many past observations, in many orders, and so it cannot be a Markov space. So if we wish to use dynamic programming to maximize $\hat E$, we need to find another way to establish optimal substructure. This is the focus of Theorem~\ref{theorem:opt_sub}.
+The problem for our defintion of information value is it relies on memory which is necessarily composed of many past observations, in many orders, and so it cannot be a Markov space. So if we wish to use the Bellman equation, we need to find another way to establish optimal substructure. This is the focus of Theorem~\ref{theorem:opt_sub}. In this theorem we implicitly assume that $\mathbf(X}=\mathbf{S}$, $\mathbf{A}$, $\mathbf{M}$, $f$, and $\Lambda$ are given, and that $\Lambda$ is deterministic, 
 
-\begin{theorem}[Optimal substructure] \label{theorem:opt_sub} 
-    Let $X$, $A$, $\mathbf{M}$, $f_{\mathbf{M}}$, (Def. 1), $\pi_{\hat E}$ and $\delta$ be given. Assuming transition function $\delta$ is deterministic, if $V^*_{\pi_{\hat E}}$ is the optimal information value given by policy $\pi_{\hat E}$, a memory $\mathbf{M}_{t+1}$ has optimal substructure if the the last observation $x_t$ can be removed from $\mathbf{M}_t$, by $\mathbf{M}_{t} = f^{-1}(\mathbf{M}_{t+1}, x_t)$ such that the resulting value $V^*_{t-1} = V^*_{t} - E_{t}$ is also optimal. 
-\end{theorem}
+\begin{definition}[Optimal substructure] \label{theorem:opt_sub} 
+   If $V^*_{\pi_{\hat E}}$ is the optimal information value given by policy $\pi_{\hat E}$, a memory $\mathbf{M}_t$ has optimal substructure if the last observation $X$ can be removed from $\mathbf{M}$, by $\mathbf{M-1}_{t} = f^{-1}(\mathbf{X}, \mathbf{M}_t)$ such that the resulting value $V^*_{t-1} = V^*_{t} - E_{t}$ is also optimal. 
+\end{definition}
 \begin{proof}
-	Given a known optimal value $V^*$ given by $\pi_{\hat E}$ we assume for the sake of contradiction there also exists an alternative policy $\hat \pi_{\hat E} \neq \pi_{\hat E}$ that gives a memory $\hat M_{t-1} \neq M_{t-1}$ and for which $\hat V^*_{t-1} > V^*_{t-1}$. 
+	Given a known optimal value $V^*$ given by $\pi_{\hat E}$ we assume for the sake of contradiction there also exists an alternative policy $\hat \pi_{\hat E} \neq \pi_{\hat E}$ that gives a memory $\hat \mathbf{M}_{t-1} \neq \mathbf{M}_{t-1}$ and for which $\hat V^*_{t-1} > V^*_{t-1}$. 
 	
-	To recover the known optimal memory $M_t$ we lift $\hat M_{t-1}$ to $M_t = f(\hat M_{t-1}, x_t)$. This implies $\hat V^* > V^*$ which in turn contradicts the purported original optimality of $V^*$ and therefore $\hat \pi_{\hat E}$.
+	To recover the known optimal memory $\mathbf{M}_t$ we lift $\hat{\mathbf{M}}_{t-1}$ to $\mathbf{M}_t = f(\hat{\mathbf{M}}_{t-1}, \mathbf{X}_t)$. This implies $\hat V^* > V^*$ which in turn contradicts the purported original optimality of $V^*$ and therefore $\hat \pi_{\hat E}$.
 \end{proof}
 
 This proof required two things. First, we need to a mechanism of forgetting, of a very particular kind. We assume that the last learning step $f(\mathbf{X}, \mathbf{M}) \rightarrow \mathbf{M}'$ can be undone by a new vector valued function $f^{-1}$, such that $f(\mathbf{X}, \mathbf{M'}) \rightarrow \mathbf{M}$. In other words we must assume what was last remembered, can always be exactly forgotten. Second we must also assume the environment $\Lambda$ is deterministic. 
@@ -35,7 +34,7 @@ Determinism is consistent with the natural world, which does evolve in a determi
 
 % ------------------------------------------------------------------------
 \subsection*{Bellman optimal information collection}
-The goal of dynamic programming is to find a series of actions $(a_1, a_2, ..a_T)$, drawn from a set $A$, that maximize each payout $(r_1, r_2, ..., r_{T})$ so the total payout received is as large as possible. If there is a policy $a = \pi(x)$ to take actions, based on a series of observations $(x_0, x_1, ..x_{T}),$, then an optimal policy $\pi^*$ will always find the maximum total value $V^* = \argmax_{A} \sum_T r_t $. The question that Bellman and dynamic programming solve then is how to make the search for finding $\pi*$ tractable. In the form above one would need to reconsider the entire sequence of actions for any one change to that sequence, leading to a combinatorial explosion. 
+The goal of dynamic programming is to find a series of actions $(a_1, a_2, ..a_T)$, drawn from a set $A$, that maximize each payout $(r_1, r_2, ..., r_{T})$ so the total payout received is as large as possible. If there is a policy $a = \pi(x)$ to take actions, based on a series of observations $(X_0, X_1, ..X_{T}),$, then an optimal policy $\pi^*$ will always find the maximum total value $V^* = \argmaX_{A} \sum_T r_t $. The question that Bellman and dynamic programming solve then is how to make the search for finding $\pi*$ tractable. In the form above one would need to reconsider the entire sequence of actions for any one change to that sequence, leading to a combinatorial explosion. 
 	
 Bellman's insight was a way to make the problem simpler, and break it down into a small set of problems that we can solve in a tractable way without an explosion in complexity. This is his principle of optimality, which reads:
 
@@ -43,10 +42,10 @@ Bellman's insight was a way to make the problem simpler, and break it down into 
     An optimal policy has the property that whatever the initial state and initial decision are, the remaining decisions must constitute an optimal policy with regard to the state resulting from the first decision. \citep{Bellmann1954}
 \end{quote}
 
-Mathematically this allows us to translate the full problem, $V^* = \argmax_{\pi} \sum_T r_1, r_2, ..., r_{T}$ to a recursive one, which is given below. 
+Mathematically this allows us to translate the full problem, $V^* = \argmaX_{\pi} \sum_T r_1, r_2, ..., r_{T}$ to a recursive one, which is given below. 
 
 \begin{equation}
-    V^* = \argmax_{\pi} \ \Big [ r_0 + V(x_1) \ \Big ]
+    V^* = \argmaX_{\pi} \ \Big [ r_0 + V(X_1) \ \Big ]
 \end{equation}
 
 Using this new form we can find an optimal solution by moving though the sequence of action iteratively, and solving each step independently. The question which remains though is how can we ensure our problem can be broken down this way? This is addressed in Box~\ref{box:substructure}.
@@ -56,31 +55,31 @@ Knowing the optimal substructure of $\mathbf{M}$ and given an arbitrary starting
 
 \begin{equation}
 	\label{eq:V_E} 
-	V_E(x) = E_0 + \argmax_a \ \Big [ E_t \Big ] \\
+	V_E(x) = E_0 + \argmaX_a \ \Big [ E_t \Big ] \\
 \end{equation}
 
 To explain this derivation we'll begin simply with the definition of a value function and work from there. A value function $V(x)$ is defined as the best possible value of the objective for $x$. Finding a Bellman solution is discovering what actions $a$ to take to arrive at $V(x)$. Bellman's insight was to break the problem down into a series of smaller problems, leading a recursive solution. Problems that can be broken down this way have optimal substructure. The value function for a finite time horizon $T$ and some payout function $F$ is given by Eq~\ref{eq:V_F1}. It's Bellman form is given by Eq.~\ref{eq:V_F2}
 
 \begin{equation}
 	\label{eq:V_F1}
-	V(x) = \argmax_a \Big [ \sum_T F(x, a) \Big ]
+	V(x) = \argmaX_a \Big [ \sum_T F(x, a) \Big ]
 \end{equation}
 
 \begin{equation}
 	\label{eq:V_F2}
-	V(x) = \argmax_a \Big [ F(x_0, a_0) + V(x_1) \Big ]
+	V(x) = \argmaX_a \Big [ F(X_0, a_0) + V(X_1) \Big ]
 \end{equation}
 
 In reinforcement learning the value function is based on the sum of future rewards giving Eq.~\ref{eq:V_R1}-\ref{eq:V_R2},
 
 \begin{equation}
 	\label{eq:V_R1}
-	V_R(x) = \argmax_a \Big [ \sum_T R_t \Big ]
+	V_R(x) = \argmaX_a \Big [ \sum_T R_t \Big ]
 \end{equation}
 
 \begin{equation}
 	\label{eq:V_R2}
-	V_R(x) = \argmax_a \Big [ R_0 + V(x_1) \Big ] \\
+	V_R(x) = \argmaX_a \Big [ R_0 + V(X_1) \Big ] \\
 \end{equation}
 
 % TODO clean this up
@@ -88,14 +87,14 @@ In our objective the best possible value is not found by temporal summation as i
 
 \begin{equation}
 	\label{eq:V_E1} 
-	V_E(x) = \argmax_a \ \Big [ E_t \Big ]
+	V_E(x) = \argmaX_a \ \Big [ E_t \Big ]
 \end{equation}
 
 \begin{equation}
 	\label{eq:V_E2} 
 	\begin{split}
-	V_E(x) &= \argmax_a \Big [ E_0 + V(x_1) \Big ] \\
-		   &= E_0 + \argmax_a \ \Big [ E_t \Big ] \\
+	V_E(x) &= \argmaX_a \Big [ E_0 + V(X_1) \Big ] \\
+		   &= E_0 + \argmaX_a \ \Big [ E_t \Big ] \\
 	\end{split}
 \end{equation}
 
@@ -162,7 +161,7 @@ Recall that in the main text we introduce the equation below as a candidate with
 
 \begin{equation}
 \label{eq:meta_greedy2} 
-	\argmax_{\pi^{\pi}} \ \Big [ E_{t-1} - \eta,\ R_{t-1} \Big ]_{\textbf{(2, 1)}}
+	\argmaX_{\pi^{\pi}} \ \Big [ E_{t-1} - \eta,\ R_{t-1} \Big ]_{\textbf{(2, 1)}}
 \end{equation}
 
 In the following section we prove two things about the optimality of $\pi_\pi$. First, if $\pi_R$ had any optimal asymptotic property for value learning before their inclusion into our scheduler, they retain that optimal property under $\pi_\pi$ when $\eta = 0$, or is otherwise sufficiently small. Second, show that if both $\pi_R$ and $\pi_E$ are greedy, and $\pi_\pi$ is greedy in its definition, then Eq~\ref{eq:pipi} is certain to maximize total value. The total value of $R$ and $\hat E$ is the exact quantity to maximize if information seeking and reward seeking are equally important, overall. This is, as the reader may recall, one of our key assumptions. Proving this optimality is analogous to the classic activity selection problem from the job scheduling literature \citep{BellmanBook,Roughgarden2019}.
