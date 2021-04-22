@@ -12,14 +12,14 @@ When the enviroment is unknowen, to maximize reward an animal must tradeoff betw
 The agent must try a variety of actions and progressively favor those that appear to be best'' \cite{Sutton2018}. 
 \end{quote}
 
-Later on we will suggest two fairly radical changes to this standard formula. Don’t stop searching progressively, do so suddenly. Explore only for learnings sake, out of curiosity \citep{Kidd2015}. 
+(Later on we will suggest two fairly radical changes to this standard formula. Don’t stop searching progressively, do so suddenly. Explore only for learnings sake, out of curiosity \citep{Kidd2015}.)
 
 
 \subsubsection*{Markovian formalities}
 Our Markov decision process (MDP) consists of states of real valued vectors $\mathbf{S}$ from a finite set $\mathcal{S}$ of size $n$. As are actions, $\mathbf{A}$ from a finite set $\mathcal{A}$ of size $k$. Rewards are non-negative real numbers, $R$. Transitions from state to state is handled by the transition function $\Lambda(\mathbf{S},\mathbf{A})$. In our mathmatics we assume $\Lambda$ is a deterministic function of its inputs. In our simulations we assume it is a stochastic function.
 
 
-\subsubsection*{Optimal reward}
+\subsubsection*{Bellman optimal reward collection}
 These prelimaries in place we can write down the value function definition, and the standard Bellman equation \cite{Bellmann1954} for reward collection, as given by reinforcement learning theory \citep{Sutton2018}. For simplicity we assume below that the horizon is finite, bounded by $T$.
 
 \begin{equation} 
@@ -55,9 +55,11 @@ How can we arrive at such an equation that is both general, and therefore suitaa
 \subsubsection*{non-Markovian formalities}
 \emph{Obervations.} Animals at different stages in development, and in different envinroments, express curious behvaoir about the envirinment, their own actions, and their own mental processes. We assume a parsimonious way to handle this is be assuming curious animals often ``bind'' \cite{Robertson2003} the elements of environment, the Markov process ($mathbf{S},\mathbf{A},\mathbf{S'},R$), into single observations $\mathbf{X}$. For conveience, we assume observations are embedded in a finite real space, $\mathbf{X} \in \mathcal{X}$ of size $l$. This binding is imagined to happen via a communication channel, $T$, identical to our observation function, $T(\mathbf{S},\mathbf{A},\mathbf{S'},R,\mathbf{M})$. ($\mathbf{M}$ is the animal's memory, that we define below.)
 
-Observations may contain action information $\mathbf{A}$ but this optional. Observations may contain reward information $R$ or not. Though ommiting reward would hamper solving dilemma. Observations made by $T$ can also be internally generated from memory $\mathbf{M}$, or externally generated from the environment ($\mathbf{S}$,$\mathbf{S'}$). Or both in combination, as happens in recurrent neural circuits. 
+Observations made by $T$ can be internally generated from memory $\mathbf{M}$, or externally generated from the environment ($\mathbf{S}$,$\mathbf{S'}$). Or both in combination, as happens in recurrent neural circuits. Observations may contain action information $\mathbf{A}$, but this optional. Observations may contain reward information $R$, but this optional. Though ommiting reward would probably hamper solving explore-exploit problems. 
 
-\emph{Memory.} Sustained firing, the strength between two synapses, elevated Calcium concentration are three simple examples of learning and memory in the nervous system. Each of these examples though can be represented as a vector space. In fact, most any memory system can be so defined. We define memory as a set of real valued numbers, embedded in a finite space that is closed and bounded with $p$ dimensions. A learning function is then any function $f$ that maps observations $\mathbf{X}$ into memory $\mathbf{M}$. This $f$ is considered to be a valid learning function as long as the mapping changes $\mathbf{M}$ some small amount. A non-constant mapping, in other words. Using recursive notation, this kind of learning is denoted by $\mathbf{M} \leftarrow f(\mathbf{X},\mathbf{M}) $. Though we will sometimes use $\mathbf{M'}$ to denote the updated memory in place of the recursion. Other times we will add subscripts, like ($\mathbf{M}_t,\mathbf{M}_{t+1},\ldots$), to express the path of a memory.
+\emph{Memory.} Sustained firing, the strength between two synapses, elevated Calcium concentration are three simple examples of learning and memory in the nervous system. Each of these examples though can be represented as a vector space. In fact, most any memory system can be so defined. 
+
+We define memory as a set of real valued numbers, embedded in a finite space that is closed and bounded with $p$ dimensions. A learning function is then any function $f$ that maps observations $\mathbf{X}$ into memory $\mathbf{M}$. This $f$ is considered to be a valid learning function as long as the mapping changes $\mathbf{M}$ some small amount. A non-constant mapping, in other words. Using recursive notation, this kind of learning is denoted by $\mathbf{M} \leftarrow f(\mathbf{X},\mathbf{M}) $. Though we will sometimes use $\mathbf{M'}$ to denote the updated memory in place of the recursion. Other times we will add subscripts, like ($\mathbf{M}_t,\mathbf{M}_{t+1},\ldots$), to express the path of a memory.
 
 We do not assume memory or the learning function are Markovian.
 
@@ -124,7 +126,7 @@ In practice here we will not work with the gradient, but will use a discrete tim
 
 \begin{equation}
 	\label{eq:E_norm_discrete}
-	\hat E = || \ f(\mathbf{M_t},\mathbf{X}) - \mathbf{M_t} \ ||
+	\hat E \approx || \ f(\mathbf{M},\mathbf{X}) - \mathbf{M} \ ||
 \end{equation}
 
 % TODO - update X on plot to match new text notation
@@ -139,7 +141,7 @@ In practice here we will not work with the gradient, but will use a discrete tim
 	\end{fullwidth}
 \end{figure}
 
-\subsubsection*{Optimal curiosity}
+\subsubsection*{Bellman optimal information collection}
 The common way to arrive at Bellman solution is to assume a Markov decision space. This is problem for our defition of memory, which we assume has a natural long-term path dependence. This breaks the Markov assumption, and its neeeded claim of optimal substructure. To get around this we proved that exact forgetting of the last observation is another way to achieve optimal substructure, and so to derive a Bellman solution.
 
  % TODO - SUBSTRUCT THEOREM HERE
