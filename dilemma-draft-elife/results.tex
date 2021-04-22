@@ -292,7 +292,7 @@ The results of this simple information seeking task are shown in Figure~\ref{fig
 
 \begin{figure}
 	\begin{fullwidth}
-	\includegraphics[width=1.0\linewidth]{img/task_outline1.pdf} 
+	\includegraphics[width=0.7\linewidth]{img/task_outline1.pdf} 
 	\caption{A simple four choice information foraging task. The information in this task is a yellow or blue stimulus, which can change from trial to trial. A good learner in this task is one who tries to learn the probabilities of all the symbols in each of the four choices. The more random the stimuli are in a choice, the more potential information/entropy there is to learn. \textit{Note}: the information payout structure is shown below (Fig.~\ref{fig:payout}a}).
 	\label{fig:task_outline1} 
 	\end{fullwidth}
@@ -323,15 +323,15 @@ The results in full for all tasks and exploration strategies are shown in Fig.~\
 
 \begin{figure}
 	\begin{fullwidth}
-	\includegraphics[width=1.0\linewidth]{img/task_outline2.pdf} 
+	\includegraphics[width=0.7\linewidth]{img/task_outline2.pdf} 
 	\caption{A 4 choice reward collection task. The reward is numerical value, here a 1 or 0. A good learner in this task is one who collects the most rewards. The task depicted here matches that in Fig~\ref{fig:payout}b. Every other reward collection task we study has the same basic form, only the number of choices increases and the reward spaces are more complex.}
 	\label{fig:task_outline2} 
 	\end{fullwidth}
 \end{figure}
 
-\begin{figure}
-	\begin{fullwidth}
-	\includegraphics[width=0.95\linewidth]{img/task_payout.pdf} 
+\begin{SCfigure*}[\sidecaptionrelwidth][t]
+    \label{fig:summary} 
+	\includegraphics[width=11.4cm]{img/task_payout.pdf} 
 	\caption{Payouts for \textit{Tasks 1 - 7}. Payouts can be information, reward, or both. For comments on general task design, see Fig~\ref{fig:task_outline2}.
 	\textbf{a.} A classic four-choice design for information collection. A good learner should visit each arm, but quickly discover that only arm two is information bearing.
 	\textbf{b.} A classic four-choice design for testing exploration under reward collection. The learner is presented with four choices and it must discover which choice yields the highest average reward. In this task that is Choice 2. 
@@ -342,8 +342,7 @@ The results in full for all tasks and exploration strategies are shown in Fig.~\
 	\textbf{g.} This task is identical to \textit{a.}, except for the high payout choice being changed to be the lowest possible payout. This task tests how well different exploration strategies adjust to simple but sudden change in the environment.
 	}
 	\label{fig:payout} 
-	\end{fullwidth}
-\end{figure}
+\end{SCfigure*}
 
 \begin{table}[]
 	\caption{Exploration strategies.}
@@ -364,10 +363,9 @@ The results in full for all tasks and exploration strategies are shown in Fig.~\
 	\end{tabular}
 \end{table}
 
-\begin{figure}
+\begin{SCfigure*}[\sidecaptionrelwidth][t]
     \label{fig:summary} 
-	\begin{fullwidth}
-	\includegraphics[width=1\linewidth]{img/summary.pdf} 
+	\includegraphics[width=11.4cm]{img/summary.pdf} 
 	\caption{Summary of reward collection (\textit{Tasks 2-7}). The strategies in each panel are grouped according to the class of search they employed (Curiosity. Random, Extrinsic reward or Extrinsic + Intrinsic rewards). 
 	\textbf{a.} Results for Task 2, which has four choices and one clear best choice.
 	\textbf{b.} Results for Task 3, which has 10 choices and very sparse positive returns.
@@ -376,29 +374,21 @@ The results in full for all tasks and exploration strategies are shown in Fig.~\
 	\textbf{e.} Results for Task 6, which has 121 choices and a quite heterogeneous set of payouts but still with one best choice.
 	\textbf{f.} Results for Task 7, which is identical to Task 6 except the best choice was changed to be the worst. The learners from Task 6 were trained on this Task beginning with the learned values from their prior experience -- a test of robustness to sudden change in the environment. 
 	\textit{Note}: To accommodate the fact that different tasks were run different numbers of trials, we normalized total reward by trial number. This lets us plot reward collection results for all tasks on the same scale.
-  	}
-	% \figsupp{Summary of regret (\textit{Tasks 2-7})}{\includegraphics[width=1\linewidth]{img/supp_regret.pdf}}
-	% \figsupp{Summary of information value (\textit{Tasks 2-7})}{\includegraphics[width=1\linewidth]{img/supp_info.pdf}}
-	% \figsupp{Examples of exploration (Task 1). Here we simulated different sets of hyper-parameters on the same task and random seed. We view each parameter set as a unique ``animal'' \citep{Prescott2006}. So this figure estimates the degree and kind of variability we might expect in a natural experiment. }{\includegraphics[width=1\linewidth]{img/exploration1.pdf}}
-	\end{fullwidth}
-\end{figure}
+  	}	
+\end{SCfigure*}
 
-\begin{figure}
+\begin{SCfigure*}[\sidecaptionrelwidth][t]
     \label{fig:summary} 
-	\begin{fullwidth}
-	\includegraphics[width=1\linewidth]{img/supp_regret.pdf} 
+	\includegraphics[width=11.4cm]{img/supp_regret.pdf} 
 	\caption{Summary of total regret (\textit{Tasks 2-7}). See the previous figure for details.}
-	\end{fullwidth}
-\end{figure}
+\end{SCfigure*}
 
-\begin{figure}
-    \label{fig:summary} 
-	\begin{fullwidth}
-	\includegraphics[width=1\linewidth]{img/exploration1.pdf}}
+\begin{SCfigure*}[\sidecaptionrelwidth][t]
+    \label{fig:exploration} 
+	\includegraphics[width=11.4cm]{img/exploration1.pdf}}
 	\caption{Examples of exploration strategies (Task 1). Here we simulated different sets of randomly chosen hyper-parameters on the same task, for all agents. We take the view here that each parameter choice acts akins to a unique ``animal'' \citep{Prescott2006}. So this figure estimates, to some degree, the degree and kind of variability we might expect in a natural experiment. 
   	}
-	\end{fullwidth}
-\end{figure}
+\end{SCfigure*}
 
 \textit{Task 1.} is an information gathering task, which we discussed already above. \textit{Task 2} was designed to examine reward collection, in probabilistic reward setting very common in the decision making literature \citep{schonberg2007reinforcement,frank2004carrot,cavanagh2014conflict,jahfari2019cross,collins2014opponent,collins2017interactions,glascher2010states}. Rewards were 0 or 1. The best choice had a payout of $p(R=1) = 0.8$. This is a much higher average payout than the others ($p(R=1) = 0.2$). At no point does the task generate symbolic information. See, Fig.~\ref{fig:payout1}\textbf{b}. 
 
@@ -419,17 +409,16 @@ Unlike idealised simulations, animals cannot pre-optimize their search parameter
 
 When we move from an optimized choice of $\eta$, to a value about 3 fold smaller, we see optimized value converged far more quickly (Fig.~\ref{fig:boredom2}a-b), generating more reward over time (Fig.~\ref{fig:boredom2}c-d)
 
-\begin{figure}
-	\begin{fullwidth}
-	\includegraphics[width=1.0\linewidth]{img/boredom2.pdf} 
+\begin{SCfigure*}[\sidecaptionrelwidth][t]
+    \label{fig:summary} 
+	\includegraphics[width=11.4cm]{img/boredom2.pdf} 
 	\caption{The importance of boredom during reward collection (Task 2). One hundred example experiments, each began with a different random seed. 
 	\textbf{a}. Behavioral choices with optimized boredom.
 	\textbf{b}. Behavioral choices with unoptimized boredom.
 	\textbf{c,d}. Average reward as a function of time for optimized (c) and unoptimized (d) boredom.
 	}
 	\label{fig:boredom2} 
-	\end{fullwidth}
-\end{figure}
+\end{SCfigure*}
 
 The next question we considered is, how sensitive is this parameter compared to random parameter choices for all other nine agents? As an answer to this question we therefore explored reward collection as a function of 1000 randomly chosen model parameters, and reexamined performance on Tasks 1 and 7. These two were chosen to represent an ``easy'' task, and a ``hard'' one, in terms of search size. The results are shown in Fig.~\ref{fig:robust}, where we plot ranked performance on random parameters. 
 
@@ -437,17 +426,16 @@ No matter the parameter choices, and as we observed in our other model compariso
 
 We can explain this last result in the following way. All the other exploration strategies use parameters to tune the degree of exploration (i.e. the level of noise). With our approach to curiosity, however, we tune only when exploration should stop (by $\eta$). That is exploration is pure, and unbiased by reward or noise level. And so it seems, in these examples anyway, it is far more robust to tune the stopping point for pure exploration, rather than the degree of exploration.
 
-\begin{figure}
-	\begin{fullwidth}
-	\includegraphics[width=1\linewidth]{img/robust.pdf} 
+\begin{SCfigure*}[\sidecaptionrelwidth][t]
+    \label{fig:summary} 
+	\includegraphics[width=11.4cm]{img/robust.pdf} 
 	\caption{Parameter sensitivity (\textit{Task 2} and \textit{6}). We wanted to evaluate how robust performance was random hyperparameters, rather than those which were carefully choose. A very robustness exploration algorithm would produce strong performance with both the best parameter choices, and the worst parameter choices. 
 	\textbf{a,d} Total reward for 1000 randomly choosed hyperparameters, for each of the agents.
 	\textbf{b,e} Performance with the top 10 random hyperparameters, after ranking. Curiosity (green) compared to all the others.
 	\textbf{c.f} Performance with the bottom 10 random hyperparameters, after ranking.
 	}
 	\label{fig:robust}
-	\end{fullwidth}
-\end{figure}
+\end{SCfigure*}
 
 The final control questions we considered were, how does our (deterministic) approach to curiosity decline under stochastic sampling? And, does it decline more or less quickly than other agents? To induce stochastic behavior in our model we sampled is value estimates via a Softmax; the same mechanism used to drive stochastic search in several other of the alternatives. Results for this are shown in Figure~\ref{fig:noise}.
 
