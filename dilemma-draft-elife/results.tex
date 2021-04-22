@@ -1,5 +1,10 @@
 \section*{Results} 
-We consider an animal who interacts with an environment over a sequence of states, actions and rewards. The animal's goal is to select actions in a way that maximizes the total reward collected. How should an animal do this? 
+\subsection*{Theory}
+For our theoretical work, we first introduce the reinforcement learning, and its basis in the Bellman equation. Next we develop a new mathematical view of information value, curiosity, and a new understanding of ideal curious search. We use these results to show exploration-for-curiosity leads to optimal value solutions for all explore-exploit problems, with deterministic dynamics.
+
+
+\subsubsection*{The reward collection problem}
+Here we consider an animal who interacts with an environment over a sequence of states, actions and rewards. The animal's goal is to select actions in a way that maximizes the total reward collected. How should an animal do this? 
 
 When the enviroment is unknowen, to maximize reward an animal must tradeoff between exploration, and exploitation. The standard way of approaching this tradeoff is to assume, 
 
@@ -7,15 +12,15 @@ When the enviroment is unknowen, to maximize reward an animal must tradeoff betw
 The agent must try a variety of actions and progressively favor those that appear to be best'' \cite{Sutton2018}. 
 \end{quote}
 
-Here we suggest two fairly radical changes to this standard formula. Don’t stop searching progressively, do so suddenly. Explore only for learnings sake, out of curiosity \citep{Kidd2015}. 
+Later on we will suggest two fairly radical changes to this standard formula. Don’t stop searching progressively, do so suddenly. Explore only for learnings sake, out of curiosity \citep{Kidd2015}. 
 
-\subsection*{Theory}
-We first develop a new mathematical view of information value, curiosity, and a new understanding of ideal curious search. This new basis makes information value and curiosity domain general, and learning rule independent. We use these results to show exploration-for-curiosity leads to optimal value solutions for all explore-exploit problems, with deterministic dynamics.
 
 \subsubsection*{Markovian formalities}
 Our Markov decision process (MDP) consists of states of real valued vectors $\mathbf{S}$ from a finite set $\mathcal{S}$ of size $n$. As are actions, $\mathbf{A}$ from a finite set $\mathcal{A}$ of size $k$. Rewards are non-negative real numbers, $R$. Transitions from state to state is handled by the transition function $\Lambda(\mathbf{S},\mathbf{A})$. In our mathmatics we assume $\Lambda$ is a deterministic function of its inputs. In our simulations we assume it is a stochastic function.
 
-These prelimaries in place we can write down the value function definition, and the standard Bellman equation \cite{Bellmann1954} for reward collection, as given by reinforcement learning theory \citep{Sutton2018}. We assume below that the horizon is finite, bounded by $T$, for simplicity.
+
+\subsubsection*{Optimal reward}
+These prelimaries in place we can write down the value function definition, and the standard Bellman equation \cite{Bellmann1954} for reward collection, as given by reinforcement learning theory \citep{Sutton2018}. For simplicity we assume below that the horizon is finite, bounded by $T$.
 
 \begin{equation} 
 	\label{eq:bellman_seq}
@@ -34,8 +39,11 @@ The second to last equation is the optimal Bellman equation for $V^*_R$. This ca
 V^*_R(\mathbf{S}) = \argmax_{\mathbf{A} \in \mathbb{A}} \Big [ R_{t}  + V^*_{R}(\Lambda(\mathbf{S},\mathbf{A})) \Big ]
 \end{equation}
 
-\subsubsection*{non-Markovian formalities}
-Imagine we wish to arrive an equation to maximize curious behavoir, in terms of information gained, what we'll call information value. Assume, as a stand-in, $\hat E$ represents the information value of some observation. What we would like is solution for this term $\hat E$ that would let us arrive at an equation like Eq.~\ref{eq:bellman_iter}, but for information value in place of reward. This could hypothetical equation could be written as, 
+\subsubsection*{Formal regret}
+Regret minimization is a standard metric of optimality in reinforcement learning \citep{Sutton2018}. Formally, given \emph{any} any optimal value solution we can define regret $G$ in terms of this, given by $G = V^* - V_t$, where $V_t$ is the value of the choosen action $\mathbf{A}_t$. An optimal value algorithm can then be restated, as a ``best'' series of best actions ($\mathbf{A}_t$, $\mathbf{A}_{t+1}$, $\mathbf{A}_{t+2}$, ...) for which $\sum_{k=0}^{T} G_t = 0$.
+
+\subsubsection*{The information collection problem}
+Imagine we wish to arrive an equation to maximize curious behavoir, in terms of information gained, or information value. Assume, as a stand-in, $\hat E$ represents the information value of some observation. What we would like is solution for this term $\hat E$ that would let us arrive at an equation like Eq.~\ref{eq:bellman_iter}, but for information value in place of reward. This could hypothetical equation could be written as, 
 
 \begin{equation} 
 	\label{eq:bellman_iter_E}
@@ -44,29 +52,27 @@ Imagine we wish to arrive an equation to maximize curious behavoir, in terms of 
 
 How can we arrive at such an equation that is both general, and therefore suitaable for use across species, and how can we do so when we necessaailry limit ourselves to non-Markovians kind of memory? To setup the formality we need to answer these questions we define observations, then memory and learning. This sets the stage for defining $\hat E$ itself.
 
+\subsubsection*{non-Markovian formalities}
 \emph{Obervations.} Animals at different stages in development, and in different envinroments, express curious behvaoir about the envirinment, their own actions, and their own mental processes. We assume a parsimonious way to handle this is be assuming curious animals often ``bind'' \cite{Robertson2003} the elements of environment, the Markov process ($mathbf{S},\mathbf{A},\mathbf{S'},R$), into single observations $\mathbf{X}$. For conveience, we assume observations are embedded in a finite real space, $\mathbf{X} \in \mathcal{X}$ of size $l$. This binding is imagined to happen via a communication channel, $T$, identical to our observation function, $T(\mathbf{S},\mathbf{A},\mathbf{S'},R,\mathbf{M})$. ($\mathbf{M}$ is the animal's memory, that we define below.)
 
 Observations may contain action information $\mathbf{A}$ but this optional. Observations may contain reward information $R$ or not. Though ommiting reward would hamper solving dilemma. Observations made by $T$ can also be internally generated from memory $\mathbf{M}$, or externally generated from the environment ($\mathbf{S}$,$\mathbf{S'}$). Or both in combination, as happens in recurrent neural circuits. 
 
 \emph{Memory.} Sustained firing, the strength between two synapses, elevated Calcium concentration are three simple examples of learning and memory in the nervous system. Each of these examples though can be represented as a vector space. In fact, most any memory system can be so defined. We define memory as a set of real valued numbers, embedded in a finite space that is closed and bounded with $p$ dimensions. A learning function is then any function $f$ that maps observations $\mathbf{X}$ into memory $\mathbf{M}$. This $f$ is considered to be a valid learning function as long as the mapping changes $\mathbf{M}$ some small amount. A non-constant mapping, in other words. Using recursive notation, this kind of learning is denoted by $\mathbf{M} \leftarrow f(\mathbf{X},\mathbf{M}) $. Though we will sometimes use $\mathbf{M'}$ to denote the updated memory in place of the recursion. Other times we will add subscripts, like ($\mathbf{M}_t,\mathbf{M}_{t+1},\ldots$), to express the path of a memory.
 
-We can also define a forgetting function that \textit{can be any function} that inverts the memory, $f^{-1}(\mathbf{X};\ \mathbf{M}') \rightarrow \mathbf{M}$. Forgetting might not seem crucial, here. But it will prove essential later on in developing exploration algorithms that provably maximize $\hat E$. 
+We do not assume memory or the learning function are Markovian.
 
-Most important, we do not assume memory is Markovian.
+We can also define a forgetting function that \textit{can be any function} that inverts the memory, $f^{-1}(\mathbf{X};\ \mathbf{M}') \rightarrow \mathbf{M}$. Forgetting might not seem crucial, but it will prove to be so later on in developing exploration algorithms that provably maximize $\hat E$. 
 
 For individual animals we assume $f$ and $f^{-1}$ have been chosen by evolution and experience to be learnable, efficient, and have sufficiently useful inductive bias for their particular environment \cite{Valiant1984,Thrun1992a}. This assumption is not necessary for the mathematical results which follow.
 
-\subsubsection*{Formal regret}
-Regret minimization is a standard metric of optimality in reinforcement learning \citep{Sutton2018}. Formally, given \emph{any} any optimal value solution we can define regret $G$ in terms of this, given by $G = V^* - V_t$, where $V_t$ is the value of the choosen action $\mathbf{A}_t$. An optimal value algorithm can then be restated, as a ``best'' series of best actions ($\mathbf{A}_t$, $\mathbf{A}_{t+1}$, $\mathbf{A}_{t+2}$, ...) for which $\sum_{k=0}^{T} G_t = 0$.
 
 \subsubsection*{Axiomatic information value} 
-To make our eventual solution to the dilemma general, we first need to separate reward value from information value in a principled and general way. We do this axiomatically because working models of curiosity tend to conflate the learning rule, with the objective itself. We reason instead that the value of any observation made by an animal depends entirely on what an animal learns by making that observation–-literally how it changes that animal's memory. 
+To make our eventual union proper, we first need to separate reward value from information value in a principled and general way. We do this axiomatically.
+We reason instead that the value of any observation made by an animal depends entirely on what an animal learns by making that observation–-literally how it changes that animal's memory. This view let us sidestep a problem present in most working models of curiosity. They tend to conflate the learning rule, with curiosity itself \cite{TODO}.
 
-We assume curiosity is driven by information value, and should be as time-efficients as possible. We will now describe an optimal value, but deterministic model, of curiosity. It is defined by some easily satisfiable requirements (axioms), which makes information value and curiosity domain general, and learning rule independent. 
+% We assume curiosity is driven by information value, and should be as time-efficients as possible. We will now describe an optimal value, but deterministic model, of curiosity. It is defined by some easily satisfiable requirements (axioms), which makes information value and curiosity domain general, and learning rule independent. 
 
-Our definition of information value closely follows that of Shannon and his definition of a communication channel. If the communication channel is agnostic to semantic considerations, as in Shannon's definition, we reason its information value should be agnostic as well.
-
-If we have a memory $\mathbf{M}$, which has been learned by $f$ over a history of observations, $(\mathbf{X_0},\mathbf{X_1},...)$, Can we measure how much value the next observation $\mathbf{X_t}$ should have? We think this measure $\hat E$ should have certain intuitive properties.
+Our definition of information value closely follows the motivations of Shannon, and his definition of a communication channel. If we have a memory $\mathbf{M}$, which has been learned by $f$ over a history of observations, $(\mathbf{X_0},\mathbf{X_1},...)$, Can we measure how much value the next observation $\mathbf{X_t}$ should have? We think this measure $\hat E$ should have certain intuitive properties.
 
 \begin{axiom}[Axiom of Memory]
 	$\hat E$ depends only on difference $\delta \mathbf{M}$ between $\mathbf{M}$ and $\mathbf{M'}$.
@@ -101,17 +107,20 @@ That is, learning on $\mathbf{M}$ makes continual progress toward equilibrium (i
 
 All we have really done in these axioms is remove any mention of a learning rule, its properties, or learning target, its properties from previous definitions \cite{Itti2009,Jaegle2019,Schmidhuber1991,Inglis2001,Reddy2016,Pirolli2007}. This is important not for its on sake but because it with thesse axioms we can consider information value, and therefore curiosity, independent of any learning semantics, or any semantics at all. Anything we prove in this more abstract setting will be therefore be true for any learning algorithm, who meets our requirements. 
 
+Put another way, if the communication channel is agnostic to semantic considerations, as Shannon's requires, we reason information value should be agnostic as well.
+
+
 \subsubsection*{Practical information value}
-Meeting our requirements is not difficult. The practical example of axiomatic value we use throughout this paper is based on the geometric norm, $||.||$ (as shown in Fig.~\ref{fig:cartoon}). Though not necessaailry a unique solution, a norm on the memory gradient is a simple, perhaps natural, way to satisfy Axioms 1-4 (Eq \ref{eq:E_norm}). 
+Meeting our requirements is not difficult. The practical example of axiomatic value we use throughout this paper is based on the geometric norm, $||.||$ (as shown in Fig.~\ref{fig:cartoon}). Though not necessaailry a unique solution, a norm on the memory gradient is a simple, computational convenient, way to satisfy Axioms 1-4 (Eq \ref{eq:E_norm}). 
 
 \begin{equation}
 	\label{eq:E_norm}
 	\hat E = || \ \nabla \mathbf{M} \ ||
 \end{equation}
 
-To satify Axiom 5 we further require $\nabla^2 \mathbf{M} < 0$ for all $ t \ge T^*$. Informally, the idea here is that any notion of sensible and useful learning must converge. We take this to mean that in finite time bound, $T^*$, $\hat E$ must approach 0 (as shown in Fig.~\ref{fig:cartoon}). We term this consistent learning.
+To satify Axiom 5 we further require memory dynamics eventually decelerate,  $\nabla^2 \mathbf{M} < 0$ for all $ t \ge T^*$. Informally, the idea here is that any notion of sensible and useful learning must converge. We take this to mean that in finite time bound, $T^*$, $\hat E$ must approach 0 (as shown in Fig.~\ref{fig:cartoon}). We term this consistent learning.
 
-In practice here we will not work with the gradient specifically, but use a discrete time map in its place,
+In practice here we will not work with the gradient, but will use a discrete time map in its place,
 
 \begin{equation}
 	\label{eq:E_norm_discrete}
@@ -122,7 +131,7 @@ In practice here we will not work with the gradient specifically, but use a disc
 \begin{figure}
 	\begin{fullwidth}
 	\includegraphics[width=0.95\linewidth]{img/cartoon.pdf} 
-	\caption{Geometric information value, and our constraints on its dynamics. 
+	\caption{Practical (geometric) information value, and our constraints on its dynamics. 
 	\textbf{a}. This panel illustrates a two dimensional memory. The information value of two observations $\mathbf{X}_1$ and $\mathbf{X}_2$ depends on the norm of memory with learning. Here we show this distance as a euclidean norm, denoted as a black arrow.
 	\textbf{b-c} This panel illustrates learning dynamics with time (over a series of observations that are not shown). If information value becomes decelerating in finite time bound, then we say that learning is consistent with Def. 2. This is shown in panel b. The bound is depicted as a dotted line. If learning does not decelerate, then it is said to be inconsistent (Panel c). \textit{It is important to note:} our account of information value and curiosity does not work when learning is inconsistent.
   	}
@@ -131,8 +140,6 @@ In practice here we will not work with the gradient specifically, but use a disc
 \end{figure}
 
 \subsubsection*{Optimal curiosity}
-An ideal learning-rule independent definition of curiosity would be a Bellman solution of this type \citep{Bellmann195}, as we noted above. It is ideal because it guarantees optimal value using recursion--a very biological idea. It is convenient also because the Bellman equation is the basis for the theory of reinforcement learning \citep{Sutton2018}, as we also illustrated above. 
-
 The common way to arrive at Bellman solution is to assume a Markov decision space. This is problem for our defition of memory, which we assume has a natural long-term path dependence. This breaks the Markov assumption, and its neeeded claim of optimal substructure. To get around this we proved that exact forgetting of the last observation is another way to achieve optimal substructure, and so to derive a Bellman solution.
 
  % TODO - SUBSTRUCT THEOREM HERE
@@ -154,13 +161,13 @@ As long learning about the different observations $\mathbf{X}$ is independent, a
 	V_E^{*}(\mathbf{X}) = \argmax_{\mathbf{A}} \Big [ E_t + E_{t+1} \Big ]
 \end{equation}
 
-\subsubsection*{The importance of boredom}
+\subsubsection*{A hypothesis about boredom}
 The central failure mode of curiosity is what we'll call minutia, defined as those learning that has little to no use, ever. A good example of this is to, ``Imagine a scenario where the agent is observing the movement of tree leaves in a breeze. Since it is inherently hard to model breeze, it is even harder to predict the location of each leaf'' \cite{Pathak2017}. This will imply, they note, a curious agent will always remain curious about chaos in the leaves even though they have no hope of successful learning of them.
 
 To limit curiosity we introduction a penalty term, $\eta$ which we treat as synomoous with boredom. We consider boredom an adaptive trait, in other words. Others have considered boredom arguing it is a useful way to motivate aversive tasks \citep{Bench2013}, or curiosity \cite{Loewenstein1994}. We take a slightly different view. We treat boredom as a tunable free parameter, $\eta \ge 0$ and a means to ignore marginal value by requiring curious exploration to stop once $E \le \eta$. 
 
 
-\subsubsection*{Exploration quality}
+\subsubsection*{Optimal exploration}
 Having a policy $\pi_E^*$ that optomally maximizes $\hat E$ does not necessarily ensure that exploration is of good quality. We think it is reasonable to call an exploration good if it meets the criteria below. 
 
 \begin{enumerate}
@@ -182,7 +189,7 @@ In Theorems~\ref{theorem:Z} and~\ref{theorem:convergence} we prove that our Bell
 \end{theorem}
 
 
-\subsubsection*{Key conjectures}
+\subsubsection*{A hypothesis of equal importance}
  Searching in an open-ended way for information must be less efficient than a direct search for reward? In answer to this question, we make two conjectures.
 
 \begin{conjecture}[A hypothesis of equal importance]
@@ -199,7 +206,7 @@ If both reward and information are equally important, then time is not wasted in
 
 It's worth noting here that curiosity, as an algorithm in machine learning, is highly effective at solving broad kinds of optimization problems \cite{Schmidhuber1991,Stanton2018,Lehman2010,Mouret2011,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Laversanne-Finot2018}. 
 
-\subsubsection*{What's a solution look like?}
+\subsubsection*{The problem of mixing reward and information collection}
 If reward and information are equally important, and curiosity is sufficient, how can an animal go about balancing them? If you accept our conjectures, then answering this question optimally is the same as solving the dilemma. To solve this dual value learning problem we’ve posed–-information and reward maximization–-we need an algorithm that can maximize the value of a mixed sequence, $V_{\hat{E}R}$. For example,
 
 \begin{equation}
@@ -270,7 +277,7 @@ Under homeostasis ties between values in Eq. \ref{eq:pipi} should be broken in f
 
 % ----------------------------------------------------------------------
 \subsection*{Experiments}
-Does our theory work in practice? The remainder of this paper is devoted to studying our approacher performance in simulated bandit tasks. Each task was designed to either test exploration performance in a way that matches recent experimental studies, or to test the limits of curiosity. 
+Does our theory work in practice? Our approach does not mathematically ensure a mixed value solution to explore-exploit problems will always maximizes reward value, comparerd with other well-established methods. The remainder of this paper is devoted to studying our approaches performance in simulated bandit tasks. Each task was designed to either test exploration performance in a way that matches recent experimental studies, or to test the limits of curiosity. 
 
 \subsubsection*{Information collection}
 The work so far has built up the idea that the most valuable, and most efficient, curious search will come from a deterministic algorithm. That is, every step strictly maximizes $\hat E$. It is this determinism which will let us resolve the dilemma, later on. A deterministic view of exploration seems at odds with how the problem is generally viewed today, which involves searching with some amount of randomness. Whereas if our analysis is correct, randomness is not needed or desirable, as it must lead to less value and a longer search. 
