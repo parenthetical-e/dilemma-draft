@@ -167,8 +167,6 @@ The central failure mode of curiosity is what we'll call minutia, defined as tho
 
 To limit curiosity we introduction a penalty term, $\eta$ which we treat as synomoous with boredom. We consider boredom an adaptive trait, in other words. Others have considered boredom arguing it is a useful way to motivate aversive tasks \citep{Bench2013}, or curiosity \cite{Loewenstein1994}. We take a slightly different view. We treat boredom as a tunable free parameter, $\eta \ge 0$ and a means to ignore marginal value by requiring curious exploration to stop once $E \le \eta$. 
 
-% TODO - talk about explore and V estimates as central challenges...
-% TODO - talk about pi_R assumptions - deterministic... MCTS is ok... probably. Smooth degradation of optimality in practice.
 
 \subsubsection*{Optimal exploration}
 Having a policy $\pi_E^*$ that optomally maximizes $\hat E$ does not necessarily ensure that exploration is of good quality. We think it is reasonable to call an exploration good if it meets the criteria below. 
@@ -379,10 +377,26 @@ The results in full for all tasks and exploration strategies are shown in Fig.~\
 	\textbf{f.} Results for Task 7, which is identical to Task 6 except the best choice was changed to be the worst. The learners from Task 6 were trained on this Task beginning with the learned values from their prior experience -- a test of robustness to sudden change in the environment. 
 	\textit{Note}: To accommodate the fact that different tasks were run different numbers of trials, we normalized total reward by trial number. This lets us plot reward collection results for all tasks on the same scale.
   	}
-	
-	\figsupp{Summary of regret (\textit{Tasks 2-7})}{\includegraphics[width=1\linewidth]{img/supp_regret.pdf}}
-	\figsupp{Summary of information value (\textit{Tasks 2-7})}{\includegraphics[width=1\linewidth]{img/supp_info.pdf}}
-	\figsupp{Examples of exploration (Task 1). Here we simulated different sets of hyper-parameters on the same task and random seed. We view each parameter set as a unique ``animal'' \citep{Prescott2006}. So this figure estimates the degree and kind of variability we might expect in a natural experiment. }{\includegraphics[width=1\linewidth]{img/exploration1.pdf}}
+	% \figsupp{Summary of regret (\textit{Tasks 2-7})}{\includegraphics[width=1\linewidth]{img/supp_regret.pdf}}
+	% \figsupp{Summary of information value (\textit{Tasks 2-7})}{\includegraphics[width=1\linewidth]{img/supp_info.pdf}}
+	% \figsupp{Examples of exploration (Task 1). Here we simulated different sets of hyper-parameters on the same task and random seed. We view each parameter set as a unique ``animal'' \citep{Prescott2006}. So this figure estimates the degree and kind of variability we might expect in a natural experiment. }{\includegraphics[width=1\linewidth]{img/exploration1.pdf}}
+	\end{fullwidth}
+\end{figure}
+
+\begin{figure}
+    \label{fig:summary} 
+	\begin{fullwidth}
+	\includegraphics[width=1\linewidth]{img/supp_regret.pdf} 
+	\caption{Summary of total regret (\textit{Tasks 2-7}). See the previous figure for details.}
+	\end{fullwidth}
+\end{figure}
+
+\begin{figure}
+    \label{fig:summary} 
+	\begin{fullwidth}
+	\includegraphics[width=1\linewidth]{img/exploration1.pdf}}
+	\caption{Examples of exploration strategies (Task 1). Here we simulated different sets of randomly chosed hyper-parameters on the same task, for all agents. We take the view here that each parameter choice acts akins to a unique ``animal'' \citep{Prescott2006}. So this figure estimates, to some degree, the degree and kind of variability we might expect in a natural experiment. 
+  	}
 	\end{fullwidth}
 \end{figure}
 
@@ -401,11 +415,9 @@ The results for Task 1 were discussed above. As for Task 2, we expected all the 
 In Task 6 deterministic curiosity performed well, securing a second place finish. We note the Bayesian strategy  outperformed our approach. However, under the sudden non-stationarity in reward when switching tasks, the top Bayesian model became the worst on Task 7, and deterministic curiosity took the top spot. Compare Fig.~\ref{fig:summary}\textbf{e} to \textbf{f}. This is the robustness that we'd expect for any curiosity algorithm, whose main goal is to learn everything unbiased by other objectives. The environment and the objectives do change in real life, and so we must be prepared for this. Note how the other less-biased-toward-reward-value exploration models (count-based, novelty, and entropy models) also saw gains, to a lesser degree.
 
 \subsubsection*{Robustness}
-A good choice of boredom $eta$ is critical for our definition of curiosity, and was optimized carefully. We show an example of this importance in Fig.~\ref{fig:boredom2}. On the left hand side we did a random search over 10000 possible parameters to find a value for $\eta$ that produced excellent results. (This was the same kind of search we did to achieve the results shown in Fig. ~\ref{fig:summary}. On the right hand side we choose a value for boredom we knew would lead to a poor relative result. We then ran the 100 different randomly generated simulations which gives us the results seen in Fig.~\ref{fig:boredom2}). 
+Unlike idealised simulations, animals cannot pre-optimize their search parameters for every task. We have so far been using carefully chosen parameters. For example, a good choice of boredom $\eta$ is critical for our definition of curiosity, and was optimized carefully. The next question we considered, albiet somewhat qualitativly, is -- how much does the choice of $\eta$ matter? 
 
-Carefully optimized boredom converged far more quickly (Fig.~\ref{fig:boredom2}a-b), generating more reward over time (Fig.~\ref{fig:boredom2}c-d), and showed far more in consistency during exploration (Fig.~\ref{fig:boredom2}e-f). 
-
-These experiments in setting $\eta$ are also useful in demonstrating the wide variance in behavior that is possible with a deterministic search. Exploration in these figures is deterministic, as prescribed by Eq.~\ref{eq:meta_greedy}. The environment was stochastic however and so the variations come from the environment changing what is learned, which then changes what the best learner should choose to learn next. 
+When we move from an optimized choice of $\eta$, to a value about 3 fold smaller, we see optimized valaue converged far more quickly (Fig.~\ref{fig:boredom2}a-b), generating more reward over time (Fig.~\ref{fig:boredom2}c-d)
 
 \begin{figure}
 	\begin{fullwidth}
@@ -419,22 +431,30 @@ These experiments in setting $\eta$ are also useful in demonstrating the wide va
 	\end{fullwidth}
 \end{figure}
 
-Unlike idealised simulations, animals cannot pre-optimize their search parameters for every task. We therefore explored reward collection as a function of 1000 randomly chosen model parameters, and reexamined performance on Tasks 1 and 7=6. These were chosen to represent an ``easy'' task, and a ``hard one''. These results are shown in Fig.~\ref{fig:robust}. 
+The next question we considered is, how sensitive is this parameter compared to random parameter choices for all other nine agents? As an answer to this question we therefore explored reward collection as a function of 1000 randomly chosen model parameters, and reexamined performance on Tasks 1 and 7. These two were chosen to represent an ``easy'' task, and a ``hard'' one, in terms of search size. The results are shown in Fig.~\ref{fig:robust}, where we plot ranked performance on random parameters. 
 
-As we observed in our other model comparisons, exploitation by deterministic curiosity produced top-3 performance on both tasks (Fig.~\ref{fig:robust}a-b). Most interesting is the performance for the worst parameters. Here deterministic curiosity was markedly better, with substantially less variability across different parameter schemes. We can explain this in the following way. All the other exploration strategies use parameters to tune the degree of exploration. With deterministic curiosity, however, we tune only when exploration should stop. The degree of exploration, the measure by how close it is to maximum entropy, is fixed by the model itself. It seems that here at least it is far more robust to tune the stopping point, rather than the degree of exploration.
+No matter the parameter choices, and as we observed in our other model comparisons, exploitation by curiosity produced top-3 performance on both tasks (Fig.~\ref{fig:robust}a-bd. Most interesting to note is the performance for the worst 10 random parameters. Here curiosity was markedly better, with substantially less variability across different parameter schemes. 
+
+We can explain this last result in the following way. All the other exploration strategies use parameters to tune the degree of exploration (i.e. the level of noise). With our approach to curiosity, however, we tune only when exploration should stop (by $\eta$). That is exploration is pure, and unbiased by reward or noise level. And so it seems, in these examples anyway, it is far more robust to tune the stopping point for pure exploration, rather than the degree of exploration.
 
 \begin{figure}
 	\begin{fullwidth}
 	\includegraphics[width=1\linewidth]{img/robust.pdf} 
-	\caption{Parameter selection and search performance (\textit{Task 2} and \textit{6}). We wanted to evaluate how robust performance was to poor and random hyperparameters. A very robustness exploration algorithm would produce strong performance with both the best parameter choices, and the worst parameter choices.   
-	\textbf{a,d} Total reward for 1000 search hyperparameters, for each of strategies we considered.  
-	\textbf{b,e} Performance with the top 10 hyperparameters, curiosity (green) compared to all the others.
-	\textbf{c.f} Performance with the bottom 10 hyperparameters.
+	\caption{Parameter sensitivity (\textit{Task 2} and \textit{6}). We wanted to evaluate how robust performance was random hyperparameters, rather than those which were carefully choose. A very robustness exploration algorithm would produce strong performance with both the best parameter choices, and the worst parameter choices. 
+	\textbf{a,d} Total reward for 1000 randomly choosed hyperparameters, for each of the agents.
+	\textbf{b,e} Performance with the top 10 random hyperparameters, after ranking. Curiosity (green) compared to all the others.
+	\textbf{c.f} Performance with the bottom 10 random hyperparameters, after ranking.
 	}
-	\figsupp{Adding noise to deterministic curiosity does degrade its performance. In this example control we added two levels of random noise. This only served to increase variability of convergence (a-c) and reduce the total rewards collected (d). Note: decision noise was modelled by sampling a Boltzmann distribution, as described in the \textit{Methods}.
-    }{\includegraphics[width=1\linewidth]{img/independent2.pdf}}
-    \figsupp{Noise across strategies. Adding noise to degrades performance to nearly the same degree (Task 2).
-    }{\includegraphics[width=0.95\linewidth]{img/forced2.pdf}}
 	\label{fig:robust}
 	\end{fullwidth}
 \end{figure}
+
+The final control question we considered was - how does our (deterministic) approach to curiosity decline under stochastic sampling? And, does it decline more or less quickly than the other agents. To induce stochastic behavior in our model we sampled is value estimates via a Softmax; the same mechanism used to drive stochastic search in several other of the alternatives. Results for this are shown in Figure~\ref{fig:noise}.
+
+\begin{figure}
+	\includegraphics[width=0.4\linewidth]{img/forced2.pdf} 
+	\caption{Noise across strategies. Adding noise to degrades performance to nearly the same degree (Task 2)}
+	\label{fig:noise}
+\end{figure}
+
+Adding noise to our approach eventually degrades performance. But performance  falls off no more quickly than several of the other models. Contratiwsie, when stochasticity becomes low, most the alternatives show substantial declines or variability in their performance. 
