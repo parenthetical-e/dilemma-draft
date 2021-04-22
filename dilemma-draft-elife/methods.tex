@@ -36,12 +36,12 @@ Where $P$ and $Q$ are two distributions, KL and JS are given by Eq.~\ref{eq:KL} 
 \end{equation}
 
 \subsection*{Tie breaking in search}
-By definition a greedy policy like $\pi_E$ does not distinguish between tied values; There is after all no mathematical way to rank equal values. Theorems~\ref{theorem:convergence} and~\ref{theorem:Z} ensure any tie breaking strategy is valid, so in the long term the choice is arbitrary. In the short-term, tie-breaking is important as it will affect choices. We expect different tie-breaking schemes will better fit different animals, their bodies, and environments. 
+By definition a greedy policy like $\pi_{\hat E}$ does not distinguish between tied values; There is after all no mathematical way to rank equal values. Theorems~\ref{theorem:convergence} and~\ref{theorem:Z} ensure any tie breaking strategy is valid, so in the long term the choice is arbitrary. In the short-term, tie-breaking is important as it will affect choices. We expect different tie-breaking schemes will better fit different animals, their bodies, and environments. 
 
 We studied several breaking strategies, ``take the left/right option'', ``take the closest option'', or ``take the option with the lowest likelihood''. For simplicity we choose to use ``take the next option'' in all our numerical studies. Most any tie breaking scheme is fine, but should it be deterministic.
 
-\subsection*{Initializing $\pi_\pi$}
-In these simulations we assume that at the start of learning an animal should have a uniform prior over the possible actions $A \in \mathbb{R}^K$. Thus $p(a_k) = 1/K$ for all $a_k \in A$. We transform this uniform prior into the appropriate units for our JS-based $\hat E$ using by, $E_0 = \sum_K p(a_k)\ \text{log}\ p(a_k)$. 
+\subsection*{Initializing $\Pi_\pi$}
+In these simulations we assume that at the start of learning an animal should have a uniform prior over the possible actions $\mathbb{A}$. Thus $p(\mathbf{A}_k) = 1/K$ for all $\mathbf{A}_k \in \mathbb{A}$. We transform this uniform prior into the appropriate units for our JS-based $\hat E$ using by, $\hat E_0 = \sum_K p(\mathbf{A}_k)\ \text{log}\ p(\mathbf{A}_)$. 
 
 \subsection*{Regret calculations}
 In line with past efforts on studying value loss during optimization we quantified lost value in terms of it regret $G$, where $G$ is defined as $G = V^* - V_t$ and $V$ is the value at the current time point and $V^*$ is the best possible value that has been experienced up until $t$.
@@ -50,12 +50,10 @@ In line with past efforts on studying value loss during optimization we quantifi
 
 \begin{equation}
 	\label{eq:TD}
-	V(s) = V(s) + \alpha (\mathbf{R}_t - V(s)
+	V(s) = V(s) + \alpha (R_t - V(s)
 \end{equation}
 
-Where $V(s)$ is the value for each state (choice), $\mathbf{R}_t$ is the \emph{return} for the current trial, and $\alpha_R$ is the learning rate $(0-1]$. See the \emph{Hyperparameter optimization} section for information on how $\alpha_R$ chosen for each agent and task.
+Where $V(s)$ is the value for each state (choice), $R_t$ is the \emph{return} for the current trial, and $\alpha_R$ is the learning rate $(0-1]$. See the \emph{Hyperparameter optimization} section for information on how $\alpha_R$ chosen for each agent and task.
 
 \subsection*{Hyperparameter optimization}
-The hyperparameters for each learner were tuned independently for each task by random search \cite{Bergstra2012}. Generally we reported results for the top 10 values, sampled from between 1000 possibilities. Ranked values for all experiments are provided as supplementary material.
-
-
+The hyperparameters for each learner were tuned independently for each task by random search \cite{Bergstra2012}. Generally we reported results for the top 10 values, sampled from between 1000 possibilities. 
