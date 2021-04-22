@@ -1,13 +1,3 @@
-% TODO:
-% 
-% Learning rule independence means any rule will do. Testing, initially, should therefore be qualitative. For which we have three strong predictions to make. 
-
-% 1. Invariant search strategy (auxiliary assumptions, learning is possible because there is some novelty, and some observations available)
-% 2. Deterministic or highly structured search. Environmental noise is the only source of noise (auxiliary assumptions, no forgetting or action/parameter/neural noise)
-% 3. Well defined pure periods (auxiliary assumptions, no other behavior-fear, avoiding, grooming)
-% 4. At the circuit level exploration module for all domains, information and reward (co-activations will vary, as different observations are constructed)
-
-
 \section*{Discussion}
 We have offered a way around the exploration-exploitation dilemma. We proved the classic dilemma, found when optimizing exploration for reward value, can be resolved by exploring instead for curiosity. And that in this form the rational trade-off we are left with is solved with a classic strategy taken from game theory. The win-stay lose-shift strategy, that is.
 
@@ -20,7 +10,7 @@ Our use of curiosity rests on three well established facts. 1. Curiosity is a pr
 \subsection*{What about information theory?}
 In short, the problems of communication and value are different problems that require different theories.
 
-Weaver \citep{Shannon1948} in his classic introduction to the topic, describes information as a communication problem with three levels. a. The technical problem of transmitting accurately. b. The semantic problem of meaning. c. The effectiveness problem of changing behavior. He then describes how Shannon's work addresses only problem A. It has turned out that Shannon's separation of the problem allowed the information theory to have an incredibly broad application. 
+Weaver \cite{Shannon1948} in his classic introduction to the topic, describes information as a communication problem with three levels. a. The technical problem of transmitting accurately. b. The semantic problem of meaning. c. The effectiveness problem of changing behavior. He then describes how Shannon's work addresses only problem A. It has turned out that Shannon's separation of the problem allowed the information theory to have an incredibly broad application. 
 
 Valuing information is not, at its core, a communications problem. Consider the very simple example Bob and Alice, having a phone conversation and then Tom and Bob having the exact same conversation. The personal history of Bob and Alice will determine what Bob learns in their phone call, and so determines what he values in that phone call. These might be completely different from what he learns when talking to Tom, even if the conversations are identical. What we mean by this example is that the personal history defines what is valuable on a channel, and this is independent of the channel and the messages sent. We have summarized this diagrammatically, in Fig. ~\ref{fig:info1}.
 
@@ -39,7 +29,7 @@ There is, we argue, an analogous set of levels for information value as those We
 \subsection*{Is this too complex?}
 Perhaps turning a single objective into two, as we have, is too complex an answer. If this is true, then it would mean our strategy is not a parsimonious solution to the dilemma. We could or should reject it on that alone?
 
-Questions about parsimony are resolved by considering the benefits versus the costs. The benefits to curiosity-based search is that it leads to no regret solutions to exploration, to exploration-exploitation, and that it so far seems to do very well in practice, at reward collection. At the same time curiosity-as-exploration can also be building a model of the environment, useful for later planning \citep{Ahilan2019,Poucet1993}, creativity, imagination \citep{Schmidhuber2010}, while also building, in some cases, diverse action strategies \citep{Lehman2011a,Lehman2013,Mouret2015,Colas2020}. 
+Questions about parsimony are resolved by considering the benefits versus the costs. The benefits to curiosity-based search is that it leads to no regret solutions to exploration, to exploration-exploitation, and that it so far seems to do very well in practice, at reward collection. At the same time curiosity-as-exploration can also be building a model of the environment, useful for later planning \cite{Ahilan2019,Poucet1993}, creativity, imagination \cite{Schmidhuber2010}, while also building, in some cases, diverse action strategies \cite{Lehman2011a,Lehman2013,Mouret2015,Colas2020}. 
 
 The cost is of curiosities indirectness, which could make it slower to converge in principle. There is also the risk of focusing on minutia, which we discuss in the main text. Our numerical simulation suggests neither of these costs are not fatal for finding practical successes.
 
@@ -49,7 +39,7 @@ Solutions to the regular dilemma are complex and require sophisticated mathemati
 
 The truth is we might have cheated, in this sense: the dilemma might have to be as hard as it has seemed. But the general case for curiosity as useful in exploration is clear, and backed up by the brute fact of its widespread presence. The question is: is curiosity so useful and so robust that it can be sufficient for all exploration with learning. 
 
-The answer to this question is empirical. If our account does well in describing and predicting animal behavior, that would be some evidence for it \citep{Sumner2019,Wang2019,Jaegle2019,Gottlieb2018,Kidd2015,Berlyne1950,Colas2020a,Rahnev2018,Wilson2020,CogliatiDezza2017b,Berger-Tal2014}. If it predicts neural structures \citep{Cisek2019,Kobayashi2019}, that would be some evidence for it (we discuss this more below). If this theory proves useful in machine learning and artificial intelligence research, that would be some evidence for it \citep{Burda2018,Schmidhuber1991,deAbril2018,Fister2019,Lehman2011a,Stanley2004a,Colas2020,Cully2015,Wilson2020,Pathak2019}. 
+The answer to this question is empirical. If our account does well in describing and predicting animal behavior, that would be some evidence for it \cite{Sumner2019,Wang2019,Jaegle2019,Gottlieb2018,Kidd2015,Berlyne1950,Colas2020a,Rahnev2018,Wilson2020,CogliatiDezza2017b,Berger-Tal2014}. If it predicts neural structures \cite{Cisek2019,Kobayashi2019}, that would be some evidence for it (we discuss this more below). If this theory proves useful in machine learning and artificial intelligence research, that would be some evidence for it \cite{Burda2018,Schmidhuber1991,deAbril2018,Fister2019,Lehman2011a,Stanley2004a,Colas2020,Cully2015,Wilson2020,Pathak2019}. 
 
 
 \subsection*{Is this a slight of hand, theoretically?}
@@ -61,9 +51,9 @@ Having a technical definition of value, free from any meaning, might seem counte
 
 
 \subsection*{What about mutual information, or truth?}
-In other prototypical examples, information value is based on how well what is learned relates to the environment \citep{Behrens2007,Kolchinsky2018,Tishby2000}, that is the mutual information the internal memory and the external environment. Colloquially, one might call this ``truth seeking". 
+In other prototypical examples, information value is based on how well what is learned relates to the environment \cite{Behrens2007,Kolchinsky2018,Tishby2000}, that is the mutual information the internal memory and the external environment. Colloquially, one might call this ``truth seeking". 
 
-As a people we pursue information which is fictional \citep{sternisko2020dark}, or based on analogy \citep{gentner1997reasoning}, or outright wrong \citep{loftus1989misinformation}. Conspiracy theories, disinformation, and our many more mundane errors, are far too commonplace for information value to be based on mutual information, as defined above. This does not mean that holding false beliefs cannot harm survival, but this is a second order question as far as learning goes. 
+As a people we pursue information which is fictional \cite{sternisko2020dark}, or based on analogy \cite{gentner1997reasoning}, or outright wrong \cite{loftus1989misinformation}. Conspiracy theories, disinformation, and our many more mundane errors, are far too commonplace for information value to be based on mutual information, as defined above. This does not mean that holding false beliefs cannot harm survival, but this is a second order question as far as learning goes. 
 
 
 \subsection*{So you suppose there is always positive value for learning of all fictions, disinformation, and deceptions?}
@@ -71,7 +61,7 @@ We must. This is our most unexpected prediction. Yet, logically, it is internall
 
 
 \subsection*{What about information foraging?}
-Our work is heavily inspired by information foraging \citep{Inglis2001,Reddy2016}. Our motivation in developing our novel strategy was that information value should not depend on only a probabilistic reasoning, as it does in information foraging. This is for the simple reason that many of the problems animals need to learn are not probabilistic problems \textit{from their point of view}. 
+Our work is heavily inspired by information foraging \cite{Inglis2001,Reddy2016}. Our motivation in developing our novel strategy was that information value should not depend on only a probabilistic reasoning, as it does in information foraging. This is for the simple reason that many of the problems animals need to learn are not probabilistic problems \textit{from their point of view}. 
 
 
 \subsection*{Was it necessary to build a general theory for information value just to describe curiosity?}
@@ -85,23 +75,23 @@ Yes. Regret is calculated for the policy which is in control of behavior, not th
 \subsection*{Is information a reward?}
 If reward is defined as more-or-less any quantity that motivates behavior, then our definition of information value is a reward. This last point does not mean, however, that information value and environmental rewards are interchangeable. Rewards from the environment, are a conserved resource, information is not. For example, if a rat shares a potato chip with a cage-mate, it must break the chip up leaving it less food for itself. While if a student shares an idea with a classmate, that idea is not divided up. 
 
-Furthermore, if you add reward value and information value to motivate search you can drive exploration in practical and useful ways. But this doesn't change the intractability of the dilemma proper \citep{Thrun1992a,Dayan1996,Findling2018,Gershman2018b}. 
+Furthermore, if you add reward value and information value to motivate search you can drive exploration in practical and useful ways. But this doesn't change the intractability of the dilemma proper \cite{Thrun1992a,Dayan1996,Findling2018,Gershman2018b}. 
 
 In other words, it depends. 
 
 
 \subsection*{But isn't curiosity impractical?}
-It does seem curiosity is just as likely to lead away from a needed solution as towards it. Especially so if one watches children who are the prototypical curious explorers \citep{Sumner2019,Kidd2015}. This is why we limit curiosity with boredom, and counter it with a competing drive for reward collecting (i.e., exploitation). 
+It does seem curiosity is just as likely to lead away from a needed solution as towards it. Especially so if one watches children who are the prototypical curious explorers \cite{Sumner2019,Kidd2015}. This is why we limit curiosity with boredom, and counter it with a competing drive for reward collecting (i.e., exploitation). 
 
-We believe there is a useful analogy between science and engineering. Science can be considered an open-ended inquiry, and engineering a purpose driven enterprise. They each have their own pursuits but they also learn from each other, often in alternating iterations \citep{Gupta2006}. It is their different objectives though which make them such good long-term collaborators.
+We believe there is a useful analogy between science and engineering. Science can be considered an open-ended inquiry, and engineering a purpose driven enterprise. They each have their own pursuits but they also learn from each other, often in alternating iterations \cite{Gupta2006}. It is their different objectives though which make them such good long-term collaborators.
 
 
 \subsection*{But what about curiosity on big problems?}
-A significant drawback to curiosity, as an algorithm, is that it will struggle to deliver timely results when the problem is very large, or highly detailed. First, it is worth noting that most learning algorithms struggle with this setting \citep{MacKay2003,Sutton2018}, that is unless significant prior knowledge can be brought to bear \citep{Zhang2020,Sutton2018} or the problem can be itself compressed \citep{Ha2018a,Fister2019}. Because ``size'' is a widespread problem in learning, there are a number of possible solutions and because our definition of learning, memory and curiosity is so general, we can take advantage of most. This does not guarantee curiosity will work out for all problems; all learning algorithms have counterexamples \citep{Wolpert1997}. 
+A significant drawback to curiosity, as an algorithm, is that it will struggle to deliver timely results when the problem is very large, or highly detailed. First, it is worth noting that most learning algorithms struggle with this setting \cite{MacKay2003,Sutton2018}, that is unless significant prior knowledge can be brought to bear \cite{Zhang2020,Sutton2018} or the problem can be itself compressed \cite{Ha2018a,Fister2019}. Because ``size'' is a widespread problem in learning, there are a number of possible solutions and because our definition of learning, memory and curiosity is so general, we can take advantage of most. This does not guarantee curiosity will work out for all problems; all learning algorithms have counterexamples \cite{Wolpert1997}. 
 
 
 \subsection*{But what about other forms of curiosity?}
-We did not intend to dismiss the niceties of curiosity that others have revealed. It is that these prior divisions parcel out the idea too soon. Philosophy and psychology consider whether curiosity is internal or external, perceptual versus epistemic, or specific versus diversive, or kinesthetic \citep{Kidd2015,Berlyne1950,Zhou2020}. Computer science tends to define it as needed, for the task at hand \citep{Stanley2004,Lehman2011a,Lehman2013,Mouret2015,Colas2020}. Before creating a taxonomy of curiosity it is important to first define it, mathematically. Something we have done here.
+We did not intend to dismiss the niceties of curiosity that others have revealed. It is that these prior divisions parcel out the idea too soon. Philosophy and psychology consider whether curiosity is internal or external, perceptual versus epistemic, or specific versus diversive, or kinesthetic \cite{Kidd2015,Berlyne1950,Zhou2020}. Computer science tends to define it as needed, for the task at hand \cite{Stanley2004,Lehman2011a,Lehman2013,Mouret2015,Colas2020}. Before creating a taxonomy of curiosity it is important to first define it, mathematically. Something we have done here.
 
 
 \subsection*{What is boredom, besides being a tunable parameter?}
@@ -113,7 +103,7 @@ Yes we are predicting exactly that.
 
 
 \subsection*{But do people subjectively feel they can tune their boredom?}
-From our experience, no. Perhaps it happens unconsciously? For example we seem to alter physiological learning rates without subjectively experiencing it \citep{Behrens2007}.
+From our experience, no. Perhaps it happens unconsciously? For example we seem to alter physiological learning rates without subjectively experiencing it \cite{Behrens2007}.
 
 
 \subsection*{How can an animal tune boredom in a new setting?}
@@ -121,9 +111,9 @@ The short answer is that one would need to guess and check. Our work in Fig \ref
 
 
 \subsection*{Do you have any evidence in animal behavior and neural circuits?}
-There is some evidence for our theory of curiosity in psychology and neuroscience, however, in these fields curiosity and reinforcement learning have largely developed as separate disciplines \citep{Berlyne1950,Kidd2015,Sutton2018}. Indeed, we have highlighted how they are separate problems, with links to different basic needs: gathering resources to maintain physiological homeostasis \citep{Keramati2014,Juechems2019} and gathering information to decide what to learn and to plan for the future \citep{Valiant1984,Sutton2018}. Here we suggest that though they are separate problems, they are problems that can, in large part, solve one another. This insight is the central idea to our view of the explore-exploit decisions. 
+There is some evidence for our theory of curiosity in psychology and neuroscience, however, in these fields curiosity and reinforcement learning have largely developed as separate disciplines \cite{Berlyne1950,Kidd2015,Sutton2018}. Indeed, we have highlighted how they are separate problems, with links to different basic needs: gathering resources to maintain physiological homeostasis \cite{Keramati2014,Juechems2019} and gathering information to decide what to learn and to plan for the future \cite{Valiant1984,Sutton2018}. Here we suggest that though they are separate problems, they are problems that can, in large part, solve one another. This insight is the central idea to our view of the explore-exploit decisions. 
 
-Yet there are hints of this independent cooperation of curiosity and reinforcement learning out there. Cisek (2019) has traced the evolution of perception, cognition, and action circuits from the Metazoan to the modern age \citep{Cisek2019}. The circuits for reward exploitation and observation-driven exploration appear to have evolved separately, and act competitively, exactly the model we suggest. In particular he notes that exploration circuits in early animals were closely tied to the primary sense organs (i.e. information) and had no input from the homeostatic circuits \citep{Keramati2014,Cisek2019,Juechems2019}. This neural separation for independent circuits has been observed in ``modern'' high animals, including zebrafish \citep{Marques2019} and monkeys \citep{White2019,Wang2019}. 
+Yet there are hints of this independent cooperation of curiosity and reinforcement learning out there. Cisek (2019) has traced the evolution of perception, cognition, and action circuits from the Metazoan to the modern age \cite{Cisek2019}. The circuits for reward exploitation and observation-driven exploration appear to have evolved separately, and act competitively, exactly the model we suggest. In particular he notes that exploration circuits in early animals were closely tied to the primary sense organs (i.e. information) and had no input from the homeostatic circuits \cite{Keramati2014,Cisek2019,Juechems2019}. This neural separation for independent circuits has been observed in ``modern'' high animals, including zebrafish \cite{Marques2019} and monkeys \cite{White2019,Wang2019}. 
 
 
 \subsection*{What about aversive values?}
@@ -159,11 +149,11 @@ Another more mundane example would be to add a policy for a grooming drive, $C$.
 Where we assume the grooming term should take precedence over all other options, when there is a tie. That is, $\chi > \rho > \eta$.
 
 \subsection*{What about fitting deterministic models?}
-Exploration in the lab is often described as probabilistic \citep{Calhoun2014,Song2019a,Gershman2018b,Schulz2018a}. By definition probabilistic models do not make exact predictions of behavior, only statistical ones. Our approach is deterministic and so can make exact predictions. If, that is, we can fit it and it turns out to be correct. In species ranging from human to \textit{Caenorhabditis elegans}, there are hundreds of exploration-exploitation experiments. A deterministic theory can, in principle, open up entirely new avenues for reanalysis. Testing and exploring these is a critical next step.
+Exploration in the lab is often described as probabilistic \cite{Calhoun2014,Song2019a,Gershman2018b,Schulz2018a}. By definition probabilistic models do not make exact predictions of behavior, only statistical ones. Our approach is deterministic and so can make exact predictions. If, that is, we can fit it and it turns out to be correct. In species ranging from human to \textit{Caenorhabditis elegans}, there are hundreds of exploration-exploitation experiments. A deterministic theory can, in principle, open up entirely new avenues for reanalysis. Testing and exploring these is a critical next step.
 
 
 \subsection*{Does regret matter?}
-Another way around the dilemma is to ignore regret altogether. This is the domain of pure exploration methods, like the Gitten’s Index \citep{Gittins1979}, or probably-approximately correct approaches \citep{Valiant1984}, or other bounded forms of reinforcement learning \citep{Brafman2002}. Such methods can guarantee that you find the best reward value actions, eventually. These methods do not consider regret, as we have. But we argue that regret is critical to consider when resources and time are scarce, as they are in most natural settings. 
+Another way around the dilemma is to ignore regret altogether. This is the domain of pure exploration methods, like the Gitten’s Index \cite{Gittins1979}, or probably-approximately correct approaches \cite{Valiant1984}, or other bounded forms of reinforcement learning \cite{Brafman2002}. Such methods can guarantee that you find the best reward value actions, eventually. These methods do not consider regret, as we have. But we argue that regret is critical to consider when resources and time are scarce, as they are in most natural settings. 
 
 
 \subsection*{Is the algorithmic run time practical?}
@@ -171,6 +161,14 @@ It is common in computer science to study the run time of an algorithm as a meas
 
 \subsection*{What predictions does this theory make?}
 % TODO
+% 
+% Learning rule independence means any rule will do. Testing, initially, should therefore be qualitative. For which we have three strong predictions to make. 
+
+% 1. Invariant search strategy (auxiliary assumptions, learning is possible because there is some novelty, and some observations available)
+% 2. Deterministic or highly structured search. Environmental noise is the only source of noise (auxiliary assumptions, no forgetting or action/parameter/neural noise)
+% 3. Well defined pure periods (auxiliary assumptions, no other behavior-fear, avoiding, grooming)
+% 4. At the circuit level exploration module for all domains, information and reward (co-activations will vary, as different observations are constructed)
+
 
 \subsection*{Summary}
 We have argued one can put aside any intuitions that suggest a curious search is too inefficient, or open-ended, to be practical for reward collection. We have shown it can be made very practical, and mathematically optimal. We have shown there is a zero-regret way to solve the dilemma, a problem that has seemed unsolvable in those terms. Simply, be curious.
