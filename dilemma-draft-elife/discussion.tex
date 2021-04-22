@@ -2,8 +2,8 @@
 % 
 % Learning rule independence means any rule will do. Testing, initially, should therefore be qualitative. For which we have three strong predictions to make. 
 
-% 1. Invariant search strategy (axillary assumptions, learning is possible because there is some novelty, and some observations available)
-% 2. Deterministic or highly structured search. Environmental noise is the only source of noise (axillary assumptions, no forgetting or action/parameter/neural noise)
+% 1. Invariant search strategy (auxiliary assumptions, learning is possible because there is some novelty, and some observations available)
+% 2. Deterministic or highly structured search. Environmental noise is the only source of noise (auxiliary assumptions, no forgetting or action/parameter/neural noise)
 % 3. Well defined pure periods (auxiliary assumptions, no other behavior-fear, avoiding, grooming)
 % 4. At the circuit level exploration module for all domains, information and reward (co-activations will vary, as different observations are constructed)
 
@@ -14,7 +14,7 @@ We have offered a way around the exploration-exploitation dilemma. We proved the
 This is a controversial claim. So we will address some of its criticisms as a series of questions. The final question explains how this approach can be tested, with behavioral experiments. 
 
 \subsection*{Why curiosity?}
-Ourr usse of curiosity rests on three well established facts. 1. Curiosity is a primary drive in most, if not all, animal behavoir \cite{Inglis2001}. 2. It is as strong, if not sometimes stronger, than the drive for reward \cite{Loewenstein1994,Kidd2015,Gottlieb2018}. 3. Curiosity as an algorithm is highly effective at solving difficult optimization problems \cite{Schmidhuber1991,Pathak2017,Stanton2018,Lehman201,Mouret2011b1,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Schwartenbeck2019.Laversanne-Finot2018}. 
+Our use of curiosity rests on three well established facts. 1. Curiosity is a primary drive in most, if not all, animal behavior \cite{Inglis2001}. 2. It is as strong, if not sometimes stronger, than the drive for reward \cite{Loewenstein1994,Kidd2015,Gottlieb2018}. 3. Curiosity as an algorithm is highly effective at solving difficult optimization problems \cite{Schmidhuber1991,Pathak2017,Stanton2018,Lehman201,Mouret2011b1,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Schwartenbeck2019.Laversanne-Finot2018}. 
 
 
 \subsection*{What about information theory?}
@@ -26,7 +26,7 @@ Valuing information is not, at its core, a communications problem. Consider the 
 
 \begin{figure}
 \begin{fullwidth}
-	\includegraphics[width=0.6\linewidth]{img/info_diagram.pdf} 
+	\includegraphics[width=1.0\linewidth]{img/info_diagram.pdf} 
     \caption{The relationship between the technical problem of communication with the technical problem of value. Note how value is not derived from the channel directly. Value is derived from learning about observations from the channel, which is in turn dependent on memory and its past history.
     }
     \label{fig:info1} 
@@ -41,7 +41,7 @@ Perhaps turning a single objective into two, as we have, is too complex an answe
 
 Questions about parsimony are resolved by considering the benefits versus the costs. The benefits to curiosity-based search is that it leads to no regret solutions to exploration, to exploration-exploitation, and that it so far seems to do very well in practice, at reward collection. At the same time curiosity-as-exploration can also be building a model of the environment, useful for later planning \citep{Ahilan2019,Poucet1993}, creativity, imagination \citep{Schmidhuber2010}, while also building, in some cases, diverse action strategies \citep{Lehman2011a,Lehman2013,Mouret2015,Colas2020}. 
 
-The cost is of curiousitieses indirectness, which could make it slower to converge in principle. There is also the risk of focusing on minutia, which we dicuss in the main text. Our numerical simulation suggests these costs are not fatal for practical successes.
+The cost is of curiosities indirectness, which could make it slower to converge in principle. There is also the risk of focusing on minutia, which we discuss in the main text. Our numerical simulation suggests neither of these costs are not fatal for finding practical successes.
 
 
 \subsection*{Is this too simple?}
@@ -53,7 +53,7 @@ The answer to this question is empirical. If our account does well in describing
 
 
 \subsection*{Is this a slight of hand, theoretically?}
-Yes. It is often useful in mathematical studies to take one problem that cannot be solved, and replace it with another related problem that can be. In this case, we swap one highly motivated animal behavoir (reward seeking) for another (information seeking).
+Yes. It is often useful in mathematical studies to take one problem that cannot be solved, and replace it with another related problem that can be. In this case, we swap one highly motivated animal behavior (reward seeking) for another (information seeking).
 
 
 \subsection*{Does value as a technical problem even make sense?}
@@ -63,7 +63,7 @@ Having a technical definition of value, free from any meaning, might seem counte
 \subsection*{What about mutual information, or truth?}
 In other prototypical examples, information value is based on how well what is learned relates to the environment \citep{Behrens2007,Kolchinsky2018,Tishby2000}, that is the mutual information the internal memory and the external environment. Colloquially, one might call this ``truth seeking". 
 
-As a people we pursue information which is fictional \citep{sternisko2020dark}, or based on analogy \citep{gentner1997reasoning}, or outright wrong \citep{loftus1989misinformation}. Conspiracy theories, disinformation, and our many more mundane errors, are far too commonplace for information value to be based on mutual information, as defined aabove. This does not mean that holding false beliefs cannot harm survival, but this is a second order question as far as learning goes. 
+As a people we pursue information which is fictional \citep{sternisko2020dark}, or based on analogy \citep{gentner1997reasoning}, or outright wrong \citep{loftus1989misinformation}. Conspiracy theories, disinformation, and our many more mundane errors, are far too commonplace for information value to be based on mutual information, as defined above. This does not mean that holding false beliefs cannot harm survival, but this is a second order question as far as learning goes. 
 
 
 \subsection*{So you suppose there is always positive value for learning of all fictions, disinformation, and deceptions?}
@@ -75,7 +75,7 @@ Our work is heavily inspired by information foraging \citep{Inglis2001,Reddy2016
 
 
 \subsection*{Was it necessary to build a general theory for information value just to describe curiosity?}
-No. It was an idealistic choice, that worked out. The field of curiosity studies has shown that there are many kinds of curiosity. At the extreme limit of this diversity is a notion of curiosity defined for any kind of observation, and any kind of learning. If we were able to develop a theory of value driven search at this limit, we can be sure it will apply in all possible examples of curiosity that we seem sure to discover in future. At this limit we can also be sure that the ideas will span fields, addressing the problem as it appears in computer science, machine learning, game theory, psychology, neuroscience, biology, and economics.
+No. It was an idealistic choice that worked out. The field of curiosity studies has shown that there are many kinds of curiosity. At the extreme limit of this diversity is a notion of curiosity defined for any kind of observation, and any kind of learning. If we were able to develop a theory of value driven search at this limit, we can be sure it will apply in all possible examples of curiosity that we seem sure to discover in future. At this limit we can also be sure that the ideas will span fields, addressing the problem as it appears in computer science, machine learning, game theory, psychology, neuroscience, biology, and economics.
 
 
 \subsection*{Doesn't your definition of regret ignore lost rewards when the curiosity policy is in control?}
@@ -83,7 +83,7 @@ Yes. Regret is calculated for the policy which is in control of behavior, not th
 
 
 \subsection*{Is information a reward?}
-If reward is defined as more-or-less any quantity that motivates behavior, then our definition of information value is a reward. This last point does not mean, however, that information value and environmental rewards are interchangeable. Rewards from the enviroment, are a conserved resource, information is not. For example, if a rat shares a potato chip with a cage-mate, it must break the chip up leaving it less food for itself. While if a student shares an idea with a classmate, that idea is not divided up. 
+If reward is defined as more-or-less any quantity that motivates behavior, then our definition of information value is a reward. This last point does not mean, however, that information value and environmental rewards are interchangeable. Rewards from the environment, are a conserved resource, information is not. For example, if a rat shares a potato chip with a cage-mate, it must break the chip up leaving it less food for itself. While if a student shares an idea with a classmate, that idea is not divided up. 
 
 Furthermore, if you add reward value and information value to motivate search you can drive exploration in practical and useful ways. But this doesn't change the intractability of the dilemma proper \citep{Thrun1992a,Dayan1996,Findling2018,Gershman2018b}. 
 
@@ -105,7 +105,7 @@ We did not intend to dismiss the niceties of curiosity that others have revealed
 
 
 \subsection*{What is boredom, besides being a tunable parameter?}
-A more complete version of the theory would let us derive a useful or even optimal value for boredom, if given a learning problem or environment. This would also answer the question of what boredom is computationally. We cannot do this. It is a next problem we will work on, and it is very important. The central challenge is deriving boredom for any kind of learning algorithm.
+A more complete version of the theory would let us derive a useful or even optimal value for boredom, if given a learning problem or environment. This would also answer the question of what boredom is computationally. We cannot do this. It is the next problem we will work on, and it is very important. The central challenge is deriving boredom for any kind of learning algorithm.
 
 
 \subsection*{Does this mean you are hypothesizing that boredom is actively tuned?}
@@ -127,9 +127,9 @@ Yet there are hints of this independent cooperation of curiosity and reinforceme
 
 
 \subsection*{What about aversive values?}
-We certainly do not believe this is complete theory of rewardind decisions. For example, we do not account for any consequences of learning, or any other aversive events. Accounting for these is another important next step.
+We certainly do not believe this is a complete theory of rewarding decisions. For example, we do not account for any consequences of learning, or any other aversive events. Accounting for these is another important next step.
 
-The prescence of mnay values fits well within our notion of competition between simple (pure) policies, in a win-stay loose-shift game \cite{Estes1994TowardAS}. To take other values into account we need a different notation, from the inequalities of Eq.~\ref{eq:pipi}. For example, if we added a fear value $F$ to our homeostatic scheme we can move to argmax notation,
+The presence of many values fits well within our notion of competition between simple (pure) policies, in a win-stay loose-shift game \cite{Estes1994TowardAS}. To take other values into account we need a different notation, from the inequalities of Eq.~\ref{eq:pipi}. For example, if we added a fear value $F$ to our homeostatic scheme we can move to argmax notation,
 
 \begin{equation}
 \label{eq:pipi_f} 
@@ -141,7 +141,7 @@ The prescence of mnay values fits well within our notion of competition between 
 	\argmax_{\Pi^{\pi}} \ \Big [ E - \eta,\ \hat R - \rho,\ F + \phi \Big ]
 \end{equation}
 
-Adding bias term to each value provides a direct way to break ties, and set default behavoirs. Additional to our standarrd assumptions, if we also assume the fear/aversive term should take precedence over all other option when there is a tie, then $\phi > \rho > \eta$.
+Adding a bias term to each value provides a direct way to break ties, and set default behaviors. Additional to our standard assumptions, if we also assume the fear/aversive term should take precedence over all other options when there is a tie, then $\phi > \rho > \eta$.
 
 \subsection*{What about other values?}
 Another more mundane example would be to add a policy for a grooming drive, $C$. 
@@ -169,9 +169,8 @@ Another way around the dilemma is to ignore regret altogether. This is the domai
 \subsection*{Is the algorithmic run time practical?}
 It is common in computer science to study the run time of an algorithm as a measure of its efficiency. So what is the run time of our win stay, loose switch solution? There is unfortunately no fixed answer for the average or best case. The worst case algorithmic run time is linear and additive in the independent policies. If it takes $T_E$ steps for $\pi_E$ to converge, and $T_R$ steps for $\pi_R$, then the worst case run time for $\pi_{\pi}$ is $T_E + T_R$. Of course this is the worst case run time and would still be within reasonable ranges for learning in most naturalistic contexts.
 
+\subsection*{What predictions does this theory make?}
+% TODO
 
 \subsection*{Summary}
-There will certainly be cases in an animal's life when their exploration must focus on tangible physical rewards. Even here, searching for information about physical rewards, rather than searching for their value, will make the search more robust to deception, and more reliable in the future. We think of this as curiosity about reward. There are many more cases though where curiosity can include observations of the environment and the self. We have argued one should put aside intuitions that suggest an open-ended curious search is too inefficient to be practical. We have shown it can be made very practical. We have argued one should put aside traditional intuitions for what exploratory behavior in animals represents. We have shown how there is a zero-regret way to solve the dilemma, a problem that has seemed unsolvable. Simply be curious.
-
-
-
+We have argued one can put aside any intuitions that suggest a curious search is too inefficient, or open-ended, to be practical for reward collection. We have shown it can be made very practical, and mathematically optimal. We have shown there is a zero-regret way to solve the dilemma, a problem that has seemed unsolvable in those terms. Simply, be curious.
