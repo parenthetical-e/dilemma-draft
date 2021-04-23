@@ -4,15 +4,15 @@ We have offered a way around the exploration-exploitation dilemma. We proved the
 This is a controversial claim. So we will address some of its criticisms as a series of questions. The final question explains how this approach can be tested, with behavioral experiments. 
 
 \subsection*{Why curiosity?}
-Our use of curiosity rests on three well established facts. 1. Curiosity is a primary drive in most, if not all, animal behavior \cite{Inglis2001}. 2. It is as strong, if not sometimes stronger, than the drive for reward \cite{Loewenstein1994,Kidd2015,Gottlieb2018}. 3. Curiosity as an algorithm is highly effective at solving difficult optimization problems \cite{Schmidhuber1991,Pathak2017,Stanton2018,Lehman201,Mouret2011b1,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Schwartenbeck2019,Laversanne-Finot2018}. 
+Our use of curiosity rests on three well established facts. 1. Curiosity is a primary drive in most, if not all, animal behavior \cite{Inglis2001}. 2. It is as strong, if not sometimes stronger, than the drive for reward \cite{Loewenstein1994,Kidd2015,Gottlieb2018}. 3. Curiosity as an algorithm is highly effective at solving difficult optimization problems \cite{Schmidhuber1991,Pathak2017,Stanton2018,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Schwartenbeck2019,Laversanne-Finot2018}. 
 
 
 \subsection*{What about information theory?}
 In short, the problems of communication and value are different problems that require different theories.
 
-Weaver \cite{Shannon1948} in his classic introduction to the topic, describes information as a communication problem with three levels. a. The technical problem of transmitting accurately. b. The semantic problem of meaning. c. The effectiveness problem of changing behavior. He then describes how Shannon's work addresses only problem A. It has turned out that Shannon's separation of the problem allowed the information theory to have an incredibly broad application. 
+Weaver \cite{Shannon1964} in his classic introduction to the topic, describes information as a communication problem with three levels. a. The technical problem of transmitting accurately. b. The semantic problem of meaning. c. The effectiveness problem of changing behavior. He then describes how Shannon's work addresses only problem A. It has turned out that Shannon's separation of the problem allowed the information theory to have an incredibly broad application. 
 
-Valuing information is not, at its core, a communications problem. Consider the very simple example Bob and Alice, having a phone conversation and then Tom and Bob having the exact same conversation. The personal history of Bob and Alice will determine what Bob learns in their phone call, and so determines what he values in that phone call. These might be completely different from what he learns when talking to Tom, even if the conversations are identical. What we mean by this example is that the personal history defines what is valuable on a channel, and this is independent of the channel and the messages sent. We have summarized this diagrammatically, in Fig. ~\ref{fig:info1}.
+Valuing information is not, at its core, a communications problem. Consider the very simple example Bob and Alice, having a phone conversation and then Tom and Bob having the exact same conversation. The personal history of Bob and Alice will determine what Bob learns in their phone call, and so determines what he values in that phone call. These might be completely different from what he learns when talking to Tom, even if the conversations are identical. What we mean by this example is that the personal history defines what is valuable on a channel, and this is independent of the channel and the messages sent. We have summarized this diagrammatically, in Fig.~\ref{fig:info1}.
 
 \begin{figure}
 	\includegraphics[width=1.0\linewidth]{img/info_diagram.pdf} 
@@ -21,13 +21,12 @@ Valuing information is not, at its core, a communications problem. Consider the 
     \label{fig:info1} 
 \end{figure}
 
-There is, we argue, an analogous set of levels for information value as those Weaver describes. a. There is the technical problem of judging how much was learned. b. There is the semantic problem of both what this learning ``means'', and also what its consequences are. c. There is an effectiveness problem of using what was learned to some other effect. In many ways b and c are similar to those in the information theory. It is a. which is most different. 
-
+There is, we argue, an analogous set of levels for information value as those Weaver describes. a. There is the technical problem of judging how much was learned. b. There is the semantic problem of both what this learning ``means'', and also what its consequences are. c. There is an effectiveness problem of using what was learned to some other effect. 
 
 \subsection*{Is this too complex?}
 Perhaps turning a single objective into two, as we have, is too complex an answer. If this is true, then it would mean our strategy is not a parsimonious solution to the dilemma. We could or should reject it on that alone?
 
-Questions about parsimony are resolved by considering the benefits versus the costs. The benefits to curiosity-based search is that it leads to no regret solutions to exploration, to exploration-exploitation, and that it so far seems to do very well in practice, at reward collection. At the same time curiosity-as-exploration can also be building a model of the environment, useful for later planning \cite{Ahilan2019,Poucet1993}, creativity, imagination \cite{Schmidhuber2010}, while also building, in some cases, diverse action strategies \cite{Lehman2011a,Lehman2013,Mouret2015,Colas2020}. 
+Questions about parsimony can be sometimes resolved by considering the benefits versus the costs to adding complexity. The benefits to curiosity-based search is that it leads to no regret solutions to exploration, to exploration-exploitation, and that it so far seems to do very well in practice, at reward collection. At the same time curiosity-as-exploration can also be building a model of the environment, useful for later planning \cite{Ahilan2019,Poucet1993}, creativity, imagination \cite{Schmidhuber2010}, while also building, in some cases, diverse action strategies \cite{Lehman2011a,Lehman2013,Mouret2015,Colas2020}. 
 
 The cost is of curiosities indirectness, which could make it slower to converge in principle. There is also the risk of focusing on minutia, which we discuss in the main text. Our numerical simulation suggests neither of these costs are not fatal for finding practical successes.
 
@@ -71,7 +70,7 @@ Yes. Regret is calculated for the policy which is in control of behavior, not th
 
 
 \subsection*{Is information a reward?}
-If reward is defined as more-or-less any quantity that motivates behavior, then our definition of information value is a reward. This last point does not mean, however, that information value and environmental rewards are interchangeable. Rewards from the environment, are a conserved resource, information is not. For example, if a rat shares a potato chip with a cage-mate, it must break the chip up leaving it less food for itself. While if a student shares an idea with a classmate, that idea is not divided up. 
+If reward is defined as more-or-less any quantity that motivates behavior, then our definition of information value is a reward. This last point does not mean, however, that information value and environmental rewards are interchangeable. Rewards from the environment are a conserved resource, information is not. For example, if a rat shares a potato chip with a cage-mate, it must break the chip up leaving it less food for itself. While if a student shares an idea with a classmate, that idea is not divided up. 
 
 Furthermore, if you add reward value and information value to motivate search you can drive exploration in practical and useful ways. But this doesn't change the intractability of the dilemma proper \cite{Thrun1992a,Dayan1996,Findling2018,Gershman2018b}. 
 
@@ -146,8 +145,8 @@ Another more mundane example would be to add a policy for a grooming drive, $C$.
 
 Where we assume the grooming term should take precedence over all other options, when there is a tie. That is, $\chi > \rho > \eta$.
 
-\subsection*{What about fitting deterministic models?}
-Exploration in the lab is often described as probabilistic \cite{Calhoun2014,Song2019a,Gershman2018b,Schulz2018a}. By definition probabilistic models do not make exact predictions of behavior, only statistical ones. Our approach is deterministic and so can make exact predictions. If, that is, we can fit it and it turns out to be correct. In species ranging from human to \textit{Caenorhabditis elegans}, there are hundreds of exploration-exploitation experiments. A deterministic theory can, in principle, open up entirely new avenues for reanalysis. Testing and exploring these is a critical next step.
+% \subsection*{What about fitting deterministic models?}
+% Exploration in the lab is often described as probabilistic \cite{Calhoun2014,Song2019a,Gershman2018b,Schulz2018a}. By definition probabilistic models do not make exact predictions of behavior, only statistical ones. Our approach is deterministic and so can make exact predictions. If, that is, we can fit it and it turns out to be correct. In species ranging from human to \textit{Caenorhabditis elegans}, there are hundreds of exploration-exploitation experiments. A deterministic theory can, in principle, open up entirely new avenues for reanalysis. Testing and exploring these is a critical next step.
 
 
 \subsection*{Does regret matter?}
@@ -158,18 +157,18 @@ Another way around the dilemma is to ignore regret altogether. This is the domai
 It is common in computer science to study the run time of an algorithm as a measure of its efficiency. So what is the run time of our win stay, loose switch solution? There is unfortunately no fixed answer for the average or best case. The worst case algorithmic run time is linear and additive in the independent policies. If it takes $T_E$ steps for $\pi_E$ to converge, and $T_R$ steps for $\pi_R$, then the worst case run time for $\pi_{\pi}$ is $T_E + T_R$. Of course this is the worst case run time and would still be within reasonable ranges for learning in most naturalistic contexts.
 
 \subsection*{What predictions does this theory make?}
-In what sense can your mathmatical union be testied? Normally to test a model or theory of learning, one tests whetheer or not the learning algorithm appears to exist in the animal of interest. However our axioms, and their learning rule independence, means any rule will do. Testing, must therefore be qualitative, for which we have three strong predictions to make. 
+In what sense can your mathematical union be tested? Normally, to test a model or theory of learning one tests whether or not the learning algorithm appears to be at work in the animal of interest. However our axioms, and their learning rule independence, means nearly any rule will do. Testing must therefore be qualitative, for which we have four strong predictions to make. 
 
 % TODO - add Diss of Rosenburg and supporting data that exists. Add it in each number.
 
 \begin{enumerate}
-    \item \textbf{Invariant exploration strategy}. The presence of reward should not change the exploration strategy. This is tricky, because differing sense information is often associated with the prescence of absence of reward. This sense information would in many cases change learning and so change curius exploration. \emph{Auxiliary assumptions}. Learning is possible because there is some novelty ($\hat E > \eta$), and some observations available to learn from. These criteria rule out for example situations where Levy walks would be optimal \cite{Viswanathan2000}.
-    \item \textbf{Information preference following reward abscence}. When reward is absent, an animal should immediatly choose information collection with it's next action. \emph{Auxiliary assumptions}. Learning is possible because there is some novelty ($\hat E > \eta$), and some observations available to learn from.
-    \item \textbf{Deterministic search}. Read strictly, environmental noise is the only source of noise in our models exploration behavior. To evaluate this we musst move from population-level distribution analysis, to moment-by-moment predation of animal behavoir \cite{Peters2016,Mangalam2021}. \emph{Auxiliary assumptions}. perfect memory, no forgetting, or action/parameter/neural noise; In the casse of internal noise like the last examples, this noise should be independent of the search).
-    \item  \textbf{Well defined pure-periods}. There should be well defined period of exploration and exploitation. \emph{Auxiliary assumptions}. The are no other behaviors, are driving factors, present. For example, learning fear, avoiding, or grooming.
+    \item \textbf{Invariant exploration strategy}. The presence of reward should not change the exploration strategy. This is tricky, because differing sense information is often associated with the presence of absence of reward. This sense of information would in many cases change learning and so change curious exploration. \emph{Auxiliary assumptions}. Learning is possible because there is some novelty ($\hat E > \eta$), and some observations available to learn from. These criteria rule out for example situations where Levy walks would be optimal \cite{Viswanathan2000}.
+    \item \textbf{Information preference following reward absence}. When reward is absent, an animal should immediately choose to do an information collection with it's next action. \emph{Auxiliary assumptions}. Learning is possible because there is some novelty ($\hat E > \eta$), and some observations available to learn from.
+    \item \textbf{Deterministic search}. Read strictly, environmental noise is the only source of noise in our models exploration behavior. To evaluate this we must move from population-level distribution analysis, to moment-by-moment predation of animal behavior \cite{Peters2016,Mangalam2021}. \emph{Auxiliary assumptions}. perfect memory, no forgetting, or action/parameter/neural noise; In the case of internal noise like the last examples, this noise should be independent of the search).
+    \item  \textbf{Well defined pure-periods}. There should be a well defined period of exploration and exploitation. \emph{Auxiliary assumptions}. There are no other behaviors, are driving factors, present. For example, learning fear, avoiding, or grooming.
 \end{enumerate}
 
-Of course the presence of any four criteria does not indicate our theory is at work, mechanisitically. Mechanisitic claims for any biological of behaavoiral problems are difficult if not impossible to be certian of. Instead, we view mmeeting each of these criterion as some evidence for our account. We think the nice mathematical properties of out curiosity trick make a good general candidate for solving explore-exploit problems. We wish to test how true that is. In the end, were ecological rationalists and not making perscptivist claims \cite{Rich2016a}.  
+Of course the presence of any four criteria does not indicate our theory is at work, mechanistically. Mechanistic claims for any biological or behavioral problems are difficult if not impossible to be certain of. Instead, we view meeting each of these criterion as some evidence for our account. We think the nice mathematical properties of out curiosity trick make a good general candidate for solving explore-exploit problems. We wish to test how true that is \cite{Rich2016a}.  
 
 % Kidd U. 
 % Relation to count based search
