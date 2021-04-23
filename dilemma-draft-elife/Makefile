@@ -1,6 +1,13 @@
 SHELL=/bin/bash -O expand_aliases
 DOCNAME=main
 
+# --
+# Master recipes
+all: copy_bib clean tex 
+
+clean: clean_tex
+
+# --
 # Sync the bib file from Zotero w/ this
 # directory
 copy_bib:
