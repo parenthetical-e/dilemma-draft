@@ -158,15 +158,23 @@ Another way around the dilemma is to ignore regret altogether. This is the domai
 It is common in computer science to study the run time of an algorithm as a measure of its efficiency. So what is the run time of our win stay, loose switch solution? There is unfortunately no fixed answer for the average or best case. The worst case algorithmic run time is linear and additive in the independent policies. If it takes $T_E$ steps for $\pi_E$ to converge, and $T_R$ steps for $\pi_R$, then the worst case run time for $\pi_{\pi}$ is $T_E + T_R$. Of course this is the worst case run time and would still be within reasonable ranges for learning in most naturalistic contexts.
 
 \subsection*{What predictions does this theory make?}
-% TODO
-% 
-% Learning rule independence means any rule will do. Testing, initially, should therefore be qualitative. For which we have three strong predictions to make. 
+In what sense can your mathmatical union be testied? Normally to test a model or theory of learning, one tests whetheer or not the learning algorithm appears to exist in the animal of interest. However our axioms, and their learning rule independence, means any rule will do. Testing, must therefore be qualitative, for which we have three strong predictions to make. 
 
-% 1. Invariant search strategy (auxiliary assumptions, learning is possible because there is some novelty, and some observations available)
-% 2. Deterministic or highly structured search. Environmental noise is the only source of noise (auxiliary assumptions, no forgetting or action/parameter/neural noise)
-% 3. Well defined pure periods (auxiliary assumptions, no other behavior-fear, avoiding, grooming)
-% 4. At the circuit level exploration module for all domains, information and reward (co-activations will vary, as different observations are constructed)
+% TODO - add Diss of Rosenburg and supporting data that exists. Add it in each number.
 
+\begin{enumerate}
+    \item \textbf{Invariant exploration strategy}. The presence of reward should not change the exploration strategy. This is tricky, because differing sense information is often associated with the prescence of absence of reward. This sense information would in many cases change learning and so change curius exploration. \emph{Auxiliary assumptions}. Learning is possible because there is some novelty ($\hat E > \eta$), and some observations available to learn from. These criteria rule out for example situations where Levy walks would be optimal \cite{Viswanathan2000}.
+    \item \textbf{Information preference following reward abscence}. When reward is absent, an animal should immediatly choose information collection with it's next action. \emph{Auxiliary assumptions}. Learning is possible because there is some novelty ($\hat E > \eta$), and some observations available to learn from.
+    \item \textbf{Deterministic search}. Read strictly, environmental noise is the only source of noise in our models exploration behavior. To evaluate this we musst move from population-level distribution analysis, to moment-by-moment predation of animal behavoir \cite{Peters2016,Mangalam2021}. \emph{Auxiliary assumptions}. perfect memory, no forgetting, or action/parameter/neural noise; In the casse of internal noise like the last examples, this noise should be independent of the search).
+    \item  \textbf{Well defined pure-periods}. There should be well defined period of exploration and exploitation. \emph{Auxiliary assumptions}. The are no other behaviors, are driving factors, present. For example, learning fear, avoiding, or grooming.
+\end{enumerate}
+
+Of course the presence of any four criteria does not indicate our theory is at work, mechanisitically. Mechanisitic claims for any biological of behaavoiral problems are difficult if not impossible to be certian of. Instead, we view mmeeting each of these criterion as some evidence for our account. We think the nice mathematical properties of out curiosity trick make a good general candidate for solving explore-exploit problems. We wish to test how true that is. In the end, were ecological rationalists and not making perscptivist claims \cite{Rich2016a}.  
+
+% Kidd U. 
+% Relation to count based search
+% Noise tuning? See Wilson?
+% Noise, and predation.
 
 \subsection*{Summary}
 We have argued one can put aside any intuitions that suggest a curious search is too inefficient, or open-ended, to be practical for reward collection. We have shown it can be made very practical, and mathematically optimal. We have shown there is a zero-regret way to solve the dilemma, a problem that has seemed unsolvable in those terms. Simply, be curious.
