@@ -12,8 +12,7 @@ When the environment is unknown, to maximize reward an animal must trade-off bet
 The agent must try a variety of actions and progressively favor those that appear to be best'' \cite{Sutton2018}. 
 \end{quote}
 
-Later on we will suggest two fairly radical changes to this standard formula. Don’t stop searching progressively, do so suddenly. Explore only for learning sake, out of curiosity \cite{Kidd2015}.
-
+A conventent way to study reward collection is with using Markov decisions.
 Our Markov decision process (MDP) for reward collection consists of states of real valued vectors $\mathbf{S}$ from a finite set $\mathcal{S}$ of size $n$, as are actions $\mathbf{A}$ from a finite set $\mathcal{A}$ of size $k$. Rewards are non-negative real numbers, $R$. Transitions from state to state are handled by the transition function $\Lambda(\mathbf{S},\mathbf{A})$. In our mathematics we assume $\Lambda$ is a deterministic function of its inputs. In our simulated experiments we assume it is a stochastic function.
 
 Markovian preliminaries in place, we can write down the standard value function definition, and the standard Bellman equation \cite{Bellmann1954} for reward collection \cite{Sutton2018}. For simplicity we assume below that the horizon is finite, bounded by $T$.
@@ -64,14 +63,14 @@ We define memory as a set of real valued numbers, embedded in a finite space tha
 
 We do not assume memory $\mathbf{M}$, or the learning function $f$ are Markovian.
 
-For individual animals we assume $f$ and $f^{-1}$ have been chosen by evolution and experience to be learnable, efficient, and have sufficiently useful inductive bias for their particular environment \cite{Valiant1984,Thrun1992a}. 
+For individual animals we assume $f$ and $f^{-1}$ have been chosen by evolution and experience to be learnable, efficient, and have sufficiently useful inductive bias for their particular environment \cite{Valiant1984a,Thrun1992a}. 
 
 
 \subsubsection*{Axiomatic information value} 
 To make our eventual union proper, we first need to separate reward value from information value in a principled and general way. We do this axiomatically.
 We reason instead that the value of any observation made by an animal depends entirely on what an animal learns by making that observation–-literally how it changes that animal's memory. This lets us sidestep a problem present in most working models of curiosity. They tend to conflate the learning rule, with curiosity itself \cite{Schmidhuber1991b,Oudeyer2018a,Burda2018,Zhang2013,deAbril2018,Zhou2020,Schwartenbeck2019,Wilson2014a,Lehman2011,Velez2014}.
 
-Our definition of information value closely follows the motivations of Shannon, and his definition of a communication channel. If we have a memory $\mathbf{M}$, which has been learned by $f$ over a history of observations, $(\mathbf{X_0},\mathbf{X_1},...)$, Can we measure how much value the next observation $\mathbf{X_t}$ should have? 
+Our definition of information value closely follows the motivations of Shannon, and his definition of a communication channel. If we have a memory $\mathbf{M}$ which has been learned by $f$ over a history of observations, $(\mathbf{X_0},\mathbf{X_1},...)$, can we measure how much value the next observation $\mathbf{X_t}$ should have? 
 
 We think this, our hypothetical measure $\hat E$, should have certain intuitive properties:
 
@@ -106,9 +105,9 @@ That is, there should be a one-to-one relationship between how memory changes an
 
 That is, learning on $\mathbf{M}$ makes continual progress toward equilibrium (i.e. self-consistency) with each observation, after a finite time period has passed. After this it will approach a steady-state value of $\delta \mathbf{M} \rightarrow 0$ and $\hat E \rightarrow 0$. We use the term consistency to denote a memory at or near equilibrium. We mean that the memory has become consitent it itseslf in time, and this all our axioms can promise. 
 
-All we have really done in these axioms is remove any mention of a learning rule, its properties, or learning target, its properties from previous definitions \cite{Itti2009,Jaegle2019,Schmidhuber1991,Inglis2001,Reddy2016,Pirolli2007}. This is important not for its own sake but because with these axioms we can consider information value, and therefore curiosity, independent of any learning semantics, or any semantics at all. Anything we prove in this axiomatic, or more abstract setting, will hold for any learning algorithm, who meets our requirements. 
+All we have really done in these axioms is remove any mention of a learning rule, its properties, or learning target, its properties from previous definitions \cite{Itti2009,Jaegle2019,Schmidhuber1991,Inglis2001,Reddy2016,Pirolli2007}. This is important not for its own sake but because with these axioms we can consider information value, and therefore curiosity, independent of any learning semantics, or any semantics at all. 
 
-Put another way, if information should be agnostic to semantic considerations to ensure its generality as a concept \cite{Shannon1948a}, we reason information value should be agnostic for the same reason.
+Put another way, if information should be agnostic to semantics \cite{Shannon1948a}, we reason information value should be agnostic as well.
 
 
 \subsubsection*{Practical information value}
@@ -137,7 +136,7 @@ In practice here we will not work with the gradient, but will use a discrete tim
 	\label{fig:cartoon} 
 \end{figure}
 
-As stated at the begning of the Theory section, we want a Bellman solution for $\hat E$. As during reward collection the common way to arrive at Bellman solution is to assume a Markov decision space. This is a problem. For our definition of memory we assume it must have a natural long-term path dependence. This breaks the Markov assumption. To get around this we prove instead that exact forgetting, of the last observation, is another way to derive a Bellman solution.
+The common way to arrive at Bellman solution is to assume a Markov decision space. This is a problem. For our definition of memory we assume long-term path dependence. This breaks the Markov assumption, and its needed claim of optimal substructure. To get around this we prove instead that exact forgetting, of the last observation, is another way to derive a Bellman solution.
 
 In the theorem below which shows the optimal substructure of $\mathbf{M}$ we implicitly assume that $\mathbf{X} = \mathbf{S}$, $\mathbf{A}$, $f$, and $\Lambda$ are given, and that $\Lambda$ is deterministic, 
 
@@ -160,7 +159,7 @@ As long as learning about the different observations $\mathbf{X}$ is independent
 \end{equation}
 
 \subsubsection*{A hypothesis about boredom}
-The central failure mode of curiosity is what we'll call minutia, defined as those learning that has little to no use, ever. A good example of this is to, ``Imagine a scenario where the agent is observing the movement of tree leaves in a breeze. Since it is inherently hard to model breeze, it is even harder to predict the location of each leaf'' \cite{Pathak2017}. This will imply, they note, a curious agent will always remain curious about chaos in the leaves even though they have no hope of successful learning of them.
+The central failure mode of curiosity is what we will call minutia, defined as learning that has little to no use to the agent. A good example of this is to, ``Imagine a scenario where the agent is observing the movement of tree leaves in a breeze. Since it is inherently hard to model breeze, it is even harder to predict the location of each leaf'' \cite{Pathak2017}. This will imply that a curious agent will always remain curious about chaos in the leaves even though they have no hope of successful learning of them.
 
 To limit curiosity we introduction a penalty term, $\eta$ which we treat as synonymous with boredom. We consider boredom an adaptive trait, in other words. Others have considered boredom arguing it is a useful way to motivate aversive tasks \cite{Bench2013}, or curiosity \cite{Loewenstein1994}. We take a slightly different view. We treat boredom as a tunable free parameter, $\eta \ge 0$ and a means to ignore marginal value by requiring curious exploration to stop once $E \le \eta$. 
 
@@ -282,7 +281,7 @@ Under homeostasis ties between values in Eq. \ref{eq:pipi} should be broken in f
 
 % ----------------------------------------------------------------------
 \subsection*{Experiments}
-Does our theory work in practice? Our approach does not mathematically ensure a mixed value solution to explore-exploit problems will always maximizes reward value, compared with other well-established methods. The remainder of this paper is devoted to studying our approaches performance in simulated bandit tasks. Each task was designed to either test exploration performance in a way that matches recent experimental studies, or to test the limits of curiosity. 
+Does our theory work in practice? The remainder of this paper is devoted to studying our approaches performance in simulated bandit tasks. Each task was designed to either test exploration performance in a way that matches recent experimental studies, or to test the limits of curiosity. 
 
 \subsubsection*{Information collection}
 The work so far has built up the idea that the most valuable, and most efficient, curious search will come from a deterministic algorithm. That is, every step strictly maximizes $\hat E$. It is this determinism which will let us resolve the dilemma, later on. A deterministic view of exploration seems at odds with how the problem is generally viewed today, which involves searching with some amount of randomness. Whereas if our analysis is correct, randomness is not needed or desirable, as it must lead to less value and a longer search. 
@@ -313,7 +312,7 @@ The results of this simple information seeking task are shown in Figure~\ref{fig
 
 
 \subsubsection*{Reward collection} 
-Our approach does not mathematically ensure a dual value solution to the dilemma maximizes reward value compared with other well-established methods. To find out we measured total reward collected over 7 tasks and 10 agents, including ours. Each agent's parameters were independently optimized for each task. For a brief description of each agent, see Table~\ref{tab:agents}. They all have in common that their central goal is to maximize total reward value, though this is often supplemented by some other goal, an intrinsic reward or bonus \cite{Ng1999,Sutton1998}. 
+We cannot mathematically ensure a mixed value solution to explore-exploit problems will maximizes reward value better than other well-established methods. To find out if this is so, we measured total reward collected over 7 tasks and 10 agents. Each agent's parameters were independently optimized for each task. For a brief description of each agent, see Table~\ref{tab:agents}. They all have in common that their central goal is to maximize total reward value, though this is often supplemented by some other goal, an intrinsic reward or bonus \cite{Ng1999,Sutton1998}. 
 
 The general form of the 7 tasks are depicted in Fig~\ref{fig:task_outline2}. As with our first task (Fig. ~\ref{fig:task_outline1}) they are all variations of the classic multi-armed bandit \cite{Sutton2018}. The payouts for each of the tasks are shown separately in Fig.~\ref{fig:task_payout}. Every trial has a set of $n$ choices. Each choice returns a ``payout’’, according to a predetermined probability. Payouts are information, a reward, or both. Note that, as in Task 1, information was symbolic, denoted by a color code, ``yellow’’ and ``blue’’ and as is custom reward was a positive real number. 
 
@@ -386,13 +385,15 @@ The results in full for all tasks and exploration strategies are shown in Fig.~\
 %   	}
 % \end{SCfigure*}
 
-\textit{Task 1.} is an information gathering task, which we discussed already above. \textit{Task 2} was designed to examine reward collection, in probabilistic reward setting very common in the decision making literature \cite{schonberg2007reinforcement,frank2004carrot,cavanagh2014conflict,jahfari2019cross,collins2014opponent,collins2017interactions,glascher2010states}. Rewards were 0 or 1. The best choice had a payout of $p(R=1) = 0.8$. This is a much higher average payout than the others ($p(R=1) = 0.2$). At no point does the task generate symbolic information. See, Fig.~\ref{fig:task_payout}\textbf{b}. 
+\textit{Task 1} is an information gathering task, which we discussed above.  We present the design and results here to contrast with the reward collection tasks. 
 
-The results for Task 1 were discussed above. As for Task 2, we expected all the exploration strategies to succeed. While this was indeed the case, our deterministic curiosity was the top-performer in terms of median rewards collected, though by a small margin (Fig.~\ref{fig:summary}\textbf{a}).
+\textit{Task 2} was designed to examine reward collection, in probabilistic reward setting very common in the decision making literature \cite{schonberg2007reinforcement,frank2004carrot,cavanagh2014conflict,jahfari2019cross,collins2014opponent,collins2017interactions,glascher2010states}. Rewards were 0 or 1. The best choice had a payout of $p(R=1) = 0.8$. This is a much higher average payout than the others ($p(R=1) = 0.2$). At no point does the task generate symbolic information. See, Fig.~\ref{fig:task_payout}\textbf{b}. 
 
-\textit{Task 3.} was designed with very sparse rewards \cite{Silver2016b,Silver2018} and there were 10 choices, making this a more difficult task (Fig.~\ref{fig:task_payout}\textbf{c}). Sparse rewards are a common problem in the natural world, where an animal may have to travel and search between each meal This is a difficult but not impossible task for vertebrates \cite{anderson1984optimal} and invertebrates \cite{westphal2006foraging}. That being said, most reinforcement learning algorithms will struggle in this setting because the thing they need to learn, that is rewards, are often absent. In this task we saw quite a bit more variation in performance, with the novelty-bonus strategy taking the top slot (this is the only time it does so).
+In contrast to the performance in Task 1, in Task 2 we expected all the exploration strategies to succeed. While this was indeed the case, our deterministic curiosity was the top-performer in terms of median rewards collected, though by a small margin (Fig.~\ref{fig:summary}\textbf{a}).
 
-\textit{Task 4.} was designed with deceptive rewards. By deceptive we mean that the best long-term option presents itself initially with a decreasing reward value (Fig.~\ref{fig:task_payout}\textbf{d}). Such small deceptions abound in many natural contexts where one must often make short-term sacrifices \cite{internicola2012bumble}. It is well known that classic reinforcement learning will often struggle in this kind of task \cite{Lehman2011a,Sutton2018}. Here our deterministic curiosity is the only strategy that reaches above chance performance. Median performance of all other strategies are similar to the random control (Fig~\ref{fig:summary}\textbf{c}). 
+\textit{Task 3} was designed with very sparse rewards \cite{Silver2016b,Silver2018} and there were 10 choices, making this a more difficult task (Fig.~\ref{fig:task_payout}\textbf{c}). Sparse rewards are a common problem in the natural world, where an animal may have to travel and search between each meal This is a difficult but not impossible task for vertebrates \cite{anderson1984optimal} and invertebrates \cite{westphal2006foraging}. That being said, most reinforcement learning algorithms will struggle in this setting because the thing they need to learn, that is rewards, are often absent. In this task we saw quite a bit more variation in performance, with the novelty-bonus strategy taking the top slot (this is the only time it does so).
+
+\textit{Task 4} was designed with deceptive rewards. By deceptive we mean that the best long-term option presents itself initially with a decreasing reward value (Fig.~\ref{fig:task_payout}\textbf{d}). Such small deceptions abound in many natural contexts where one must often make short-term sacrifices \cite{internicola2012bumble}. It is well known that classic reinforcement learning will often struggle in this kind of task \cite{Lehman2011a,Sutton2018}. Here our deterministic curiosity is the only strategy that reaches above chance performance. Median performance of all other strategies are similar to the random control (Fig~\ref{fig:summary}\textbf{c}). 
 
 \textit{Task 5} was designed to fool curiosity, our algorithm, by presenting information that was utterly irrelevant to reward collection, but had very high entropy and so ``interesting'' to our algorithm. We fully anticipated that this context would fool just our algorithm, with all other strategies performing well since they are largely agnostic to entropy. However, despite being designed to fail, deterministic curiosity still produced a competitive performance to the other strategies (Fig~\ref{fig:summary}\textbf{d}). 
 
@@ -401,9 +402,9 @@ The results for Task 1 were discussed above. As for Task 2, we expected all the 
 In Task 6 deterministic curiosity performed well, securing a second place finish. We note the Bayesian strategy  outperformed our approach. However, under the sudden non-stationarity in reward when switching tasks, the top Bayesian model became the worst on Task 7, and deterministic curiosity took the top spot. Compare Fig.~\ref{fig:summary}\textbf{e} to \textbf{f}. This is the robustness that we'd expect for any curiosity algorithm, whose main goal is to learn everything unbiased by other objectives. The environment and the objectives do change in real life, and so we must be prepared for this. Note how the other less-biased-toward-reward-value exploration models (count-based, novelty, and entropy models) also saw gains, to a lesser degree.
 
 \subsubsection*{Robustness}
-It is common to focus on best case performance in simulation experiments, as we have above. However worst case performance is just important in judging the utility of an algorithm. We therefore examined the progression from our best case hyperparameters, to the worst case.  
+It is common to focus on best case performance, as we have above. However worst case performance is just as important in judging the usefulness of an algorithm. We therefore examined the progression from best case hyperparameters, to the worst case.  
 
-Unlike idealized simulations, animals cannot know with perfect fidelity how their environment may change. They cannot perfectly pre-optimize their search parameters for every task, in other words. We have been using carefully chosen parameters. To test the robustness of our algorithm, and all other exploration algorithms we considered, we reexamined reward collection performance across all hyper parameters from our tuning set. Results for this are shown in Figure~\ref{fig:robust}. 
+Unlike idealized simulations, animals cannot know with perfect fidelity how their environment may change. So they cannot perfectly know the search parameters, in other words. To test the robustness of our algorithm, and all other exploration strategies we considered, we reexamined reward collection performance across all hyperparameters from our tuning set. Results for this are shown in Figure~\ref{fig:robust}. We plotted performance ranked by parameters, from best to worst.
 
 \begin{SCfigure*}[\sidecaptionrelwidth][t]
 	\includegraphics[width=11.4cm]{img/robust.pdf} 
@@ -415,7 +416,6 @@ Unlike idealized simulations, animals cannot know with perfect fidelity how thei
 	\label{fig:robust}
 \end{SCfigure*}
 
-
-No matter the parameter choices, exploration-as-curiosity produced top-3 performance on both tasks in Figure.~\ref{fig:robust}a-bd. Most interesting to note is the performance on the worst 10 parameters. Here curiosity was markedly better, with substantially less variability. We can explain this last result in the following way. 
+No matter the parameter choices, exploration-as-curiosity produced top-3 performance (Figure.~\ref{fig:robust}a-bd). Most interesting to note is the performance on the worst 10 parameters. Here curiosity was markedly better, with substantially less variability.
 
 All other exploration strategies we considered have hyperparameters to tune their \emph{degree} of exploration. For example, the temperature of noise in softmax. With our approach to curiosity, however, we tune only when exploration should stop, by $\eta$. In these examples, performance is more robust to  ``mistuning'' the stopping point, rather than the degree of exploration.
