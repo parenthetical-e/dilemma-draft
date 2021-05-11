@@ -1,6 +1,6 @@
 \section*{Results} 
 \subsection*{Theory}
-For our theoretical work, we first introduce reinforcement learning, and its basis in the Bellman equation. Next we develop a new mathematical view of information value, curiosity, and a new understanding of ideal curious search. We then use these results to argue exploration-for-curiosity leads to optimal value solutions for all explore-exploit problems, with deterministic dynamics.
+For our theoretical work, we first introduce reinforcement learning, and its basis in the Bellman equation. Next we develop a new mathematical view of information value, curiosity, and a new understanding of ideal curious search. We then use these results to argue that exploration-for-curiosity leads to optimal value solutions for all explore-exploit problems, with deterministic dynamics.
 
 
 \subsubsection*{The reward collection problem}
@@ -12,7 +12,7 @@ When the environment is unknown, to maximize reward an animal must trade-off bet
 The agent must try a variety of actions and progressively favor those that appear to be best'' \cite{Sutton2018}. 
 \end{quote}
 
-A conventent way to study reward collection is with using Markov decisions.
+A convenient way to study reward collection is with using Markov decisions.
 Our Markov decision process (MDP) for reward collection consists of states of real valued vectors $\mathbf{S}$ from a finite set $\mathcal{S}$ of size $n$, as are actions $\mathbf{A}$ from a finite set $\mathcal{A}$ of size $k$. Rewards are non-negative real numbers, $R$. Transitions from state to state are handled by the transition function $\Lambda(\mathbf{S},\mathbf{A})$. In our mathematics we assume $\Lambda$ is a deterministic function of its inputs. In our simulated experiments we assume it is a stochastic function.
 
 Markovian preliminaries in place, we can write down the standard value function definition, and the standard Bellman equation \cite{Bellmann1954} for reward collection \cite{Sutton2018}. For simplicity we assume below that the horizon is finite, bounded by $T$.
@@ -38,10 +38,10 @@ Having this last equation means a central challenge in reinforcement learning is
 
 
 \subsubsection*{Formal regret}
-Regret minimization is a standard metric of optimality in reinforcement learning \cite{Sutton2018}. Formally, given \emph{any} any optimal value solution we can define regret $G_t$ in terms of this, given by $G = V^* - V_t$, where $V_t$ is the value of the chosen action $\mathbf{A}_t$. An optimal value algorithm can then be restated, as a ``best'' series of best actions ($\mathbf{A}_t$, $\mathbf{A}_{t+1}$, $\mathbf{A}_{t+2}$, ...) for which $\sum_{k=0}^{T} G_t = 0$.
+Regret minimization is a standard metric of optimality in reinforcement learning \cite{Sutton2018}. Regret compares the best value response, to the chosen one. Formally, given \emph{any} any optimal value solution we can define regret $G_t$ in terms of this, given by $G = V^* - V_t$ where $V_t$ is the value of the chosen action $\mathbf{A}_t$. An optimal value algorithm can then be restated, as a ``best'' series of best actions ($\mathbf{A}_t$, $\mathbf{A}_{t+1}$, $\mathbf{A}_{t+2}$, ...) for which $\sum_{k=0}^{T} G_t = 0$.
 
 \subsubsection*{The information collection problem}
-Imagine we wish to arrive at an equation to maximize curious behavior, in terms of information value. Assume, as a stand-in, $\hat E$ represents the information value of some observation. This hypothetical equation we want could be written to match Eq.~\ref{eq:bellman_iter}, as. 
+Imagine we wish to arrive at an equation to maximize curious behavior, in terms of information value. Assume, as a stand-in, $\hat E$ represents the information value of some observation. This hypothetical equation we want could be written to match Eq.~\ref{eq:bellman_iter}. As, 
 
 \begin{equation} 
 	\label{eq:bellman_iter_E}
@@ -118,7 +118,7 @@ Meeting our requirements is not difficult. The practical example of axiomatic va
 	\hat E = || \ \nabla \mathbf{M} \ ||
 \end{equation}
 
-To satisfy Axiom 5 we further require memory dynamics eventually decelerate,  $\nabla^2 \mathbf{M} < 0$ for all $ t \ge T^*$. Informally, the idea here is that any notion of sensible and useful learning must converge. We take this to mean that in finite time bound, $T^*$, $\hat E$ must approach 0 (as shown in Fig.~\ref{fig:cartoon}). We term this consistent learning.
+To satisfy Axiom 5 we further require memory dynamics eventually decelerate,  $\nabla^2 \mathbf{M} < 0$ for all $ t \ge T^*$. Informally, the idea here is that any notion of sensible and useful learning must converge. We take this to mean that in finite time bound, $T^*$, $\hat E$ must approach 0 (as shown in Fig.~\ref{fig:cartoon}b-c). We term this consistent learning.
 
 In practice here we will not work with the gradient, but will use a discrete time map in its place,
 
@@ -130,15 +130,15 @@ In practice here we will not work with the gradient, but will use a discrete tim
 \begin{figure}
 	\includegraphics[width=1\linewidth]{img/cartoon.pdf} 
 	\caption{Practical (geometric) information value, and our constraints on its dynamics. 
-	\textbf{a}. This panel illustrates a two dimensional memory. The information value of two observations $\mathbf{X}_1$ and $\mathbf{X}_2$ depends on the norm of memory with learning. Here we show this distance as a euclidean norm, denoted as a black arrow.
-	\textbf{b-c} This panel illustrates learning dynamics with time (over a series of observations that are not shown). If information value becomes decelerating in finite time bound, then we say that learning is consistent with Def. 2. This is shown in panel b. The bound is depicted as a dotted line. If learning does not decelerate, then it is said to be inconsistent (Panel c). \textit{It is important to note:} our account of information value and curiosity does not work when learning is inconsistent.
+	\textbf{a}. This panel illustrates a two dimensional memory. The information value of two observations $\mathbf{X}_1$ and $\mathbf{X}_2$ depends on the norm of their memory, $\mathbf{E_1}$ and $\mathbf{E_2}$ respectively, with learning. Here we show this distance as a euclidean norm, denoted as a black arrow.
+	\textbf{b-c} This panel illustrates learning dynamics with time (over a series of observations that are not shown). If information value becomes decelerating in finite time bound, then we say that learning is consistent with Def. 2. This is shown in panel b. The bound is depicted as a dotted line. If learning does not decelerate, then it is said to be inconsistent (Panel c). It is important to note that our account of information value and curiosity does not work when learning is inconsistent.
   	}
 	\label{fig:cartoon} 
 \end{figure}
 
-The common way to arrive at Bellman solution is to assume a Markov decision space. This is a problem. For our definition of memory we assume long-term path dependence. This breaks the Markov assumption, and its needed claim of optimal substructure. To get around this we prove instead that exact forgetting, of the last observation, is another way to derive a Bellman solution.
+The common way to arrive at the Bellman solution is to again assume a Markov decision space. This is a problem for our definition of memory, which we assume has a natural long-term path dependence. This breaks the Markov assumption, and its needed claim of optimal substructure. To get around this we proved that exact forgetting of the last observation is another way to achieve optimal substructure, and so to derive a Bellman solution.
 
-In the theorem below which shows the optimal substructure of $\mathbf{M}$ we implicitly assume that $\mathbf{X} = \mathbf{S}$, $\mathbf{A}$, $f$, and $\Lambda$ are given, and that $\Lambda$ is deterministic, 
+In the theorem below, which shows the optimal substructure of $\mathbf{M}$, we implicitly assume that $\mathbf{X} = \mathbf{S}$, $\mathbf{A}$, $f$, and $\Lambda$ are given, and that $\Lambda$ is deterministic, 
 
 \begin{theorem}[Optimal substructure] \label{theorem:opt_sub} 
    If $V^*_{\pi_{\hat E}}$ is the optimal information value given by policy $\pi_{\hat E}$, a memory $\mathbf{M}_t$ has optimal substructure if the last observation $X$ can be removed from $\mathbf{M}$, by $\mathbf{M-1}_{t} = f^{-1}(\mathbf{X}, \mathbf{M}_t)$ such that the resulting value $V^*_{t-1} = V^*_{t} - E_{t}$ is also optimal. 
@@ -193,15 +193,12 @@ In Theorems~\ref{theorem:Z} and~\ref{theorem:convergence} we prove that our Bell
 	Reward value and information value are equally important for survival, in changing environments 
 \end{conjecture}
 
-It's worth reiterating here, that curiosity is a primary drive in most, if not all, animals \cite{Inglis2001}. It is as strong, if not sometimes stronger, than the drive for reward \cite{Loewenstein1994,Kidd2015,Gottlieb2018}.
-
-If both reward and information are equally important, then time is not wasted in a curious search, and so the process is not \textit{necessarily} inefficient or even indirect. Instead, we offer a new question. Is curiosity practical enough to serve as a useful ``trick'' to solve reward collection search problems? We answer this with a second conjecture,
+If both reward and information are equally important, then time is not wasted in a curious search. The process is not \textit{necessarily} inefficient, or even indirect. Instead, this hypothesis leads we argue to a new question. Is curiosity practical enough to serve as a useful ``trick'' to solve all reward collection search problems? We answer this question with a second conjecture,
 
 \begin{conjecture}[The curiosity trick]
 	When learning is possible, curiosity is a sufficient solution for all exploration problems.
 \end{conjecture}
 
-It's worth noting here that curiosity, as an algorithm in machine learning, is highly effective at solving broad kinds of optimization problems \cite{Schmidhuber1991,Stanton2018,Lehman2010,Mouret2011,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Laversanne-Finot2018}. 
 
 \subsubsection*{The problem of mixing reward and information collection}
 If reward and information are equally important, and curiosity is sufficient, how can an animal go about balancing them? If you accept our conjectures, then answering this question optimally is the same as solving the dilemma. To solve this dual value learning problem we’ve posed–-information and reward maximization–-we need an algorithm that can maximize the value of a mixed sequence, $V_{\hat{E}R}$. For example,
@@ -212,7 +209,7 @@ If reward and information are equally important, and curiosity is sufficient, ho
 \end{equation}
 
 \subsubsection*{A win-stay, lose-switch solution}
-A similar dual value optimization problem to Eq.~\ref{eq:bellman_seq_ER} was posed, solved, with its regret bounded, by Robbins \cite{Robbins1952} in his derivation of the win-stay lose-switch rule. This WSLS approach has since proven useful in decision making and reinforcement learning \cite{Estes1994TowardAS,Worthy2014}, Bayesian sampling \cite{Bonawitz2014}, and especially in game theory \cite{Nowak1993}. We also put it to use here. 
+A similar dual value optimization problem to Eq.~\ref{eq:bellman_seq_ER} was posed and solved, with its regret bounded, by Robbins \cite{Robbins1952} in his original derivation of the win-stay lose-switch rule. This WSLS approach has since proven useful in decision making and reinforcement learning \cite{Estes1994TowardAS,Worthy2014}, Bayesian sampling \cite{Bonawitz2014}, and especially in game theory \cite{Nowak1993}. We also put it to use here. 
 
 We have come to think about our two optimal value policies $\pi_R$ and $\pi_{\hat E}$ as two ``players'' in game for behavioral control of an animal's moment-by-moment actions \cite{Estes1994TowardAS}. The simplest solution to this game, in terms of computational complexity, is a WSLS rule. We denote this rule as $\Pi_\pi$, and define it here by the inequalities below. 
 
@@ -229,11 +226,11 @@ We have come to think about our two optimal value policies $\pi_R$ and $\pi_{\ha
 
 We assume no matter which policy is in control in Eq.~\ref{eq:pipi}, each policy can learn from (be updated using) the other policies actions, and observations. That is, while the two policies compete for control, they learn from each other in a cooperative fashion.
 
-Here $\eta$ is the boredom term we defined earlier. We also introduce the reward bias term $\rho$, where $\rho > \eta$. This bias ensures no ties can occur, and that as $\hat E$ decreases to 0, as it must, the default policy is reward collection. That is, by $\pi_R$. In this paper we assume $\rho$ is set to be just a small bit larger than $\eta$. It's role is then to break ties, and little else. Larger values of $\rho$ could be used to bias reward exploitation in ``irrational'' ways.
+Here $\eta$ is the boredom term we defined earlier. We also introduce the reward bias term $\rho$, where $\rho > \eta$. This bias ensures no ties can occur, and that as $\hat E$ decreases to 0, as it must, the default policy is reward collection. That is, by $\pi_R$. In this paper we assume $\rho$ is set to be just a modest amount larger than $\eta$. Its role is then to break ties, and little else. Larger values of $\rho$ could be used to bias reward  exploitation in ``irrational'' ways.
 
 In Eq.~\ref{eq:pipi} we compare reward $R$ and information value $\hat E$ but have not made sure they have the same ``units''. We sidestep this issue, and at the same time ensure complete exploration, as well as convergence, by limiting the expected probability of having zero reward to be, itself, non-zero. That is, $\mathbb{E}[p(R_t=0) > 0]$. For the same reasons, we also limit $E_0$, the first set of values, to be positive and non-zero, $(E_0 - \eta) > 0$. 
 
-To provide some intuition for Eq.\ref{eq:pipi}, imagine that in the previous action an animal observed, arbitrarily, 0.7 units of information value, $\hat E$, and no reward (i.e. $R = 0$). Using our rule on the next action the animal should then choose its exploration policy $\pi^*_{\hat{E}}$. If it explored last time, this is a ``stay'' action. If not, it is a ``switch''. Let's then say that with this next observation, $\hat E$ decreases to 0.2 and a reward value of 1.0 is observed. Now the animals should switch its strategy for the next round, to exploit instead. 
+o provide some intuition for Eq.\ref{eq:pipi}, imagine that in the previous action an animal observed, arbitrarily, 0.7 units of information value and no reward (i.e. $R = 0$). Using our rule on the next action the animal should then choose its exploration policy $\pi^*_{\hat{E}}$. If it explored last time, this is a ``stay'' action. If not, it is a ``switch'' action. Let's then say that with this next observation, $\hat E$ decreases to 0.2 and a reward value of 1.0 is observed. Now the animals should switch its strategy for the next round, to exploit instead.
 
 In general, if there was more reward value then information value last round ($R > \hat E$), our rule dictates an animal should choose the reward policy. If information value dominated, $R < \hat E$, then it should choose the information gathering policy.
 
@@ -254,7 +251,7 @@ The WSLS rule in Eq~\ref{eq:pipi} when applied to exploration-exploitation probl
 	When either $\pi_{\hat E}$ or $\pi_R$ is in control under $\Pi_{\pi}$, all actions are zero regret in terms of $V_{\hat{E}R}$. That is, $\sum_{k=0}^{T} G = 0$.
 \end{theorem}
 
-In each of theses Theorems we assume our definitions for $\mathbf{X}$, $\mathbf{A}$, $\mathbf{M}$, $f$, $\Lambda$, and $\Pi_{\pi}$ are implicitly given, and a finite horizon $T$. Proofs for Theorems~\ref{th:no_regret_E} and~\ref{th:no_regret_E} follow from both reinforcement learning and our definition of information optimization having a Bellman optimality. The proof for the optimality of $V_{\hat{E}R}$ (Th~\ref{th:no_regret_ER}) is provided in the Appendix. The intuition for this proof is simple that a greedy algorithm made over two Bellman solutions is itself a Bellman solution.
+In each of theses Theorems we assume our definitions for $\mathbf{X}$, $\mathbf{A}$, $\mathbf{M}$, $f$, $\Lambda$, and $\Pi_{\pi}$ are implicitly given, and a finite horizon $T$. Proofs for Theorems~\ref{th:no_regret_E} and~\ref{th:no_regret_ER} follow from both reinforcement learning and our definition of information optimization having a Bellman optimality. The proof for the optimality of $V_{\hat{E}R}$ (Th~\ref{th:no_regret_ER}) is provided in the Appendix. The intuition for this proof is simple that a greedy algorithm made over two Bellman solutions is itself a Bellman solution.
 
 In Eq.~\ref{eq:pipi} we compare reward $R$ and information value $\hat E$ but have not ensured they have the same ``units'', or are comparable valuables. We sidestep this issue by limiting the probability of having zero reward to be, itself, non-zero. That is, $p(R_t=0) > 0$. We also limit $E_0$, the first set of values, to be positive and non-zero when used with boredom, $(E_0 - \eta) \geq 0$. These constraints ensure complete ``good'' exploration (defined above) which in turn ensures optimal reward learning is possible.
 
