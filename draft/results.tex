@@ -2,7 +2,6 @@
 \subsection*{Theory}
 For our theoretical work, we first introduce reinforcement learning, and its basis in the Bellman equation. Next we develop a new mathematical view of information value, curiosity, and a new understanding of ideal curious search. We then use these results to argue that exploration-for-curiosity leads to optimal value solutions for all explore-exploit problems, with deterministic dynamics.
 
-
 \subsubsection*{The reward collection problem}
 Here we consider an animal who interacts with an environment over a sequence of states, actions and rewards. The animal's goal is to select actions in a way that maximizes the total reward collected. How should an animal do this? 
 
@@ -15,6 +14,51 @@ The agent must try a variety of actions and progressively favor those that appea
 A convenient way to study reward collection is with using Markov decisions.
 Our Markov decision process (MDP) for reward collection consists of states of real valued vectors $\mathbf{S}$ from a finite set $\mathcal{S}$ of size $n$, as are actions $\mathbf{A}$ from a finite set $\mathcal{A}$ of size $k$. Rewards are non-negative real numbers, $R$. Transitions from state to state are handled by the transition function $\Lambda(\mathbf{S},\mathbf{A})$. In our mathematics we assume $\Lambda$ is a deterministic function of its inputs. In our simulated experiments we assume it is a stochastic function.
 
+In general, we use italic capital letters for sets. Upper-case letters are used for elements. Quantities that are real-valued vector spaces are written in bold. Parameters are denoted by greek letters. A full set of the symbols used in this paper is shown in Table~\ref{tab:notation}.
+
+\begin{table}[]
+	\caption{Shared notation.}
+    \begin{tabular}{ll}
+	\textbf{Notation} & \textbf{Description} \\
+    $\mathcal{S}$ & The state space of the environment. \\
+    $\mathcal{A}$ & The action space of the agent. \\
+    $\mathbf{S}$ & A state. \\
+    $\mathbf{S'}$ & A next state in a sequence. \\
+    $\Lambda(\mathbf{S},\mathbf{A})$ & The transition function. Generates $\mathbf{S'}$. \\
+    $\mathbf{A}$ & An action. \\
+    $R$ & Reward value from the environment. \\
+    $\hat R$ & Subjective reward value. \\
+    $\mathcal{X}$ & The observation space. \\
+    $\mathbf{X}$ & An observation. \\
+    $T(\mathbf{S},\mathbf{A},\mathbf{S'},R,\mathbf{M})$ & The observation function. Generates $\mathbf{X}$. \\
+    $\mathbf{M}$ & Memory (subjective). \\
+    $f(\mathbf{\mathbf{X},M})$ & A learning function. Generates $\mathbf{M'}$. \\
+    $\hat E$ & Subjective information value. \\
+    $E(\mathbf{M},\mathbf{M'})$ & Information value function. Generates $\hat E$. \\
+    $\pi$ & An action policy. Generates $\mathbf{A}$. \\
+    $\pi_R$ & A policy to maximize reward ($R$, $\hat R$). \\
+    $\pi_E$ & A policy to maximize information ($\hat E$). \\
+    $\pi(\mathbf{S})$ & A deterministic action policy. \\
+    $\pi(\mathbf{S}|\mathbf{A})$ & A stochastic action policy. \\
+    $\Pi$ & A set of possible policies. A meta-policy. \\
+    $J$ & A cost function. \\
+    $J_E$ & A cost function for information value ($\hat E$). \\
+    $J_R$ & A cost function for reward value ($R$, $\hat R$). \\
+    $|.|$ & Denotes set size. \\
+    $||.||$ & Denotes a vector norm. \\
+    $\delta$ & Denotes a difference, between two scalars or vectors. \\
+    $\nabla$ & Denotes a gradient. \\
+    $\nabla^2$ & Denotes the Laplacian. \\
+    $\alpha$ & Step-size (0,1]. \\
+    $\beta$ & Softness parameter for softmax sampling (0, $\infty$). \\
+    $\epsilon$ & Probability of random choice for e-greedy policy [0,1]. \\
+    $\eta$ & Boredom bias [0,$\infty$). \\
+    $\rho$ & Reward bias [0,$\infty$). \\
+    &                          
+    \end{tabular}
+	\label{tab:notation}
+\end{table}
+ 
 Markovian preliminaries in place, we can write down the standard value function definition, and the standard Bellman equation \cite{Bellmann1954} for reward collection \cite{Sutton2018}. For simplicity we assume below that the horizon is finite, bounded by $T$.
 
 \begin{equation} 
@@ -340,19 +384,18 @@ The results in full for all tasks and exploration strategies are shown in Fig.~\
 \begin{table}[]
 	\caption{Exploration strategies.}
 	\label{tab:agents}
-	\begin{tabular}{|p{2cm}|p{2cm}|p{3cm}|}
-	\hline
-	\textbf{Name} & \textbf{Class} & \textbf{Exploration strategy} \\ \hline
-	Curiosity & Deterministic & Maximize information value \\ \hline
-	Random/Greedy & Random & Alternates between random exploration and greedy with probability $\epsilon$. \\ \hline
-	Decay/Greedy & Random & The $\epsilon$ parameter decays with a half-life \\ \hline
-	Random & Random & Pure random exploration \\ \hline
-	Reward & Directed & Softmax sampling of reward value \\ \hline
-	Bayesian & Directed & Softmax sampling of reward value + information value \\ \hline
-	Novelty & Directed & Softmax sampling of reward value + novelty signal \\ \hline
-	Entropy & Directed & Softmax sampling of reward value + action entropy \\ \hline
-	Count (EB) & Directed & Softmax sampling of reward value + visit counts \\ \hline
-	Count (UCB) & Directed & Softmax sampling of reward value + visit counts \\ \hline
+	\begin{tabular}{p{2cm}p{2cm}p{3cm}}
+	\textbf{Name} & \textbf{Class} & \textbf{Exploration strategy} \\ 
+	Curiosity & Deterministic & Maximize information value \\ 
+	Random/Greedy & Random & Alternates between random exploration and greedy with probability $\epsilon$. \\ 
+	Decay/Greedy & Random & The $\epsilon$ parameter decays with a half-life \\ 
+	Random & Random & Pure random exploration \\ 
+	Reward & Directed & Softmax sampling of reward value \\ 
+	Bayesian & Directed & Softmax sampling of reward value + information value \\ 
+	Novelty & Directed & Softmax sampling of reward value + novelty signal \\ 
+	Entropy & Directed & Softmax sampling of reward value + action entropy \\ 
+	Count (EB) & Directed & Softmax sampling of reward value + visit counts \\ 
+	Count (UCB) & Directed & Softmax sampling of reward value + visit counts \\ 
 	\end{tabular}
 \end{table}
 
