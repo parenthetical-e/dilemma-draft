@@ -1,7 +1,7 @@
 \section*{Discussion}
-We have offered a way around the exploration-exploitation dilemma. We proved the classic dilemma, found when optimizing exploration for reward value, can be resolved by exploring instead for curiosity. And that in this form the rational trade-off we are left with is solved with a classic strategy taken from game theory. The win-stay lose-shift strategy, that is.
+We have offered a way around the exploration-exploitation dilemma. We proved the classic dilemma, found when optimizing exploration for reward value, can be resolved by exploring instead for curiosity. In this form the rational trade-off we are left with is solved with a classic strategy taken from game theory: the win-stay lose-shift strategy. When information is more valuable than rewards, then be curious, otherwise seek rewards. We prove this rule has zero formal regret, when maximizing both reward and information value on equal terms.
 
-This is a controversial claim. So we will address some of its criticisms as a series of questions. The final question explains how this approach can be tested, with behavioral experiments. 
+Arguing the dilemma can be solved without regret is a controversial claim. So we will address some potential criticisms, as a series of questions. The final question explains how this approach can be tested with behavioral experiments. 
 
 \subsection*{Why curiosity?}
 Our use of curiosity rests on three well established facts. 1. Curiosity is a primary drive in most, if not all, animal behavior \cite{Inglis2001}. 2. It is as strong, if not sometimes stronger, than the drive for reward \cite{Loewenstein1994,Kidd2015,Gottlieb2018}. 3. Curiosity as an algorithm is highly effective at solving difficult optimization problems \cite{Schmidhuber1991,Pathak2017,Stanton2018,Fister2019,Mouret2015,Colas2020,Cully2015,Pathak2017,Schwartenbeck2019,Laversanne-Finot2018}. 
@@ -150,7 +150,8 @@ Where we assume the grooming term should take precedence over all other options,
 
 
 \subsection*{Does regret matter?}
-Another way around the dilemma is to ignore regret altogether. This is the domain of pure exploration methods, like the Gitten’s Index \cite{Gittins1979}, or probably-approximately correct approaches \cite{Valiant1984a}, or other bounded forms of reinforcement learning \cite{Brafman2002}. Such methods can guarantee that you find the best reward value actions, eventually. These methods do not consider regret, as we have. But we argue that regret is critical to consider when resources and time are scarce, as they are in most natural settings. 
+Another way around the dilemma is to ignore regret altogether. This is the domain of pure exploration methods, like the Gitten’s Index \cite{Gittins1979}, or probably-approximately correct approaches \cite{Valiant1984}, or other bounded forms of reinforcement learning \cite{Brafman2002}. Such methods can guarantee that you find the best reward value actions, eventually. These methods do not consider regret, as we have. But we argue that regret is critical to consider when resources and time are scarce, as they are in most natural settings. 
+
 
 
 \subsection*{Is the algorithmic run time practical?}
@@ -168,7 +169,7 @@ In what sense can your mathematical union be tested? Normally, to test a model o
     \item  \textbf{Well defined pure-periods}. There should be a well defined period of exploration and exploitation. \emph{Auxiliary assumptions}. There are no other behaviors, are driving factors, present. For example, learning fear, avoiding, or grooming.
 \end{enumerate}
 
-Of course the presence of any four criteria does not indicate our theory is at work, mechanistically. Mechanistic claims for any biological or behavioral problems are difficult if not impossible to be certain of. Instead, we view meeting each of these criterion as some evidence for our account. We think the nice mathematical properties of out curiosity trick make a good general candidate for solving explore-exploit problems. We wish to test how true that is \cite{Rich2016a}.  
+Of course the presence of any four criteria does not indicate our theory is at work, mechanistically. Mechanistic claims for any biological or behavioral problems are difficult if not impossible to be certain of. Instead, we view meeting each of these criteria as some evidence for our account. We think the nice mathematical properties of our union makes it a good general candidate for solving explore-exploit problems, and ultimately we wish to test how true that is.  
 
 % Kidd U. 
 % Relation to count based search
@@ -177,3 +178,5 @@ Of course the presence of any four criteria does not indicate our theory is at w
 
 \subsection*{Summary}
 We have argued one can put aside any intuitions that suggest a curious search is too inefficient, or open-ended, to be practical for reward collection. We have shown it can be made very practical, and mathematically optimal. We have shown there is a zero-regret way to solve the dilemma, a problem that has seemed unsolvable in those terms. Simply, be curious.
+
+
