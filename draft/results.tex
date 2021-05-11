@@ -48,7 +48,7 @@ Imagine we wish to arrive at an equation to maximize curious behavior, in terms 
 	V^*_{\hat E}(\mathbf{S}) = \argmax_{\mathbf{A} \in \mathbb{A}} \Big [ \hat E_{t}  + V^*_{\hat E}(\Lambda(\mathbf{S},\mathbf{A})) \Big ]
 \end{equation}
 
-We add a ``hat'' to this term $E$ to indicate it is a subject value. In constrast $R$, the external reward define about, has no ``hat''. Until, that is, we dicuss homeostatic reward value $\hat R$ later on. 
+We add a ``hat'' to this term $E$ to indicate it is a subject value. In contrast $R$, the external reward define about, has no ``hat''. Until, that is, we discuss homeostatic reward value $\hat R$ later on. 
 
 So how can we arrive at Eq.~\ref{eq:bellman_iter}? How can we ensure $\hat E$ is general, and therefore suitable for use across species? How can we do so when we choose to limit ourselves to non-Markovian kinds of learning and memory? 
 
@@ -103,7 +103,7 @@ That is, there should be a one-to-one relationship between how memory changes an
 	For the same observation $\hat E$ should approach 0 in finite time.
 \end{axiom}
 
-That is, learning on $\mathbf{M}$ makes continual progress toward equilibrium (i.e. self-consistency) with each observation, after a finite time period has passed. After this it will approach a steady-state value of $\delta \mathbf{M} \rightarrow 0$ and $\hat E \rightarrow 0$. We use the term consistency to denote a memory at or near equilibrium. We mean that the memory has become consitent it itseslf in time, and this all our axioms can promise. 
+That is, learning on $\mathbf{M}$ makes continual progress toward equilibrium (i.e. self-consistency) with each observation, after a finite time period has passed. After this it will approach a steady-state value of $\delta \mathbf{M} \rightarrow 0$ and $\hat E \rightarrow 0$. We use the term consistency to denote a memory at or near equilibrium. We mean that the memory has become consistent in itself in time, and this all our axioms can promise. 
 
 All we have really done in these axioms is remove any mention of a learning rule, its properties, or learning target, its properties from previous definitions \cite{Itti2009,Jaegle2019,Schmidhuber1991,Inglis2001,Reddy2016,Pirolli2007}. This is important not for its own sake but because with these axioms we can consider information value, and therefore curiosity, independent of any learning semantics, or any semantics at all. 
 
@@ -193,7 +193,7 @@ In Theorems~\ref{theorem:Z} and~\ref{theorem:convergence} we prove that our Bell
 	Reward value and information value are equally important for survival, in changing environments 
 \end{conjecture}
 
-If both reward and information are equally important, then time is not wasted in a curious search. The process is not \textit{necessarily} inefficient, or even indirect. Instead, this hypothesis leads we argue to a new question. Is curiosity practical enough to serve as a useful ``trick'' to solve all reward collection search problems? We answer this question with a second conjecture,
+If both reward and information are equally important, then time is not wasted in a curious search. The process is not \textit{necessarily} inefficient, or even indirect. Instead, this hypothesis leads us to argue a new question. Is curiosity practical enough to serve as a useful ``trick'' to solve all reward collection search problems? We answer this question with a second conjecture,
 
 \begin{conjecture}[The curiosity trick]
 	When learning is possible, curiosity is a sufficient solution for all exploration problems.
@@ -253,7 +253,8 @@ The WSLS rule in Eq~\ref{eq:pipi} when applied to exploration-exploitation probl
 
 In each of theses Theorems we assume our definitions for $\mathbf{X}$, $\mathbf{A}$, $\mathbf{M}$, $f$, $\Lambda$, and $\Pi_{\pi}$ are implicitly given, and a finite horizon $T$. Proofs for Theorems~\ref{th:no_regret_E} and~\ref{th:no_regret_ER} follow from both reinforcement learning and our definition of information optimization having a Bellman optimality. The proof for the optimality of $V_{\hat{E}R}$ (Th~\ref{th:no_regret_ER}) is provided in the Appendix. The intuition for this proof is simple that a greedy algorithm made over two Bellman solutions is itself a Bellman solution.
 
-In Eq.~\ref{eq:pipi} we compare reward $R$ and information value $\hat E$ but have not ensured they have the same ``units'', or are comparable valuables. We sidestep this issue by limiting the probability of having zero reward to be, itself, non-zero. That is, $p(R_t=0) > 0$. We also limit $E_0$, the first set of values, to be positive and non-zero when used with boredom, $(E_0 - \eta) \geq 0$. These constraints ensure complete ``good'' exploration (defined above) which in turn ensures optimal reward learning is possible.
+In Eq.~\ref{eq:pipi} we compare reward $R$ and information value $\hat E$ but have not ensured they have the same ``units'', or are comparable valuables. We sidestep this issue by limiting the probability of having zero reward to be, itself, non-zero. That is, $p(R_t=0) > 0$. We also limit $E_0$, the first set of values, to be positive and non-zero when used with boredom, $(E_0 - \eta) \geq 0$. These constraints ensure complete ``good'' exploration (defined above) which, in turn, ensures optimal reward learning is possible.
+
 
 
 \subsubsection*{Homeostatic adjustments}
@@ -261,7 +262,7 @@ We have been studying cases where reward value is fixed. That is, where the envi
 
 The goal in a control setting is not to maximize $R$, but to minimize the difference between collected $R$ and a set point, $\bar R$ \cite{Keramati2014,Juechems2019,Munch2020}. So, in a homeostatic setting reward value is subjective, and approximated by $\hat R \approx \bar R - R$.
 
-Fortunately, it has been shown a reward collection policy designed for one greedy reward collection, will work for homeostasis as well \cite{Keramati2014}. However, to use a form similar to our Eq. \ref{eq:pipi} with homeostatic reward value, we need to make one modification. This is shown in Eq.~\ref{eq:pipi_h}. 
+Fortunately, a reward collection policy designed for one greedy reward collection, will work for homeostasis as well \cite{Keramati2014}. However, to use a form similar to our Eq. \ref{eq:pipi} with homeostatic reward value, we need to make one modification. This is shown in Eq.~\ref{eq:pipi_h}. 
 
 \begin{equation} 
     \label{eq:pipi_h}
@@ -274,7 +275,7 @@ Fortunately, it has been shown a reward collection policy designed for one greed
     \end{split}
 \end{equation}
 
-Under homeostasis ties between values in Eq. \ref{eq:pipi} should be broken in favor of exploration. Persuing reward exploitation instead, when homeostasis is satisfied and $\hat R=0$, disturbs homeostasis. Exploitation, in the control theoretic sense of homeostatis, is therefore a suboptimal result. 
+Under homeostasis ties between values in Eq. \ref{eq:pipi} should be broken in favor of exploration. Persuing reward exploitation instead, when homeostasis is satisfied and $\hat R=0$, disturbs homeostasis. Exploitation, in the control theoretic sense of homeostasis, is therefore a suboptimal result. 
 
 % ----------------------------------------------------------------------
 \subsection*{Experiments}
@@ -309,7 +310,7 @@ The results of this simple information seeking task are shown in Figure~\ref{fig
 
 
 \subsubsection*{Reward collection} 
-We cannot mathematically ensure a mixed value solution to explore-exploit problems will maximizes reward value better than other well-established methods. To find out if this is so, we measured total reward collected over 7 tasks and 10 agents. Each agent's parameters were independently optimized for each task. For a brief description of each agent, see Table~\ref{tab:agents}. They all have in common that their central goal is to maximize total reward value, though this is often supplemented by some other goal, an intrinsic reward or bonus \cite{Ng1999,Sutton1998}. 
+We cannot mathematically ensure a mixed value solution to explore-exploit problems will maximize reward value better than other well-established methods. To find out if this is so, we measured total reward collected over 7 tasks and 10 agents. Each agent's parameters were independently optimized for each task. For a brief description of each agent, see Table~\ref{tab:agents}. They all have in common that their central goal is to maximize total reward value, though this is often supplemented by some other goal, an intrinsic reward or bonus \cite{Ng1999,Sutton1998}. 
 
 The general form of the 7 tasks are depicted in Fig~\ref{fig:task_outline2}. As with our first task (Fig. ~\ref{fig:task_outline1}) they are all variations of the classic multi-armed bandit \cite{Sutton2018}. The payouts for each of the tasks are shown separately in Fig.~\ref{fig:task_payout}. Every trial has a set of $n$ choices. Each choice returns a ``payout’’, according to a predetermined probability. Payouts are information, a reward, or both. Note that, as in Task 1, information was symbolic, denoted by a color code, ``yellow’’ and ``blue’’ and as is custom reward was a positive real number. 
 
@@ -382,21 +383,22 @@ The results in full for all tasks and exploration strategies are shown in Fig.~\
 %   	}
 % \end{SCfigure*}
 
-\textit{Task 1} is an information gathering task, which we discussed above.  We present the design and results here to contrast with the reward collection tasks. 
+\textit{Task 1} is an information gathering task, discussed above. We present the design and results here to contrast with the reward collection tasks. 
 
-\textit{Task 2} was designed to examine reward collection, in probabilistic reward setting very common in the decision making literature \cite{schonberg2007reinforcement,frank2004carrot,cavanagh2014conflict,jahfari2019cross,collins2014opponent,collins2017interactions,glascher2010states}. Rewards were 0 or 1. The best choice had a payout of $p(R=1) = 0.8$. This is a much higher average payout than the others ($p(R=1) = 0.2$). At no point does the task generate symbolic information. See, Fig.~\ref{fig:task_payout}\textbf{b}. 
-
+\textit{Task 2} was designed to examine reward collection, in a probabilistic reward setting very common in the decision making literature \cite{schonberg2007reinforcement,frank2004carrot,cavanagh2014conflict,jahfari2019cross,collins2014opponent,collins2017interactions,glascher2010states}. Rewards were 0 or 1. The best choice had a payout of $p(R=1) = 0.8$. This is a much higher average payout than the others ($p(R=1) = 0.2$). At no point does the task generate symbolic information. See, Fig.~\ref{fig:task_payout}\textbf{b}. 
+ 
 In contrast to the performance in Task 1, in Task 2 we expected all the exploration strategies to succeed. While this was indeed the case, our deterministic curiosity was the top-performer in terms of median rewards collected, though by a small margin (Fig.~\ref{fig:summary}\textbf{a}).
 
 \textit{Task 3} was designed with very sparse rewards \cite{Silver2016b,Silver2018} and there were 10 choices, making this a more difficult task (Fig.~\ref{fig:task_payout}\textbf{c}). Sparse rewards are a common problem in the natural world, where an animal may have to travel and search between each meal This is a difficult but not impossible task for vertebrates \cite{anderson1984optimal} and invertebrates \cite{westphal2006foraging}. That being said, most reinforcement learning algorithms will struggle in this setting because the thing they need to learn, that is rewards, are often absent. In this task we saw quite a bit more variation in performance, with the novelty-bonus strategy taking the top slot (this is the only time it does so).
 
 \textit{Task 4} was designed with deceptive rewards. By deceptive we mean that the best long-term option presents itself initially with a decreasing reward value (Fig.~\ref{fig:task_payout}\textbf{d}). Such small deceptions abound in many natural contexts where one must often make short-term sacrifices \cite{internicola2012bumble}. It is well known that classic reinforcement learning will often struggle in this kind of task \cite{Lehman2011a,Sutton2018}. Here our deterministic curiosity is the only strategy that reaches above chance performance. Median performance of all other strategies are similar to the random control (Fig~\ref{fig:summary}\textbf{c}). 
 
-\textit{Task 5} was designed to fool curiosity, our algorithm, by presenting information that was utterly irrelevant to reward collection, but had very high entropy and so ``interesting'' to our algorithm. We fully anticipated that this context would fool just our algorithm, with all other strategies performing well since they are largely agnostic to entropy. However, despite being designed to fail, deterministic curiosity still produced a competitive performance to the other strategies (Fig~\ref{fig:summary}\textbf{d}). 
+\textit{Task 5} was designed to fool curiosity, specifically our algorithm, by presenting information that was utterly irrelevant to reward collection, but had very high entropy and so ``interesting'' to our algorithm. We anticipated that task would fool our algorithm, with all others performing well since they are agnostic to information entropy. However, despite being designed to fail,  curiosity produced a competitive performance (Fig~\ref{fig:summary}\textbf{d}) with no regret (Fig~\ref{fig:supp_regret}\textbf{d}).
 
-\textit{Tasks 6-7} were designed as a pair, with both having 121 choices, and a complex payout structure. Tasks of this size are at the limit of human performance \cite{Wu2018}. We first trained all learners on \textit{Task 6}, then tested them in Task 7 which identical to 6, except the best payout arm is reset to be worst (Fig.~\ref{fig:task_payout}\textbf{e}-\textbf{f}). In other words Tasks 6 and 7 were joined to measure learning in a high dimensional, but shifting, environments.
+\textit{Tasks 6-7} were designed as a pair of tasks, with both having 121 choices, and a complex payout structure. Problems of this size are at the limit of human performance \cite{Wu2018}. We first trained all learners on Task 6, and tested them in Task 7 which identical to 6, except the best payout arm is reset to be the worst (Fig.~\ref{fig:task_payout}\textbf{e}-\textbf{f}). In other words, Tasks 6 and 7 were joined to measure learning in a high dimensional, but shifting, environments.
 
-In Task 6 deterministic curiosity performed well, securing a second place finish. We note the Bayesian strategy  outperformed our approach. However, under the sudden non-stationarity in reward when switching tasks, the top Bayesian model became the worst on Task 7, and deterministic curiosity took the top spot. Compare Fig.~\ref{fig:summary}\textbf{e} to \textbf{f}. This is the robustness that we'd expect for any curiosity algorithm, whose main goal is to learn everything unbiased by other objectives. The environment and the objectives do change in real life, and so we must be prepared for this. Note how the other less-biased-toward-reward-value exploration models (count-based, novelty, and entropy models) also saw gains, to a lesser degree.
+In Task 6 curiosity performed well, securing a second place finish in both reward maximization (Fig.~\ref{fig:task_payout}\textbf{e}) and regret (Fig.~\ref{fig:supp_regret}\textbf{e}). The Bayesian agent outperformed ours. When switching tasks the top Bayesian model, became the worst (Task 7) and curiosity took the top spot. Note how the other less-biased-toward-reward-value exploration models--count-based, novelty, and entropy models--also saw gains on Task 7.
+
 
 \subsubsection*{Robustness}
 It is common to focus on best case performance, as we have above. However worst case performance is just as important in judging the usefulness of an algorithm. We therefore examined the progression from best case hyperparameters, to the worst case.  
@@ -406,9 +408,9 @@ Unlike idealized simulations, animals cannot know with perfect fidelity how thei
 \begin{SCfigure*}[\sidecaptionrelwidth][t]
 	\includegraphics[width=11.4cm]{img/robust.pdf} 
 	\caption{Parameter sensitivity (\textit{Task 2} and \textit{6}). Here we evaluated how robust performance was for random hyperparameters, rather than those which were carefully chosen. A very robustness exploration algorithm would produce strong performance with both the best parameter choices, and the worst parameter choices. 
-	\textbf{a,d} Total reward for 1000 randomly choosed hyperparameters, for each of the agents.
-	\textbf{b,e} Performance with the top 10 random hyperparameters, after ranking. Curiosity (green) compared to all the others.
-	\textbf{c.f} Performance with the bottom 10 random hyperparameters, after ranking.
+	\textbf{a,d} Total reward for 1000 randomly chosen hyperparameters, after ranking. Curiosity (green) compared to all the others.
+	\textbf{b,e} Performance with the top 10 hyperparameters.
+	\textbf{c.f} Performance with the bottom 10 hyperparameters.
 	}
 	\label{fig:robust}
 \end{SCfigure*}
