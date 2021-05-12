@@ -1,11 +1,11 @@
 \section*{Results} 
 \subsection*{Theory}
-For our theoretical work, we first introduce reinforcement learning, and its basis in the Bellman equation. Next we develop a new mathematical view of information value, curiosity, and a new understanding of ideal curious search. We then use these results to argue that exploration-for-curiosity leads to optimal value solutions for all explore-exploit problems, with deterministic dynamics.
+For our theoretical work, we first introduce reinforcement learning, and its basis in the Bellman equation. Next we develop a new mathematical view of information value, curiosity, and a new understanding of ideal curious search. We then use these results to argue that exploration-for-curiosity leads to optimal value solutions for all explore-exploit problems with deterministic dynamics.
 
 \subsubsection*{The reward collection problem}
 Here we consider an animal who interacts with an environment over a sequence of states, actions and rewards. The animal's goal is to select actions in a way that maximizes the total reward collected. How should an animal do this? 
 
-When the environment is unknown, to maximize reward an animal must trade-off between exploration, and exploitation. The standard way of approaching this tradeoff is to assume, 
+When the environment is unknown, to maximize reward an animal must trade-off between exploration and exploitation. The standard way of approaching this tradeoff is to assume, 
 
 \begin{quote}
 The agent must try a variety of actions and progressively favor those that appear to be best'' \cite{Sutton2018}. 
@@ -59,7 +59,7 @@ In general, we use italic capital letters for sets. Upper-case letters are used 
 	\label{tab:notation}
 \end{table}
  
-Markovian preliminaries in place, we can write down the standard value function definition, and the standard Bellman equation \cite{Bellmann1954} for reward collection \cite{Sutton2018}. For simplicity we assume below that the horizon is finite, bounded by $T$.
+Markovian preliminaries in place, we can write down the value definition for reward, $V^*_{R}$, and the Bellman equation \cite{Bellmann1954} for reward collection \cite{Sutton2018}. For simplicity we assume the horizon is finite at bounded by $T$.
 
 \begin{equation} 
 	\label{eq:bellman_seq}
