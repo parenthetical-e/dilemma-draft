@@ -78,11 +78,11 @@ To formalize the idea of ranking we take an algebraic approach. Give any three r
 	
 	Therefore, again by Eq.~\ref{eq:ineq}, $\exists \int \delta \hat E \rightarrow -c$. 
 	
-	\textit{Recall}: Axiom 5 - $\nabla^2 \mathbf{M} < 0$ after a finite time $T^*$.
+	\textit{Recall}: Axiom 4 - $\nabla^2 \mathbf{M} < 0$ after a finite time $T^*$.
 	
 	However if we wished to instead swap ($\hat E_i \leq \hat E_j$) so ($\hat E_i \geq \hat E_j$) by definition $\not \exists c; \hat E_i + c = \hat E_j$, as $\not \exists \int \delta \hat E \rightarrow c$. 
 	
-	To complete the proof, assume that some policy $\hat \pi_{\hat E} \neq \pi^*_E$. By definition policy $\hat \pi_{\hat E}$ can be any action but the maximum, leaving $k-1$ options. Eventually as $t \rightarrow T*$ the only possible swap is between the max option and the $kth$, but as we have already proven this is impossible as long as Axiom 5 holds. Therefore, the policy $\hat \pi_{\hat E}$ will leave at least 1 option unexplored and $S \neq Z$. 
+	To complete the proof, assume that some policy $\hat \pi_{\hat E} \neq \pi^*_E$. By definition policy $\hat \pi_{\hat E}$ can be any action but the maximum, leaving $k-1$ options. Eventually as $t \rightarrow T*$ the only possible swap is between the max option and the $kth$, but as we have already proven this is impossible as long as Axiom 4 holds. Therefore, the policy $\hat \pi_{\hat E}$ will leave at least 1 option unexplored and $S \neq Z$. 
 \end{proof}
 
 \begin{theorem}[[Efficient exploration] \label{theorem:convergence} 
