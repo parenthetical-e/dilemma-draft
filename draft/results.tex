@@ -103,68 +103,58 @@ Observations made by $T$ can be internally generated from memory $\mathbf{M}$, o
 
 \emph{Memory.} Sustained firing, the strength between two synapses, elevated Calcium concentration are three simple examples of learning and memory in the nervous system. Each of these examples though can be represented into a vector space. In fact, most any memory system can be so defined. 
 
-We define memory as a set of real valued numbers, embedded in a finite space that is closed and bounded with $p$ dimensions. A learning function is then any function $f$ that maps observations $\mathbf{X}$ into memory $\mathbf{M}$. This $f$ is considered to be a valid learning function as long as the mapping changes $\mathbf{M}$ some small amount. A non-constant mapping, in other words. Using recursive notation, this kind of learning is denoted by $\mathbf{M} \leftarrow f(\mathbf{X},\mathbf{M}) $. Though we will sometimes use $\mathbf{M'}$ to denote the updated memory in place of the recursion. Other times we will add subscripts, like ($\mathbf{M}_t,\mathbf{M}_{t+1},\ldots$), to express the path of a memory. We can also define a forgetting function that \textit{can be any function} that inverts the memory, $f^{-1}(\mathbf{X};\ \mathbf{M}') \rightarrow \mathbf{M}$. 
+We define memory as a vector of size $p$, embedded in a real-valued space, that is closed and bounded. A learning function is then any function $f$ that maps observations $\mathbf{X}$ into memory $\mathbf{M}$. This $f$ is considered to be a valid learning function as long as the mapping changes $\mathbf{M}$ some small amount. A non-constant mapping, in other words. Using recursive notation, this kind of learning is denoted by $\mathbf{M} \leftarrow f(\mathbf{X},\mathbf{M}) $. Though we will sometimes use $\mathbf{M'}$ to denote the updated memory in place of the recursion. Other times we will add subscripts, like ($\mathbf{M}_t,\mathbf{M}_{t+1},\ldots$), to express the path of a memory. We can also define a forgetting function that \textit{can be any function} that inverts the memory, $f^{-1}(\mathbf{X};\ \mathbf{M}') \rightarrow \mathbf{M}$. 
 
 We do not assume memory $\mathbf{M}$, or the learning function $f$ are Markovian.
 
 For individual animals we assume $f$ and $f^{-1}$ have been chosen by evolution and experience to be learnable, efficient, and have sufficiently useful inductive bias for their particular environment \cite{Valiant1984a,Thrun1992a}. 
 
 
-\subsubsection*{Axiomatic information value} 
-To make our eventual union proper, we first need to separate reward value from information value in a principled and general way. We do this axiomatically.
-We reason instead that the value of any observation made by an animal depends entirely on what an animal learns by making that observation–-literally how it changes that animal's memory. This lets us sidestep a problem present in most working models of curiosity. They tend to conflate the learning rule, with curiosity itself \cite{Schmidhuber1991b,Oudeyer2018a,Burda2018,Zhang2013,deAbril2018,Zhou2020,Schwartenbeck2019,Wilson2014a,Lehman2011,Velez2014}.
+\subsubsection*{Axioms for information value} 
+To make our eventual union proper, we first need to separate reward value from information value in a principled way. We do this axiomatically. Our definition of information value closely follows the motivations of Shannon, and his definition of a communication channel. 
 
-Our definition of information value closely follows the motivations of Shannon, and his definition of a communication channel. If we have a memory $\mathbf{M}$ which has been learned by $f$ over a history of observations, $(\mathbf{X_0},\mathbf{X_1},...)$, can we measure how much value the next observation $\mathbf{X_t}$ should have? 
+We reason the value of any information animal depends entirely on what an animal learns by making that observation–-literally how it changes that animal's memory. This definition lets us sidestep a problem with most working models of curiosity. They tend to conflate the learning rule, with curiosity itself \cite{Schmidhuber1991b,Oudeyer2018a,Burda2018,Zhang2013,deAbril2018,Zhou2020,Schwartenbeck2019,Wilson2014a,Lehman2011,Velez2014}.
+
+If we have a memory $\mathbf{M}$ which has been learned by $f$ over a history of observations, $(\mathbf{X_0},\mathbf{X_1},...)$, can we measure how much value the next observation $\mathbf{X_t}$ should have? 
 
 We think this, our hypothetical measure $\hat E$, should have certain intuitive properties:
 
 \begin{axiom}[Axiom of Memory]
-	$\hat E$ depends only on the difference $\delta \mathbf{M}$ between $\mathbf{M}$ and $\mathbf{M'}$.
+	$\hat E$ should be continous with a change in memory, $\delta \mathbf{M}$,between $\mathbf{M}$ and $\mathbf{M'}$.
 \end{axiom}
 
-That is, the value of an observation $\mathbf{X}$ depends only on how
-the memory changes, by $f$. 
+That is, the value of an observation $\mathbf{X}$ depends only on how memory changes, and this vaalue must smoothly scale. 
 
-\begin{axiom}[Axiom of Novelty]
-	$\hat E = 0$ if and only if $\delta M = 0$. 
+A corallary of \emph{Axiom 1} is that an observation that doesn’t change memory, has no information value. That is, if $\delta \mathbf{M}$ then $\hat E = 0$.
+
+\begin{axiom}[Axiom of Induction]
+	If all $p$ elements $\delta m_i$ in $\delta \mathbf{M}$ are equal, $\delta m_i = \frac{1}{p} \sum \delta \mathbf{M}$, then $\hat E$ should be minimized.
 \end{axiom}
 
-That is, an observation that doesn’t change the memory has no value.
+That is, information which is learned evenly in memory cannot induce an inductive bias, and is therefore the least useful learning possible \cite{Mitchell1980,Thrun1998}. It should therefore be the least valuable information, all other factors held equal. In some sense then, information value is the reciprocal of entropy.
 
 \begin{axiom}[Axiom of Scholarship]
 	$\hat E \ge 0$.
 \end{axiom}
 
-That is, all (new) information is in principle valuable even if its consequences are later found to be negative.
-
-\begin{axiom}[Axiom of Completeness]
-	$\hat E$ should increase monotonically with the total change in memory. 
-\end{axiom}
-
-That is, there should be a one-to-one relationship between how memory changes and how information is valued.
+That is, all information value is in principle positive even if its consequences are later found to be negative.
 
 \begin{axiom}[Axiom of Equilibrium]
-	For the same observation $\hat E$ should approach 0 in finite time.
+	For the same observation, $\hat E$ should approach 0 in finite time.
 \end{axiom}
 
 That is, learning on $\mathbf{M}$ makes continual progress toward equilibrium (i.e. self-consistency) with each observation, after a finite time period has passed. After this it will approach a steady-state value of $\delta \mathbf{M} \rightarrow 0$ and $\hat E \rightarrow 0$. We use the term consistency to denote a memory at or near equilibrium. We mean that the memory has become consistent in itself in time, and this all our axioms can promise. 
 
-All we have really done in these axioms is remove any mention of a learning rule, its properties, or learning target, its properties from previous definitions \cite{Itti2009,Jaegle2019,Schmidhuber1991,Inglis2001,Reddy2016,Pirolli2007}. This is important not for its own sake but because with these axioms we can consider information value, and therefore curiosity, independent of any learning semantics, or any semantics at all. 
-
-Put another way, if information should be agnostic to semantics \cite{Shannon1948a}, we reason information value should be agnostic as well.
-
-
-\subsubsection*{Practical information value}
-Meeting our requirements is not difficult. The practical example of axiomatic value we use throughout this paper is based on the geometric norm, $||.||$ (as shown in Fig.~\ref{fig:cartoon}). Though not necessarily a unique solution, a norm on the memory gradient is a simple, computational convenience, way to satisfy Axioms 1-4 (Eq \ref{eq:E_norm}). 
+The practical example of information value we use throughout this paper is based on a norm, $|| \ \nabla \mathbf{M} \ ||$. This is shown in Fig.~\ref{fig:cartoon}. Though not necessarily a unique solution this is a computationally convenient way to satisfy Axioms 1-3 (Eq \ref{eq:E_norm}). 
 
 \begin{equation}
 	\label{eq:E_norm}
 	\hat E = || \ \nabla \mathbf{M} \ ||
 \end{equation}
 
-To satisfy Axiom 5 we further require memory dynamics eventually decelerate,  $\nabla^2 \mathbf{M} < 0$ for all $ t \ge T^*$. Informally, the idea here is that any notion of sensible and useful learning must converge. We take this to mean that in finite time bound, $T^*$, $\hat E$ must approach 0 (as shown in Fig.~\ref{fig:cartoon}b-c). We term this consistent learning.
+To satisfy Axiom 4 we further require learning to decelerate, $\nabla^2 \mathbf{M} < 0$ for all $ t \ge T^*$. That is, learning that is sensible and useful should ``converge'' in finite time, and stay converged thereafter. We term this consistent learning. Examples of consistent learning, and a counterexample, are shown in Fig.~\ref{fig:cartoon}b-c. 
 
-In practice here we will not work with the gradient, but will use a discrete time map in its place,
+In practice here we will not work with the gradient, but will use a discrete map instead,
 
 \begin{equation}
 	\label{eq:E_norm_discrete}
@@ -180,6 +170,7 @@ In practice here we will not work with the gradient, but will use a discrete tim
 	\label{fig:cartoon} 
 \end{figure}
 
+\subsection*{A bellman solution for information value}
 The common way to arrive at the Bellman solution is to again assume a Markov decision space. This is a problem for our definition of memory, which we assume has a natural long-term path dependence. This breaks the Markov assumption, and its needed claim of optimal substructure. To get around this we proved that exact forgetting of the last observation is another way to achieve optimal substructure, and so to derive a Bellman solution.
 
 In the theorem below, which shows the optimal substructure of $\mathbf{M}$, we implicitly assume that $\mathbf{X} = \mathbf{S}$, $\mathbf{A}$, $f$, and $\Lambda$ are given, and that $\Lambda$ is deterministic, 
@@ -203,9 +194,9 @@ As long as learning about the different observations $\mathbf{X}$ is independent
 \end{equation}
 
 \subsubsection*{A hypothesis about boredom}
-The central failure mode of curiosity is what we will call minutia, defined as learning that has little to no use to the agent. A good example of this is to, ``Imagine a scenario where the agent is observing the movement of tree leaves in a breeze. Since it is inherently hard to model breeze, it is even harder to predict the location of each leaf'' \cite{Pathak2017}. This will imply that a curious agent will always remain curious about chaos in the leaves even though they have no hope of successful learning of them.
-
 To limit curiosity we introduction a penalty term, $\eta$ which we treat as synonymous with boredom. We consider boredom an adaptive trait, in other words. Others have considered boredom arguing it is a useful way to motivate aversive tasks \cite{Bench2013}, or curiosity \cite{Loewenstein1994}. We take a slightly different view. We treat boredom as a tunable free parameter, $\eta \ge 0$ and a means to ignore marginal value by requiring curious exploration to stop once $E \le \eta$. 
+
+The central failure of curiosity is what we will call minutia. ``Excess`` learning of little to no use to the agent. A good example of minutia is to, ``Imagine a scenario where the agent is observing the movement of tree leaves in a breeze. Since it is inherently hard to model breeze, it is even harder to predict the location of each leaf'' \cite{Pathak2017}. A unconstrained curious agent will remain curious about chaos in the leaves even though they have no hope of mastering it. The movment of the leaves is minutia.
 
 
 \subsubsection*{Optimal exploration}
